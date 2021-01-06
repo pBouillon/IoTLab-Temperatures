@@ -9,9 +9,9 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid Visibility="Visible" RequestedTheme="Default">
-        <TextBox x:Name="LatitudeBox" HorizontalAlignment="Left" Margin="112,67,0,0" Text="" VerticalAlignment="Top" Width="224" FontFamily="Segoe UI" PlaceholderText="Latitude" InputScope="Number"/>
+        <TextBox x:Name="LatitudeBox" HorizontalAlignment="Left" Margin="112,67,0,0" Text="" VerticalAlignment="Top" Width="224" FontFamily="Segoe UI" PlaceholderText="Latitude" InputScope="Number" MaxLength="9"/>
         <TextBlock x:Name="LatitudeTextBlock" HorizontalAlignment="Left" Margin="18,73,0,0" Text="Latitude" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Segoe UI"/>
-        <TextBox x:Name="LongitudeBox" HorizontalAlignment="Left" Margin="112,126,0,0" Text="" VerticalAlignment="Top" RenderTransformOrigin="0.475,0.134" Width="224" PlaceholderText="Longitude" InputScope="Number"/>
+        <TextBox x:Name="LongitudeBox" HorizontalAlignment="Left" Margin="112,126,0,0" Text="" VerticalAlignment="Top" RenderTransformOrigin="0.475,0.134" Width="224" PlaceholderText="Longitude" InputScope="Number" MaxLength="10"/>
         <TextBlock x:Name="LongitudeTextBlock" HorizontalAlignment="Left" Margin="18,133,0,0" Text="Longitude" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <Button x:Name="ValidateButton" Content="Validate" HorizontalAlignment="Left" Margin="18,203,0,0" VerticalAlignment="Top" FontFamily="Segoe UI" Width="317" Click="ValidateButton_Click"/>
         <TextBlock x:Name="CoordinatesTextBlock" HorizontalAlignment="Left" Margin="18,287,0,0" Text="Coordinates" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Segoe UI"/>
