@@ -17,5 +17,7 @@ namespace IoTLab_Temperatures
 	public:
 		MainPage();
 
+	private:
+		void ValidateButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 	};
 }

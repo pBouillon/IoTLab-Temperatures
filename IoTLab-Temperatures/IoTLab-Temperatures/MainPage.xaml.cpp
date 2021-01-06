@@ -25,3 +25,9 @@ MainPage::MainPage()
 {
 	InitializeComponent();
 }
+
+
+void IoTLab_Temperatures::MainPage::ValidateButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+	CoordinatesBox->Text = LatitudeBox->Text + "," + LongitudeBox->Text;
+}
