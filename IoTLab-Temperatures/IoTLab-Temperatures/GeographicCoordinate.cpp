@@ -29,13 +29,13 @@ GeographicCoordinate::GeographicCoordinate(double latitude, double longitude)
 // Evaluate the distance between two geographic coordinates in kilometers
 // Algorithm from: http://www.movable-type.co.uk/scripts/latlong.html
 // And an implementation in JS from: https://stackoverflow.com/a/365853
-double GeographicCoordinate::GetDistanceFrom(GeographicCoordinate* coordinate)
+double GeographicCoordinate::GetDistanceFrom(GeographicCoordinate& coordinate)
 {
-	double distanceBetweenLatitudes = degree::ToRadians(coordinate->GetLatitude() - this->latitude);
-	double distanceBetweenLongitudes = degree::ToRadians(coordinate->GetLongitude() - this->longitude);
+	double distanceBetweenLatitudes = degree::ToRadians(coordinate.GetLatitude() - this->latitude);
+	double distanceBetweenLongitudes = degree::ToRadians(coordinate.GetLongitude() - this->longitude);
 
 	double latitudeInRadian = degree::ToRadians(this->latitude);
-	double targetLatitudeInRadian = degree::ToRadians(coordinate->GetLatitude());
+	double targetLatitudeInRadian = degree::ToRadians(coordinate.GetLatitude());
 
 	double a = sin(distanceBetweenLatitudes / 2) * sin(distanceBetweenLatitudes / 2)
 		+ sin(distanceBetweenLongitudes / 2) * sin(distanceBetweenLongitudes / 2)

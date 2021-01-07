@@ -23,7 +23,7 @@ public:
 	GeographicCoordinate(double, double);
 
 	// Evaluate the distance between two geographic coordinates in kilometers
-	double GetDistanceFrom(GeographicCoordinate*);
+	double GetDistanceFrom(GeographicCoordinate&);
 
 	// Get the latitude
 	double GetLatitude();
