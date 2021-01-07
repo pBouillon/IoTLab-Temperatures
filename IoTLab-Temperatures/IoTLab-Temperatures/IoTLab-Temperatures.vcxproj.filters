@@ -18,7 +18,9 @@
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="GeographicCoordinate.cpp" />
     <ClCompile Include="Mote.cpp" />
-    <ClCompile Include="Degree.cpp" />
+    <ClCompile Include="Degree.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -26,6 +28,9 @@
     <ClInclude Include="MainPage.xaml.h" />
     <ClInclude Include="GeographicCoordinate.h" />
     <ClInclude Include="Mote.h" />
+    <ClInclude Include="Degree.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\LockScreenLogo.scale-200.png">

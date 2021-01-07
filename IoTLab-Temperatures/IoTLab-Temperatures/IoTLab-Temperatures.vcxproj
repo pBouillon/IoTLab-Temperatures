@@ -170,6 +170,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="GeographicCoordinate.h" />
+    <ClInclude Include="Degree.h" />
     <ClInclude Include="Mote.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.xaml.h">

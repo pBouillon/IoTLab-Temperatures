@@ -28,6 +28,7 @@ public:
 	// Create a new mote from its coordinates, its identifier and its name
 	Mote(double, double, double, std::string);
 
+	// Get the distance between this mote and a coordinate in kilometers
 	double GetDistanceToThisMoteInKm(GeographicCoordinate*);
 };
 

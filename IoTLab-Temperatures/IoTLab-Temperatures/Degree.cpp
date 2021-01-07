@@ -1,15 +1,18 @@
-#define _USE_MATH_DEFINES
+#include "pch.h"
 
-#include <cmath>
+#include "Degree.h"
 
-// Convert a value in radians to degrees
-double ToDegrees(double radians)
+namespace degree
 {
-	return (radians * 180) / M_PI;
-}
+	constexpr double pi = 3.14159265358979323846;
 
-// Convert a value in degrees to radians
-double ToRadians(double degrees)
-{
-	return (degrees * M_PI) / 180;
+	double ToDegrees(double radians)
+	{
+		return (radians * 180) / pi;
+	}
+
+	double ToRadians(double degrees)
+	{
+		return (degrees * pi) / 180;
+	}
 }
