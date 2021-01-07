@@ -17,12 +17,15 @@
     <ClCompile Include="MainPage.xaml.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="GeographicCoordinate.cpp" />
+    <ClCompile Include="Mote.cpp" />
+    <ClCompile Include="Degree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.xaml.h" />
     <ClInclude Include="MainPage.xaml.h" />
     <ClInclude Include="GeographicCoordinate.h" />
+    <ClInclude Include="Mote.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\LockScreenLogo.scale-200.png">
