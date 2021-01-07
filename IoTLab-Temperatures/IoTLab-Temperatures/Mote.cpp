@@ -1,14 +1,14 @@
 #include "pch.h"
 #include "Mote.h"
 
-Mote::Mote(GeographicCoordinate* coordinate, double name, std::string commonName)
+Mote::Mote(GeographicCoordinate* coordinate, std::string name, std::string commonName)
 {
 	this->commonName = commonName;
 	this->coordinate = coordinate;
 	this->name = name;
 }
 
-Mote::Mote(double latitude, double longitude, double name, std::string commonName)
+Mote::Mote(double latitude, double longitude, std::string name, std::string commonName)
 {
 	this->commonName = commonName;
 	this->coordinate = &GeographicCoordinate(latitude, longitude);
