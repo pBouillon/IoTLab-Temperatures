@@ -8,7 +8,7 @@ const int MAX_ABSOLUTE_LONGITUDE_DEGREE = 180;
 
 // Create a new instance of a geographic coordinate.
 // Example:
-//     GeographicCoordinate coordinate (49.59933, 6.10567)
+//     GeographicCoordinate coordinate (49.59933, 6.10567);
 class GeographicCoordinate
 {
 	// Latitude of the geographic coordinate
@@ -19,7 +19,7 @@ class GeographicCoordinate
 
 public:
 	// Create a new instance of a geographic coordinate, based on the provided
-	// angles.
+	// angles
 	GeographicCoordinate(double, double);
 
 	// Get the latitude
@@ -28,9 +28,11 @@ public:
 	// Get the longitude
 	double GetLongitude();
 
-	// Check if a latitude is within the allowed bounds of +- MAX_ABSOLUTE_LATITUDE_DEGREE
+	// Check if a latitude is within the allowed bounds of
+	// +- MAX_ABSOLUTE_LATITUDE_DEGREE
 	static bool IsValidLatitude(double);
 
-	// Check if a longitude is within the allowed bounds of +- MAX_ABSOLUTE_LONGITUDE_DEGREE
+	// Check if a longitude is within the allowed bounds of
+	// +- MAX_ABSOLUTE_LONGITUDE_DEGREE
 	static bool IsValidLongitude(double);
 };

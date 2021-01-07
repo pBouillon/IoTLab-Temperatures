@@ -2,7 +2,8 @@
 #include "GeographicCoordinate.h"
 
 // Create a new instance of a geographic coordinate, based on the provided
-// angles. If any of the provided angles is an illegal value, throws an invalid_argument.
+// angles. If any of the provided angles is an illegal value, throws an
+// invalid_argument.
 // For the validity of the coordinates, refer to:
 // https://en.wikipedia.org/wiki/Geographic_coordinate_system#Latitude_and_longitude
 GeographicCoordinate::GeographicCoordinate(double latitude, double longitude)
