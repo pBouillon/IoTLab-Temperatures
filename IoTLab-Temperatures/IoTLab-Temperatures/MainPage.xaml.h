@@ -9,13 +9,19 @@
 
 namespace IoTLab_Temperatures
 {
-	/// <summary>
-	/// An empty page that can be used on its own or navigated to within a Frame.
-	/// </summary>
 	public ref class MainPage sealed
 	{
 	public:
 		MainPage();
 
+	private:
+		bool IsInputValid(Platform::String ^ input);
+		bool IsLatitudeValid();
+		bool IsLongitudeValid();
+		void LatitudeBox_TextChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e);
+		void LongitudeBox_TextChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e);
+		double ToDouble(Platform::String ^ value);
+		void UpdateValidateButtonValidity();
+		void ValidateButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 	};
 }

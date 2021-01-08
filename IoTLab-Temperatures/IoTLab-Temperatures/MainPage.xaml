@@ -8,7 +8,21 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
-
+    <Grid Visibility="Visible" RequestedTheme="Default">
+        <TextBox x:Name="LatitudeBox" HorizontalAlignment="Left" Margin="112,105,0,0" Text="" VerticalAlignment="Top" Width="223" FontFamily="Segoe UI" PlaceholderText="Latitude" InputScope="Number" MaxLength="9" TextChanged="LatitudeBox_TextChanged"/>
+        <TextBlock x:Name="LatitudeTextBlock" HorizontalAlignment="Left" Margin="18,73,0,0" Text="Latitude" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Segoe UI"/>
+        <TextBox x:Name="LongitudeBox" HorizontalAlignment="Left" Margin="112,182,0,0" Text="" VerticalAlignment="Top" RenderTransformOrigin="0.475,0.134" Width="223" PlaceholderText="Longitude" InputScope="Number" MaxLength="10" TextChanged="LongitudeBox_TextChanged"/>
+        <TextBlock x:Name="LongitudeTextBlock" HorizontalAlignment="Left" Margin="18,149,0,0" Text="Longitude" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Segoe UI"/>
+        <Button x:Name="ValidateButton" Content="Validate" HorizontalAlignment="Left" Margin="18,245,0,0" VerticalAlignment="Top" FontFamily="Segoe UI" Width="317" Click="ValidateButton_Click" IsEnabled="False"/>
+        <TextBlock x:Name="CoordinatesTextBlock" HorizontalAlignment="Left" Margin="18,301,0,0" Text="Coordinates" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Segoe UI"/>
+        <TextBox x:Name="CoordinatesBox" HorizontalAlignment="Left" Margin="112,294,0,0" Text="" VerticalAlignment="Top" FontFamily="Segoe UI" Width="223" PlaceholderText="Coordinates will appear here" IsReadOnly="True"/>
+        <ComboBox x:Name="LatitudeSignComboBox" HorizontalAlignment="Left" Margin="18,105,0,0" VerticalAlignment="Top" Width="65" Height="32" SelectedIndex="0" FontFamily="Segoe UI">
+            <x:String>+</x:String>
+            <x:String>-</x:String>
+        </ComboBox>
+        <ComboBox x:Name="LongitudeSignComboBox" HorizontalAlignment="Left" Margin="18,182,0,0" VerticalAlignment="Top" Width="65" SelectedIndex="0" FontFamily="Segoe UI">
+            <x:String>+</x:String>
+            <x:String>-</x:String>
+        </ComboBox>
     </Grid>
 </Page>
