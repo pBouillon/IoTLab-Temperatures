@@ -20,6 +20,11 @@ namespace IoTLab_Temperatures
 	private:
 		void ValidateButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 		void LatitudeBox_TextChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e);
+		void SetValidateButtonValidity();
+		bool IsLatitudeValid();
+		bool IsLongitudeValid();
+		bool IsInputValid(Platform::String ^ input);
+		double ToDouble(Platform::String ^ value);
 		void LongitudeBox_TextChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e);
 	};
 }

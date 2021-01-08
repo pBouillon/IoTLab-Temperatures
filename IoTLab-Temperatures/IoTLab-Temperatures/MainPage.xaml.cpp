@@ -5,6 +5,7 @@
 
 #include "pch.h"
 #include "MainPage.xaml.h"
+#include "GeographicCoordinate.h"
 
 using namespace IoTLab_Temperatures;
 
@@ -19,9 +20,13 @@ using namespace Windows::UI::Xaml::Input;
 using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 
+
+const Platform::String^ GEOGRAPHIC_COORDINATE_SEPARATOR = ", ";
+
+const int INPUT_MAX_SIZE = 8;
+
+
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
-Boolean IsLatitudeValueSet = false;
-Boolean IsLongitudeValueSet = false;
 
 
 MainPage::MainPage()
@@ -38,19 +43,57 @@ void IoTLab_Temperatures::MainPage::ValidateButton_Click(Platform::Object^ sende
 	Platform::String^ latitudeValue = LatitudeBox->Text;
 	Platform::String^ longitudeValue = LongitudeBox->Text;
 
-	CoordinatesBox->Text = latitudeSign + latitudeValue + ", " + longitudeSign + longitudeValue;
+	CoordinatesBox->Text = latitudeSign + latitudeValue
+		+ GEOGRAPHIC_COORDINATE_SEPARATOR
+		+ longitudeSign + longitudeValue;
 }
 
 
 void IoTLab_Temperatures::MainPage::LatitudeBox_TextChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e)
 {
-	IsLatitudeValueSet = LatitudeBox->Text->Length() >= 8;
-	ValidateButton->IsEnabled = IsLatitudeValueSet && IsLongitudeValueSet;
+	SetValidateButtonValidity();
 }
 
 
 void IoTLab_Temperatures::MainPage::LongitudeBox_TextChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e)
 {
-	IsLongitudeValueSet = LongitudeBox->Text->Length() >= 8;
-	ValidateButton->IsEnabled = IsLatitudeValueSet && IsLongitudeValueSet;
+	SetValidateButtonValidity();
+}
+
+
+void IoTLab_Temperatures::MainPage::SetValidateButtonValidity()
+{
+	ValidateButton->IsEnabled = IsLatitudeValid()
+		&& IsLongitudeValid();
+}
+
+
+bool IoTLab_Temperatures::MainPage::IsLatitudeValid() {
+	Platform::String^ content = LatitudeBox->Text;
+
+	return IsInputValid(content)
+		&& GeographicCoordinate::IsValidLatitude(ToDouble(content));
+}
+
+
+bool IoTLab_Temperatures::MainPage::IsLongitudeValid() {
+	Platform::String^ content = LongitudeBox->Text;
+
+	return IsInputValid(content)
+		&& GeographicCoordinate::IsValidLongitude(ToDouble(content));
+}
+
+
+bool IoTLab_Temperatures::MainPage::IsInputValid(Platform::String^ input) {
+	return input->Length() <= INPUT_MAX_SIZE
+		&& input->Length() > 0;
+}
+
+
+double IoTLab_Temperatures::MainPage::ToDouble(Platform::String^ value) {
+	std::wstring tmp(value->Begin());
+
+	std::string stringifiedValue(tmp.begin(), tmp.end());
+	
+	return atof(stringifiedValue.c_str());
 }
