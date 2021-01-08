@@ -32,7 +32,13 @@ MainPage::MainPage()
 
 void IoTLab_Temperatures::MainPage::ValidateButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-	CoordinatesBox->Text = LatitudeBox->Text + "," + LongitudeBox->Text;
+	Platform::String^ latitudeSign = LatitudeSignComboBox->SelectedItem->ToString();
+	Platform::String^ longitudeSign = LongitudeSignComboBox->SelectedItem->ToString();
+
+	Platform::String^ latitudeValue = LatitudeBox->Text;
+	Platform::String^ longitudeValue = LongitudeBox->Text;
+
+	CoordinatesBox->Text = latitudeSign + latitudeValue + ", " + longitudeSign + longitudeValue;
 }
 
 
