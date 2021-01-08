@@ -29,8 +29,8 @@ public:
 	// Create a new mote from its coordinates, its identifier and its name
 	Mote(double, double, std::string, std::string);
 
-	// Get a default set of motes to work with and put it in the `result` buffer
-	static void Mote::GenerateDefaultMoteSet(std::vector<Mote> &result);
+	// Get a default set of motes to work with and put it in the buffer
+	static void Mote::GenerateDefaultMoteSet(std::vector<Mote>&);
 
 	// Get the distance between this mote and a coordinate in kilometers
 	double GetDistanceToThisMoteInKm(GeographicCoordinate&);

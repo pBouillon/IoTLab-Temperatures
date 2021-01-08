@@ -9,14 +9,10 @@ Mote::Mote(GeographicCoordinate* coordinate, std::string name, std::string commo
 }
 
 Mote::Mote(double latitude, double longitude, std::string name, std::string commonName)
-{
-	this->commonName = commonName;
-	this->coordinate = &GeographicCoordinate(latitude, longitude);
-	this->name = name;
-}
+	: Mote(&GeographicCoordinate(latitude, longitude), name, commonName) { }
 
 // Generate a default set of motes based on the data provided in the "mote.csv" file
-void Mote::GenerateDefaultMoteSet(std::vector<Mote> &result)
+void Mote::GenerateDefaultMoteSet(std::vector<Mote>& result)
 {
 	result = {
 		Mote(48.669422, 6.155112, "9.138", "amphiNord"),
@@ -32,5 +28,5 @@ void Mote::GenerateDefaultMoteSet(std::vector<Mote> &result)
 
 double Mote::GetDistanceToThisMoteInKm(GeographicCoordinate& coordinate)
 {
-	return this->coordinate->GetDistanceFrom(coordinate);
+	return this->coordinate->GetDistanceFromInKm(coordinate);
 }
