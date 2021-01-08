@@ -21,12 +21,14 @@ using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 
 
+// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
+
+
+// Separator used when displaying alongside the latitude and the longitude of the user
 const Platform::String^ GEOGRAPHIC_COORDINATE_SEPARATOR = ", ";
 
+// Maximum size allowed for the latitude and the longitude input (ex: "12.34567")
 const int INPUT_MAX_SIZE = 8;
-
-
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 
 MainPage::MainPage()
@@ -35,36 +37,11 @@ MainPage::MainPage()
 }
 
 
-void IoTLab_Temperatures::MainPage::ValidateButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
-{
-	Platform::String^ latitudeSign = LatitudeSignComboBox->SelectedItem->ToString();
-	Platform::String^ longitudeSign = LongitudeSignComboBox->SelectedItem->ToString();
+bool IoTLab_Temperatures::MainPage::IsInputValid(Platform::String^ input) {
+	int inputLength = input->Length();
 
-	Platform::String^ latitudeValue = LatitudeBox->Text;
-	Platform::String^ longitudeValue = LongitudeBox->Text;
-
-	CoordinatesBox->Text = latitudeSign + latitudeValue
-		+ GEOGRAPHIC_COORDINATE_SEPARATOR
-		+ longitudeSign + longitudeValue;
-}
-
-
-void IoTLab_Temperatures::MainPage::LatitudeBox_TextChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e)
-{
-	SetValidateButtonValidity();
-}
-
-
-void IoTLab_Temperatures::MainPage::LongitudeBox_TextChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e)
-{
-	SetValidateButtonValidity();
-}
-
-
-void IoTLab_Temperatures::MainPage::SetValidateButtonValidity()
-{
-	ValidateButton->IsEnabled = IsLatitudeValid()
-		&& IsLongitudeValid();
+	return inputLength > 0
+		&& inputLength <= INPUT_MAX_SIZE;
 }
 
 
@@ -84,9 +61,17 @@ bool IoTLab_Temperatures::MainPage::IsLongitudeValid() {
 }
 
 
-bool IoTLab_Temperatures::MainPage::IsInputValid(Platform::String^ input) {
-	return input->Length() <= INPUT_MAX_SIZE
-		&& input->Length() > 0;
+void IoTLab_Temperatures::MainPage::LatitudeBox_TextChanged(
+	Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e)
+{
+	UpdateValidateButtonValidity();
+}
+
+
+void IoTLab_Temperatures::MainPage::LongitudeBox_TextChanged(
+	Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e)
+{
+	UpdateValidateButtonValidity();
 }
 
 
@@ -96,4 +81,31 @@ double IoTLab_Temperatures::MainPage::ToDouble(Platform::String^ value) {
 	std::string stringifiedValue(tmp.begin(), tmp.end());
 	
 	return atof(stringifiedValue.c_str());
+}
+
+
+// Enable the "Validate" button depending of the validity of the other fields
+void IoTLab_Temperatures::MainPage::UpdateValidateButtonValidity()
+{
+	ValidateButton->IsEnabled = IsLatitudeValid()
+		&& IsLongitudeValid();
+}
+
+
+// On click, build the user's geographic coordinate from the latitude and the longitude input fields
+// and display it
+void IoTLab_Temperatures::MainPage::ValidateButton_Click(
+	Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+	Platform::String^ latitudeValue = LatitudeBox->Text;
+	Platform::String^ latitudeSign = LatitudeSignComboBox->SelectedItem->ToString();
+	Platform::String^ formattedLatitude = latitudeSign + latitudeValue;
+
+	Platform::String^ longitudeValue = LongitudeBox->Text;
+	Platform::String^ longitudeSign = LongitudeSignComboBox->SelectedItem->ToString();
+	Platform::String^ formattedLongitude = longitudeSign + longitudeValue;
+
+	Platform::String^ userCoordinate = formattedLatitude + GEOGRAPHIC_COORDINATE_SEPARATOR + formattedLongitude;
+
+	CoordinatesBox->Text = userCoordinate;
 }
