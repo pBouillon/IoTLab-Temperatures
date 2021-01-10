@@ -24,5 +24,6 @@
             <x:String>+</x:String>
             <x:String>-</x:String>
         </ComboBox>
+        <TextBlock x:Name="AppTitle" HorizontalAlignment="Center" Margin="0,29,0,0" Text="IoTLab - Sensors" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold"/>
     </Grid>
 </Page>
