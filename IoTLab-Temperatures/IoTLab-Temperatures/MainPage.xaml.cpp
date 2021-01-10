@@ -95,6 +95,4 @@ void IoTLab_Temperatures::MainPage::ValidateButton_Click(
 	Platform::String^ formattedLongitude = longitudeSign + longitudeValue;
 
 	Platform::String^ userCoordinate = formattedLatitude + GEOGRAPHIC_COORDINATE_SEPARATOR + formattedLongitude;
-
-	CoordinatesBox->Text = userCoordinate;
 }

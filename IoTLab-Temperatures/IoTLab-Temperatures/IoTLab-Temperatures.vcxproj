@@ -195,6 +195,11 @@
     <None Include="IoTLab-Temperatures_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Assets\icons8-battery-level-96.png" />
+    <Image Include="Assets\icons8-ceiling-light-64.png" />
+    <Image Include="Assets\icons8-iot-sensor-100.png" />
+    <Image Include="Assets\icons8-thermometer-40.png" />
+    <Image Include="Assets\icons8-wet-80.png" />
     <Image Include="Assets\LockScreenLogo.scale-200.png" />
     <Image Include="Assets\SplashScreen.scale-200.png" />
     <Image Include="Assets\Square150x150Logo.scale-200.png" />
