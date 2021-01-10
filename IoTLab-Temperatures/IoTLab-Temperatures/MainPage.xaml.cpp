@@ -27,9 +27,6 @@ using namespace Windows::UI::Xaml::Navigation;
 // Separator used when displaying alongside the latitude and the longitude of the user
 const Platform::String^ GEOGRAPHIC_COORDINATE_SEPARATOR = ", ";
 
-// Maximum size allowed for the latitude and the longitude input (ex: "12.34567")
-const int INPUT_MAX_SIZE = 8;
-
 
 MainPage::MainPage()
 {
@@ -37,18 +34,10 @@ MainPage::MainPage()
 }
 
 
-bool IoTLab_Temperatures::MainPage::IsInputValid(Platform::String^ input) {
-	int inputLength = input->Length();
-
-	return inputLength > 0
-		&& inputLength <= INPUT_MAX_SIZE;
-}
-
-
 bool IoTLab_Temperatures::MainPage::IsLatitudeValid() {
 	Platform::String^ content = LatitudeBox->Text;
 
-	return IsInputValid(content)
+	return !content->IsEmpty()
 		&& GeographicCoordinate::IsValidLatitude(ToDouble(content));
 }
 
@@ -56,7 +45,7 @@ bool IoTLab_Temperatures::MainPage::IsLatitudeValid() {
 bool IoTLab_Temperatures::MainPage::IsLongitudeValid() {
 	Platform::String^ content = LongitudeBox->Text;
 
-	return IsInputValid(content)
+	return !content->IsEmpty()
 		&& GeographicCoordinate::IsValidLongitude(ToDouble(content));
 }
 
