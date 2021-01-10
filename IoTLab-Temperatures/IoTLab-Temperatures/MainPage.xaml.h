@@ -15,7 +15,6 @@ namespace IoTLab_Temperatures
 		MainPage();
 
 	private:
-		bool IsInputValid(Platform::String ^ input);
 		bool IsLatitudeValid();
 		bool IsLongitudeValid();
 		void LatitudeBox_TextChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e);
