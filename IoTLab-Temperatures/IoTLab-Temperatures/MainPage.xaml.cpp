@@ -18,6 +18,7 @@
 #include "pch.h"
 #include "MainPage.xaml.h"
 #include "GeographicCoordinate.h"
+#include "TypeConversion.h"
 
 using namespace IoTLab_Temperatures;
 
@@ -54,7 +55,7 @@ bool IoTLab_Temperatures::MainPage::IsLatitudeValid() {
 	Platform::String^ content = LatitudeBox->Text;
 
 	return !content->IsEmpty()
-		&& GeographicCoordinate::IsValidLatitude(ToDouble(content));
+		&& GeographicCoordinate::IsValidLatitude(typeConversion::ToDouble(content));
 }
 
 
@@ -62,7 +63,7 @@ bool IoTLab_Temperatures::MainPage::IsLongitudeValid() {
 	Platform::String^ content = LongitudeBox->Text;
 
 	return !content->IsEmpty()
-		&& GeographicCoordinate::IsValidLongitude(ToDouble(content));
+		&& GeographicCoordinate::IsValidLongitude(typeConversion::ToDouble(content));
 }
 
 
@@ -104,15 +105,6 @@ void IoTLab_Temperatures::MainPage::RetrieveTemperatureFromIoTLab()
 
 		return task_from_result();
 	});
-}
-
-
-double IoTLab_Temperatures::MainPage::ToDouble(Platform::String^ value) {
-	std::wstring tmp(value->Begin());
-
-	std::string stringifiedValue(tmp.begin(), tmp.end());
-	
-	return atof(stringifiedValue.c_str());
 }
 
 

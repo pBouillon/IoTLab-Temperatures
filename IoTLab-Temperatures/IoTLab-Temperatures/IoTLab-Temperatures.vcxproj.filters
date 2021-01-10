@@ -8,6 +8,9 @@
       <UniqueIdentifier>bf73e019-6d96-4c90-b68c-7d434caf06e8</UniqueIdentifier>
       <Extensions>bmp;fbx;gif;jpg;jpeg;tga;tiff;tif;png</Extensions>
     </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{364774f6-028d-44ac-9a26-495997722d0d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml" />
@@ -16,9 +19,6 @@
     <ClCompile Include="App.xaml.cpp" />
     <ClCompile Include="MainPage.xaml.cpp" />
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="Degree.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="GeographicCoordinate.cpp">
       <Filter>Common</Filter>
     </ClCompile>
@@ -28,14 +28,17 @@
     <ClCompile Include="MeasureReport.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="Degree.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="TypeConversion.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.xaml.h" />
     <ClInclude Include="MainPage.xaml.h" />
-    <ClInclude Include="Degree.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="GeographicCoordinate.h">
       <Filter>Common</Filter>
     </ClInclude>
@@ -44,6 +47,12 @@
     </ClInclude>
     <ClInclude Include="MeasureReport.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Degree.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeConversion.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
