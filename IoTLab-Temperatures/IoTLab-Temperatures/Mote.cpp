@@ -1,10 +1,17 @@
 #include "pch.h"
+#include "MeasureReport.h"
 #include "Mote.h"
+
+Mote::~Mote()
+{
+	delete this->measure;
+}
 
 Mote::Mote(GeographicCoordinate* coordinate, std::string name, std::string commonName)
 {
 	this->commonName = commonName;
 	this->coordinate = coordinate;
+	this->measure = new MeasureReport();
 	this->name = name;
 }
 

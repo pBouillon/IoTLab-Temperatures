@@ -171,6 +171,7 @@
   <ItemGroup>
     <ClInclude Include="GeographicCoordinate.h" />
     <ClInclude Include="Degree.h" />
+    <ClInclude Include="MeasureReport.h" />
     <ClInclude Include="Mote.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.xaml.h">
@@ -212,6 +213,7 @@
     <ClCompile Include="MainPage.xaml.cpp">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </ClCompile>
+    <ClCompile Include="MeasureReport.cpp" />
     <ClCompile Include="Mote.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

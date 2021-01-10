@@ -25,6 +25,9 @@
     <ClCompile Include="Mote.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="MeasureReport.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -37,6 +40,9 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="Mote.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="MeasureReport.h">
       <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>

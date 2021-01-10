@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "GeographicCoordinate.h"
+#include "MeasureReport.h"
 
 // Create a new instance of a mote managed by the IoTLab.
 // Example:
@@ -19,10 +20,15 @@ class Mote
 	// Geocraphic coordinate of the mote
 	GeographicCoordinate* coordinate;
 
+	// Mote latest measure
+	MeasureReport* measure;
+
 	// Raw name and identifier of the mote from the IoTLab
 	std::string name;
 
 public:
+	~Mote();
+
 	// Create a new mote from a geographic coordinate, its identifier and its name
 	Mote(GeographicCoordinate*, std::string, std::string);
 

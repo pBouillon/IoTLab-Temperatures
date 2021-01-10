@@ -90,7 +90,7 @@ void IoTLab_Temperatures::MainPage::RetrieveTemperatureFromIoTLab()
 	create_task(httpClient->GetStringAsync(uri))
 		.then([=](Platform::String^ Tet) 
 	{
-		auto objJson = JsonObject::Parse(Tet);
+		JsonObject^ objJson = JsonObject::Parse(Tet);
 		
 		JsonArray^ data = objJson->GetObject()->GetNamedArray("data")->GetArray();
 		
