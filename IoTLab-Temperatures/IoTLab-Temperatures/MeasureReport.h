@@ -12,13 +12,25 @@ class MeasureReport
 	double battery;
 
 	// Measured brightness level, in Lux
-	int brightness;
+	double brightness;
 
 	// Measured humidity level, in percentages 
 	double humidity;
 
 	// Measured temperature, in Celsius
 	double temperature;
+
+	// Extract the value of a standardize IoTLab JSON row such as:
+	// { "timestamp": 1608301045, "label": "battery_indicator", "value": 0.0, "mote": "9.138" }
+	static double MeasureReport::ExtractValue(JsonObject^);
+
+	void SetBattery(double);
+
+	void SetBrightness(double);
+
+	void SetHumidity(double);
+
+	void SetTemperature(double);
 
 public:
 
@@ -27,9 +39,9 @@ public:
 
 	// Create a new report based on the battery, the brightness,
 	// the humidity and the temperature
-	MeasureReport(double, int, double, double);
+	MeasureReport(double, double, double, double);
 
 	// Create the report from the IoTLab response
-	static MeasureReport FromIotlabResponse(JsonObject^);
+	static MeasureReport* FromIotlabResponse(JsonObject^);
 };
 

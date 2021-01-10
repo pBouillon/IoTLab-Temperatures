@@ -16,8 +16,9 @@
 #include <vector>
 
 #include "pch.h"
-#include "MainPage.xaml.h"
 #include "GeographicCoordinate.h"
+#include "MainPage.xaml.h"
+#include "MeasureReport.h"
 #include "TypeConversion.h"
 
 using namespace IoTLab_Temperatures;
@@ -47,6 +48,9 @@ const Platform::String^ IOTLAB_URI = "http://iotlab.telecomnancy.eu:8080/iotlab/
 
 MainPage::MainPage()
 {
+	// TODO: remove
+	RetrieveTemperatureFromIoTLab();
+
 	InitializeComponent();
 }
 
@@ -81,6 +85,7 @@ void IoTLab_Temperatures::MainPage::LongitudeBox_TextChanged(
 }
 
 
+// TODO: Update the closest mote's measure instead of creating a record
 void IoTLab_Temperatures::MainPage::RetrieveTemperatureFromIoTLab()
 {
 	Platform::String^ url = IOTLAB_URI + "/data/1/temperature-light2-light1-battery_indicator-humidity/1/";
@@ -89,19 +94,11 @@ void IoTLab_Temperatures::MainPage::RetrieveTemperatureFromIoTLab()
 	Windows::Web::Http::HttpClient^ httpClient = ref new HttpClient();
 
 	create_task(httpClient->GetStringAsync(uri))
-		.then([=](Platform::String^ Tet) 
+		.then([=](Platform::String^ IoTLabResponse)
 	{
-		JsonObject^ objJson = JsonObject::Parse(Tet);
+		JsonObject^ jsonResponse = JsonObject::Parse(IoTLabResponse);
 		
-		JsonArray^ data = objJson->GetObject()->GetNamedArray("data")->GetArray();
-		
-		int jsonArraySize = data->Size;
-		
-		for (int i = 0; i < jsonArraySize; i++) {
-			if (data->GetObjectAt(i)->GetNamedString("label")->Equals("temperature")) {
-				Platform::String^ temprature = data->GetObjectAt(i)->GetNamedValue("value")->ToString();
-			}
-		}
+		MeasureReport* report = MeasureReport::FromIotlabResponse(jsonResponse);
 
 		return task_from_result();
 	});
