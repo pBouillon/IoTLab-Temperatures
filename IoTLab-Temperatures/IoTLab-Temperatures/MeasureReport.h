@@ -2,18 +2,27 @@
 
 using namespace Windows::Data::Json;
 
+// Create an instance of a measure report of a mote which is holding
+// the various data it has measured such as the battery in percentages,
+// the brightness in lux, the humidity in percentages and the
+// temperature in Celsius
 class MeasureReport
 {
+	// Measured battery level, in percentages
 	double battery;
 
+	// Measured brightness level, in Lux
 	int brightness;
 
+	// Measured humidity level, in percentages 
 	double humidity;
 
+	// Measured temperature, in Celsius
 	double temperature;
 
 public:
 
+	// Create an empty measure report with all default values (0)
 	MeasureReport();
 
 	// Create a new report based on the battery, the brightness,
