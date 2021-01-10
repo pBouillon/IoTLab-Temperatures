@@ -43,9 +43,6 @@ const Platform::String^ GEOGRAPHIC_COORDINATE_SEPARATOR = ", ";
 // IoTLab API URI
 const Platform::String^ IOTLAB_URI = "http://iotlab.telecomnancy.eu:8080/iotlab/rest";
 
-// Maximum size allowed for the latitude and the longitude input (ex: "12.34567")
-const int INPUT_MAX_SIZE = 8;
-
 
 MainPage::MainPage()
 {
@@ -53,18 +50,10 @@ MainPage::MainPage()
 }
 
 
-bool IoTLab_Temperatures::MainPage::IsInputValid(Platform::String^ input) {
-	int inputLength = input->Length();
-
-	return inputLength > 0
-		&& inputLength <= INPUT_MAX_SIZE;
-}
-
-
 bool IoTLab_Temperatures::MainPage::IsLatitudeValid() {
 	Platform::String^ content = LatitudeBox->Text;
 
-	return IsInputValid(content)
+	return !content->IsEmpty()
 		&& GeographicCoordinate::IsValidLatitude(ToDouble(content));
 }
 
@@ -72,7 +61,7 @@ bool IoTLab_Temperatures::MainPage::IsLatitudeValid() {
 bool IoTLab_Temperatures::MainPage::IsLongitudeValid() {
 	Platform::String^ content = LongitudeBox->Text;
 
-	return IsInputValid(content)
+	return !content->IsEmpty()
 		&& GeographicCoordinate::IsValidLongitude(ToDouble(content));
 }
 
