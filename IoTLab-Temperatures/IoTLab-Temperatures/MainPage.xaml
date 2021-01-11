@@ -23,29 +23,28 @@
             <x:String>-</x:String>
         </ComboBox>
         <TextBlock x:Name="AppTitle" HorizontalAlignment="Center" Margin="0,1,0,0" Text="IoTLab sensors" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20"/>
-        <Image HorizontalAlignment="Center" Height="84" Margin="0,228,0,0" VerticalAlignment="Top" Width="87" Source="/Assets/icons8-iot-sensor-100.png"/>
-        <TextBlock HorizontalAlignment="Center" Margin="0,314,0,0" Text="Mote 42.2" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="133,333,0,0" Text="Bureau de M. CHOLEZ" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="10" FocusVisualPrimaryBrush="White">
+        <Image x:Name="SensorImage" HorizontalAlignment="Center" Height="84" Margin="0,228,0,0" VerticalAlignment="Top" Width="87" Source="/Assets/icons8-iot-sensor-100.png"/>
+        <TextBlock x:Name="MoteTextBlock" HorizontalAlignment="Center" Margin="0,314,0,0" Text="Mote 42.2" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TextBlock x:Name="LocationTextBlock" HorizontalAlignment="Left" Margin="133,333,0,0" Text="Bureau de M. CHOLEZ" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="10" FocusVisualPrimaryBrush="White">
             <TextBlock.Foreground>
                 <SolidColorBrush Color="#FFC7C0C2"/>
             </TextBlock.Foreground>
         </TextBlock>
-        <Rectangle HorizontalAlignment="Left" Height="106" Margin="46,362,0,0" VerticalAlignment="Top" Width="113" FocusVisualPrimaryBrush="White" FocusVisualSecondaryBrush="#99FFFFFF" Stroke="White" RadiusX="8" RadiusY="8"/>
-        <Rectangle HorizontalAlignment="Left" Height="106" Margin="199,362,0,0" VerticalAlignment="Top" Width="113" Stroke="White" RadiusX="8" RadiusY="8"/>
-        <Rectangle HorizontalAlignment="Left" Height="106" Margin="46,486,0,0" VerticalAlignment="Top" Width="113" FocusVisualPrimaryBrush="{x:Null}" Stroke="White" RadiusX="8" RadiusY="8"/>
-        <Rectangle HorizontalAlignment="Left" Height="106" Margin="199,486,0,0" VerticalAlignment="Top" Width="113" Stroke="White" RadiusX="8" RadiusY="8"/>
-        <TextBlock HorizontalAlignment="Left" Margin="64,369,0,0" Text="Température" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="583,278,0,0" Text="TextBlock" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="227,369,0,0" Text="Humidité" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="79,494,0,0" Text="Batterie" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="222,494,0,0" Text="Luminosité" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <Image HorizontalAlignment="Left" Height="47" Margin="79,396,0,0" VerticalAlignment="Top" Width="47" Source="/Assets/icons8-thermometer-40.png"/>
-        <Image HorizontalAlignment="Left" Height="47" Margin="232,396,0,0" VerticalAlignment="Top" Width="47" Source="/Assets/icons8-wet-80.png"/>
-        <Image HorizontalAlignment="Left" Height="47" Margin="79,522,0,0" VerticalAlignment="Top" Width="47" Source="/Assets/icons8-battery-level-96.png"/>
-        <Image HorizontalAlignment="Left" Height="47" Margin="233,522,0,0" VerticalAlignment="Top" Width="47" Source="/Assets/icons8-ceiling-light-64.png"/>
-        <TextBlock HorizontalAlignment="Left" Margin="91,443,0,0" Text="22" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="248,443,0,0" Text="75" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="95,568,0,0" Text="50" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="244,568,0,0" Text="210" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <Rectangle x:Name="TemperatureRectangle" HorizontalAlignment="Left" Height="106" Margin="46,362,0,0" VerticalAlignment="Top" Width="113" FocusVisualPrimaryBrush="White" FocusVisualSecondaryBrush="#99FFFFFF" Stroke="White" RadiusX="8" RadiusY="8"/>
+        <Rectangle x:Name="HumidityRectangle" HorizontalAlignment="Left" Height="106" Margin="199,362,0,0" VerticalAlignment="Top" Width="113" Stroke="White" RadiusX="8" RadiusY="8"/>
+        <Rectangle x:Name="BatteryRectangle" HorizontalAlignment="Left" Height="106" Margin="46,486,0,0" VerticalAlignment="Top" Width="113" FocusVisualPrimaryBrush="{x:Null}" Stroke="White" RadiusX="8" RadiusY="8"/>
+        <Rectangle x:Name="LuminosityRectangle" HorizontalAlignment="Left" Height="106" Margin="199,486,0,0" VerticalAlignment="Top" Width="113" Stroke="White" RadiusX="8" RadiusY="8"/>
+        <TextBlock x:Name="TemperatureTextBlock" HorizontalAlignment="Left" Margin="64,369,0,0" Text="Température" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TextBlock x:Name="HumidityTextBlock" HorizontalAlignment="Left" Margin="227,369,0,0" Text="Humidité" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TextBlock x:Name="BatteryTextBlock" HorizontalAlignment="Left" Margin="79,494,0,0" Text="Batterie" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TextBlock x:Name="LuminosityTextBlock" HorizontalAlignment="Left" Margin="222,494,0,0" Text="Luminosité" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <Image x:Name="ThermometerImage" HorizontalAlignment="Left" Height="47" Margin="79,396,0,0" VerticalAlignment="Top" Width="47" Source="/Assets/icons8-thermometer-40.png"/>
+        <Image x:Name="HumidityImage" HorizontalAlignment="Left" Height="47" Margin="232,396,0,0" VerticalAlignment="Top" Width="47" Source="/Assets/icons8-wet-80.png"/>
+        <Image x:Name="BatteryImage" HorizontalAlignment="Left" Height="47" Margin="79,522,0,0" VerticalAlignment="Top" Width="47" Source="/Assets/icons8-battery-level-96.png"/>
+        <Image x:Name="LuminosityImage" HorizontalAlignment="Left" Height="47" Margin="233,522,0,0" VerticalAlignment="Top" Width="47" Source="/Assets/icons8-ceiling-light-64.png"/>
+        <TextBlock x:Name="TemperatureValueTextBlock" HorizontalAlignment="Left" Margin="91,443,0,0" Text="22" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TextBlock x:Name="HumidityValueTextBlock" HorizontalAlignment="Left" Margin="248,443,0,0" Text="75" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TextBlock x:Name="BatteryValueTextBlock" HorizontalAlignment="Left" Margin="95,568,0,0" Text="50" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TextBlock x:Name="LuminosityValueTextBlock" HorizontalAlignment="Left" Margin="244,568,0,0" Text="210" TextWrapping="Wrap" VerticalAlignment="Top"/>
     </Grid>
 </Page>
