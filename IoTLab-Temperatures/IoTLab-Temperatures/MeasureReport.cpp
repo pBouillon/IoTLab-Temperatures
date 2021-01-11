@@ -10,19 +10,19 @@ using namespace Windows::Data::Json;
 //     which allows only 'Platform::String^' and not 'const Platform::String^'
 Platform::String^ IOTLAB_JSON_DATA_KEY = "data";
 
-// JSON key to caracterizing a JSON record as holding the battery level measured by the mote
+// JSON key to characterizing a JSON record as holding the battery level measured by the mote
 // Note:
 //     This can't be marked as const since it is used in GetNamedValue()
 //     which allows only 'Platform::String^' and not 'const Platform::String^'
 Platform::String^ IOTLAB_JSON_BATTERY_KEY = "battery";
 
-// JSON key to caracterizing a JSON record as holding the brightness measured by the mote
+// JSON key to characterizing a JSON record as holding the brightness measured by the mote
 // Note:
 //     This can't be marked as const since it is used in GetNamedValue()
 //     which allows only 'Platform::String^' and not 'const Platform::String^'
 Platform::String^ IOTLAB_JSON_BRIGHTNESS_KEY = "light1";
 
-// JSON key to caracterizing a JSON record as holding the humidity level measured by the mote
+// JSON key to characterizing a JSON record as holding the humidity level measured by the mote
 // Note:
 //     This can't be marked as const since it is used in GetNamedValue()
 //     which allows only 'Platform::String^' and not 'const Platform::String^'
@@ -34,7 +34,7 @@ Platform::String^ IOTLAB_JSON_HUMIDITY_KEY = "humidity";
 //     which allows only 'Platform::String^' and not 'const Platform::String^'
 Platform::String^ IOTLAB_JSON_LABEL_KEY = "label";
 
-// JSON key to caracterizing a JSON record as holding the temperature measured by the mote
+// JSON key to characterizing a JSON record as holding the temperature measured by the mote
 // Note:
 //     This can't be marked as const since it is used in GetNamedValue()
 //     which allows only 'Platform::String^' and not 'const Platform::String^'
