@@ -124,8 +124,8 @@ void IoTLab_Temperatures::MainPage::RenderClosestMoteHumidity() {
 	HumidityValueTextBlock->Visibility = Windows::UI::Xaml::Visibility::Visible;
 }
 
-void IoTLab_Temperatures::MainPage::RenderClosestMoteMeasure() {
 
+void IoTLab_Temperatures::MainPage::RenderClosestMoteMeasure() {
 	// Collapse the default text when no mote's measure is displayed
 	NoMoteDisplayedTextBlock->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
 
@@ -161,7 +161,6 @@ void IoTLab_Temperatures::MainPage::UpdateValidateButtonValidity()
 
 
 void IoTLab_Temperatures::MainPage::UpdateDisplayedMeasures(double battery, double brightness, double humidity, double temperature) {
-
 	BatteryValueTextBlock->Text = battery.ToString() + " %";
 	BrightnessValueTextBlock->Text = brightness.ToString() + " Lx";
 	HumidityValueTextBlock->Text = humidity.ToString() + " %";
