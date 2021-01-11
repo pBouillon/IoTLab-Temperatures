@@ -6,6 +6,7 @@
 #pragma once
 
 #include "MainPage.g.h"
+#include "Mote.h"
 
 namespace IoTLab_Temperatures
 {
@@ -15,11 +16,15 @@ namespace IoTLab_Temperatures
 		MainPage();
 
 	private:
+		Mote* closestMote;
+
+		~MainPage();
+
 		bool IsLatitudeValid();
 		bool IsLongitudeValid();
 		void LatitudeBox_TextChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e);
 		void LongitudeBox_TextChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e);
-		double ToDouble(Platform::String ^ value);
+		void RetrieveTemperatureFromIoTLab();
 		void UpdateValidateButtonValidity();
 		void ValidateButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 	};

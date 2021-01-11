@@ -3,13 +3,27 @@
 // Implementation of the MainPage class.
 //
 
+#include <codecvt>
+#include <iterator>
+#include <locale> 
+#include <shared_mutex>
+#include <stdio.h>
+#include <sstream>
+#include <string>
+#include <thread>
+#include <vector>
+
 #include "pch.h"
-#include "MainPage.xaml.h"
 #include "GeographicCoordinate.h"
+#include "MainPage.xaml.h"
+#include "Mote.h"
+#include "TypeConversion.h"
 
 using namespace IoTLab_Temperatures;
 
+using namespace Concurrency;
 using namespace Platform;
+using namespace Windows::Data::Json;
 using namespace Windows::Foundation;
 using namespace Windows::Foundation::Collections;
 using namespace Windows::UI::Xaml;
@@ -19,9 +33,8 @@ using namespace Windows::UI::Xaml::Data;
 using namespace Windows::UI::Xaml::Input;
 using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
-
-
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
+using namespace Windows::UI::Xaml::Navigation;
+using namespace Windows::Web::Http;
 
 
 // Separator used when displaying alongside the latitude and the longitude of the user
@@ -31,6 +44,16 @@ const Platform::String^ GEOGRAPHIC_COORDINATE_SEPARATOR = ", ";
 MainPage::MainPage()
 {
 	InitializeComponent();
+
+	// No mote can be defined as the closest on startup since
+	// we do not know the current user's position
+	closestMote = NULL;
+}
+
+
+MainPage::~MainPage()
+{
+	delete closestMote;
 }
 
 
@@ -38,7 +61,7 @@ bool IoTLab_Temperatures::MainPage::IsLatitudeValid() {
 	Platform::String^ content = LatitudeBox->Text;
 
 	return !content->IsEmpty()
-		&& GeographicCoordinate::IsValidLatitude(ToDouble(content));
+		&& GeographicCoordinate::IsValidLatitude(typeConversion::ToDouble(content));
 }
 
 
@@ -46,7 +69,7 @@ bool IoTLab_Temperatures::MainPage::IsLongitudeValid() {
 	Platform::String^ content = LongitudeBox->Text;
 
 	return !content->IsEmpty()
-		&& GeographicCoordinate::IsValidLongitude(ToDouble(content));
+		&& GeographicCoordinate::IsValidLongitude(typeConversion::ToDouble(content));
 }
 
 
@@ -64,12 +87,9 @@ void IoTLab_Temperatures::MainPage::LongitudeBox_TextChanged(
 }
 
 
-double IoTLab_Temperatures::MainPage::ToDouble(Platform::String^ value) {
-	std::wstring tmp(value->Begin());
-
-	std::string stringifiedValue(tmp.begin(), tmp.end());
-	
-	return atof(stringifiedValue.c_str());
+void IoTLab_Temperatures::MainPage::RetrieveTemperatureFromIoTLab()
+{
+	closestMote->LoadLatestMeasure();
 }
 
 
@@ -97,4 +117,8 @@ void IoTLab_Temperatures::MainPage::ValidateButton_Click(
 	Platform::String^ userCoordinate = formattedLatitude + GEOGRAPHIC_COORDINATE_SEPARATOR + formattedLongitude;
 
 	CoordinatesBox->Text = userCoordinate;
+
+	// TODO: retrieve the closest mote
+
+	RetrieveTemperatureFromIoTLab();
 }
