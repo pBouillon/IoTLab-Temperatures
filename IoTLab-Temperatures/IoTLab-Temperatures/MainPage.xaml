@@ -9,21 +9,43 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid Visibility="Visible" RequestedTheme="Default">
-        <TextBox x:Name="LatitudeBox" HorizontalAlignment="Left" Margin="112,105,0,0" Text="" VerticalAlignment="Top" Width="223" FontFamily="Segoe UI" PlaceholderText="Latitude" InputScope="Number" MaxLength="9" TextChanged="LatitudeBox_TextChanged"/>
-        <TextBlock x:Name="LatitudeTextBlock" HorizontalAlignment="Left" Margin="18,73,0,0" Text="Latitude" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Segoe UI"/>
-        <TextBox x:Name="LongitudeBox" HorizontalAlignment="Left" Margin="112,182,0,0" Text="" VerticalAlignment="Top" RenderTransformOrigin="0.475,0.134" Width="223" PlaceholderText="Longitude" InputScope="Number" MaxLength="10" TextChanged="LongitudeBox_TextChanged"/>
-        <TextBlock x:Name="LongitudeTextBlock" HorizontalAlignment="Left" Margin="18,149,0,0" Text="Longitude" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Segoe UI"/>
-        <Button x:Name="ValidateButton" Content="Validate" HorizontalAlignment="Left" Margin="18,245,0,0" VerticalAlignment="Top" FontFamily="Segoe UI" Width="317" Click="ValidateButton_Click" IsEnabled="False"/>
-        <TextBlock x:Name="CoordinatesTextBlock" HorizontalAlignment="Left" Margin="18,301,0,0" Text="Coordinates" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Segoe UI"/>
-        <TextBox x:Name="CoordinatesBox" HorizontalAlignment="Left" Margin="112,294,0,0" Text="" VerticalAlignment="Top" FontFamily="Segoe UI" Width="223" PlaceholderText="Coordinates will appear here" IsReadOnly="True"/>
-        <ComboBox x:Name="LatitudeSignComboBox" HorizontalAlignment="Left" Margin="18,105,0,0" VerticalAlignment="Top" Width="65" Height="32" SelectedIndex="0" FontFamily="Segoe UI">
+        <TextBox x:Name="LatitudeBox" HorizontalAlignment="Left" Margin="112,56,0,0" Text="" VerticalAlignment="Top" Width="223" FontFamily="Segoe UI" PlaceholderText="Latitude" InputScope="Number" MaxLength="9" TextChanged="LatitudeBox_TextChanged"/>
+        <TextBlock x:Name="LatitudeTextBlock" HorizontalAlignment="Left" Margin="18,30,0,0" Text="Latitude" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Segoe UI"/>
+        <TextBox x:Name="LongitudeBox" HorizontalAlignment="Left" Margin="112,131,0,0" Text="" VerticalAlignment="Top" RenderTransformOrigin="0.475,0.134" Width="223" PlaceholderText="Longitude" InputScope="Number" MaxLength="10" TextChanged="LongitudeBox_TextChanged"/>
+        <TextBlock x:Name="LongitudeTextBlock" HorizontalAlignment="Left" Margin="18,103,0,0" Text="Longitude" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Segoe UI"/>
+        <Button x:Name="ValidateButton" Content="Validate" HorizontalAlignment="Left" Margin="18,184,0,0" VerticalAlignment="Top" FontFamily="Segoe UI" Width="317" Click="ValidateButton_Click" IsEnabled="False"/>
+        <ComboBox x:Name="LatitudeSignComboBox" HorizontalAlignment="Left" Margin="18,56,0,0" VerticalAlignment="Top" Width="65" Height="32" SelectedIndex="0" FontFamily="Segoe UI">
             <x:String>+</x:String>
             <x:String>-</x:String>
         </ComboBox>
-        <ComboBox x:Name="LongitudeSignComboBox" HorizontalAlignment="Left" Margin="18,182,0,0" VerticalAlignment="Top" Width="65" SelectedIndex="0" FontFamily="Segoe UI">
+        <ComboBox x:Name="LongitudeSignComboBox" HorizontalAlignment="Left" Margin="18,132,0,0" VerticalAlignment="Top" Width="65" SelectedIndex="0" FontFamily="Segoe UI">
             <x:String>+</x:String>
             <x:String>-</x:String>
         </ComboBox>
-        <TextBlock x:Name="AppTitle" HorizontalAlignment="Center" Margin="0,29,0,0" Text="IoTLab sensors" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20"/>
+        <TextBlock x:Name="AppTitle" HorizontalAlignment="Center" Margin="0,1,0,0" Text="IoTLab sensors" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20"/>
+        <Image x:Name="MoteImage" HorizontalAlignment="Center" Height="84" Margin="0,228,0,0" VerticalAlignment="Top" Width="87" Source="/Assets/icons8-iot-sensor-100.png" Visibility="Collapsed"/>
+        <TextBlock x:Name="MoteTextBlock" HorizontalAlignment="Center" Margin="0,314,0,0" Text="Mote 42.2" TextWrapping="Wrap" VerticalAlignment="Top" Visibility="Collapsed"/>
+        <TextBlock x:Name="MoteLocationTextBlock" HorizontalAlignment="Left" Margin="133,333,0,0" Text="Mr. CHOLEZ's Office" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="10" FocusVisualPrimaryBrush="White" Visibility="Collapsed">
+            <TextBlock.Foreground>
+                <SolidColorBrush Color="#FFC7C0C2"/>
+            </TextBlock.Foreground>
+        </TextBlock>
+        <Rectangle x:Name="TemperatureRectangle" HorizontalAlignment="Left" Height="106" Margin="46,362,0,0" VerticalAlignment="Top" Width="113" FocusVisualPrimaryBrush="White" FocusVisualSecondaryBrush="#99FFFFFF" Stroke="#FF656565" RadiusX="8" RadiusY="8" Visibility="Collapsed"/>
+        <Rectangle x:Name="HumidityRectangle" HorizontalAlignment="Left" Height="106" Margin="199,362,0,0" VerticalAlignment="Top" Width="113" Stroke="#FF656565" RadiusX="8" RadiusY="8" Visibility="Collapsed"/>
+        <Rectangle x:Name="BatteryRectangle" HorizontalAlignment="Left" Height="106" Margin="46,486,0,0" VerticalAlignment="Top" Width="113" FocusVisualPrimaryBrush="{x:Null}" Stroke="#FF656565" RadiusX="8" RadiusY="8" Visibility="Collapsed"/>
+        <Rectangle x:Name="BrightnessRectangle" HorizontalAlignment="Left" Height="106" Margin="199,486,0,0" VerticalAlignment="Top" Width="113" Stroke="#FF656565" RadiusX="8" RadiusY="8" Visibility="Collapsed"/>
+        <TextBlock x:Name="TemperatureTextBlock" HorizontalAlignment="Left" Margin="64,369,0,0" Text="Temperature" TextWrapping="Wrap" VerticalAlignment="Top" Visibility="Collapsed"/>
+        <TextBlock x:Name="HumidityTextBlock" HorizontalAlignment="Left" Margin="227,369,0,0" Text="Humidity" TextWrapping="Wrap" VerticalAlignment="Top" Visibility="Collapsed"/>
+        <TextBlock x:Name="BatteryTextBlock" HorizontalAlignment="Left" Margin="79,494,0,0" Text="Battery" TextWrapping="Wrap" VerticalAlignment="Top" Visibility="Collapsed"/>
+        <TextBlock x:Name="BrightnessTextBlock" HorizontalAlignment="Left" Margin="222,494,0,0" Text="Brightness" TextWrapping="Wrap" VerticalAlignment="Top" Visibility="Collapsed"/>
+        <Image x:Name="TemperatureImage" HorizontalAlignment="Left" Height="37" Margin="85,397,0,0" VerticalAlignment="Top" Width="37" Source="/Assets/icons8-thermometer-40.png" Visibility="Collapsed"/>
+        <Image x:Name="HumidityImage" HorizontalAlignment="Left" Height="37" Margin="237,397,0,0" VerticalAlignment="Top" Width="37" Source="/Assets/icons8-wet-80.png" Visibility="Collapsed"/>
+        <Image x:Name="BatteryImage" HorizontalAlignment="Left" Height="37" Margin="82,522,0,0" VerticalAlignment="Top" Width="37" Source="/Assets/icons8-battery-level-96.png" Visibility="Collapsed"/>
+        <Image x:Name="BrightnessImage" HorizontalAlignment="Left" Height="37" Margin="237,522,0,0" VerticalAlignment="Top" Width="37" Source="/Assets/icons8-ceiling-light-64.png" Visibility="Collapsed"/>
+        <TextBlock x:Name="TemperatureValueTextBlock" HorizontalAlignment="Left" Margin="51,442,0,0" Text="22 °C" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold" Width="104" TextAlignment="Center" Visibility="Collapsed"/>
+        <TextBlock x:Name="HumidityValueTextBlock" HorizontalAlignment="Left" Margin="202,443,0,0" Text="75 %" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold" Width="107" TextAlignment="Center" Visibility="Collapsed"/>
+        <TextBlock x:Name="BatteryValueTextBlock" HorizontalAlignment="Left" Margin="49,568,0,0" Text="50 %" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold" Width="107" TextAlignment="Center" Visibility="Collapsed"/>
+        <TextBlock x:Name="BrightnessValueTextBlock" HorizontalAlignment="Left" Margin="202,568,0,0" Text="210 Lx" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold" Width="107" TextAlignment="Center" Visibility="Collapsed"/>
+        <TextBlock x:Name="NoMoteDisplayedTextBlock" HorizontalAlignment="Center" Margin="0,0,0,199" Text="Please enter your coordinates to show the closest mote's measure" TextWrapping="Wrap" VerticalAlignment="Bottom" FontSize="18" Width="260" TextAlignment="Center" FontFamily="Segoe UI" FocusVisualPrimaryBrush="White" Foreground="#FF656565"/>
     </Grid>
 </Page>
