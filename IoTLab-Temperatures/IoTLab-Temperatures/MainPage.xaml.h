@@ -29,10 +29,9 @@ namespace IoTLab_Temperatures
 		void RenderClosestMoteBrightness();
 		void RenderClosestMoteHumidity();
 		void RenderClosestMoteMeasure();
-		double ToDouble(Platform::String ^ value);
 		void RenderClosestMoteTemperature();
-		void UpdateDisplayedMeasures(double battery, double brightness, double humidity, double temperature);
 		void RetrieveTemperatureFromIoTLab();
+		void UpdateDisplayedMeasures(double battery, double brightness, double humidity, double temperature);
 		void UpdateValidateButtonValidity();
 		void ValidateButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 	};

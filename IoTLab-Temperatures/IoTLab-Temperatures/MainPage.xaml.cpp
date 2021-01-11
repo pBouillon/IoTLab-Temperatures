@@ -145,12 +145,7 @@ void IoTLab_Temperatures::MainPage::RenderClosestMoteTemperature() {
 	TemperatureValueTextBlock->Visibility = Windows::UI::Xaml::Visibility::Visible;
 }
 
-double IoTLab_Temperatures::MainPage::ToDouble(Platform::String^ value) {
-	std::wstring tmp(value->Begin());
 
-	std::string stringifiedValue(tmp.begin(), tmp.end());
-
-	return atof(stringifiedValue.c_str());
 void IoTLab_Temperatures::MainPage::RetrieveTemperatureFromIoTLab()
 {
 	closestMote->LoadLatestMeasure();
@@ -197,7 +192,6 @@ void IoTLab_Temperatures::MainPage::ValidateButton_Click(
 	UpdateDisplayedMeasures(battery, brightness, humidity, temperature);
 
 	RenderClosestMoteMeasure();
-	CoordinatesBox->Text = userCoordinate;
 
 	// TODO: retrieve the closest mote
 
