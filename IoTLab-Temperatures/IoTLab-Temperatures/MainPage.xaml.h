@@ -24,7 +24,14 @@ namespace IoTLab_Temperatures
 		bool IsLongitudeValid();
 		void LatitudeBox_TextChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e);
 		void LongitudeBox_TextChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e);
+		void RenderClosestMote();
+		void RenderClosestMoteBattery();
+		void RenderClosestMoteBrightness();
+		void RenderClosestMoteHumidity();
+		void RenderClosestMoteMeasure();
+		void RenderClosestMoteTemperature();
 		void RetrieveTemperatureFromIoTLab();
+		void UpdateDisplayedMeasures(double battery, double brightness, double humidity, double temperature);
 		void UpdateValidateButtonValidity();
 		void ValidateButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 	};
