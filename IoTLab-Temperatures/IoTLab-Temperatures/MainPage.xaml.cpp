@@ -16,7 +16,7 @@
 #include "pch.h"
 #include "GeographicCoordinate.h"
 #include "MainPage.xaml.h"
-#include "MeasureReport.h"
+#include "Mote.h"
 #include "TypeConversion.h"
 
 using namespace IoTLab_Temperatures;
@@ -43,9 +43,17 @@ const Platform::String^ GEOGRAPHIC_COORDINATE_SEPARATOR = ", ";
 
 MainPage::MainPage()
 {
-	RetrieveTemperatureFromIoTLab();
-
 	InitializeComponent();
+
+	// No mote can be defined as the closest on startup since
+	// we do not know the current user's position
+	closestMote = NULL;
+}
+
+
+MainPage::~MainPage()
+{
+	delete closestMote;
 }
 
 
@@ -79,23 +87,9 @@ void IoTLab_Temperatures::MainPage::LongitudeBox_TextChanged(
 }
 
 
-// TODO: Update the closest mote's measure instead of creating a record
 void IoTLab_Temperatures::MainPage::RetrieveTemperatureFromIoTLab()
 {
-	Platform::String^ url = "" + "/data/1/temperature-light2-light1-battery_indicator-humidity/1/";
-	Windows::Foundation::Uri^ uri = ref new Uri(url);
-
-	Windows::Web::Http::HttpClient^ httpClient = ref new HttpClient();
-
-	create_task(httpClient->GetStringAsync(uri))
-		.then([=](Platform::String^ IoTLabResponse)
-	{
-		JsonObject^ jsonResponse = JsonObject::Parse(IoTLabResponse);
-		
-		MeasureReport* report = MeasureReport::FromIotlabResponse(jsonResponse);
-
-		return task_from_result();
-	});
+	closestMote->LoadLatestMeasure();
 }
 
 
@@ -123,4 +117,8 @@ void IoTLab_Temperatures::MainPage::ValidateButton_Click(
 	Platform::String^ userCoordinate = formattedLatitude + GEOGRAPHIC_COORDINATE_SEPARATOR + formattedLongitude;
 
 	CoordinatesBox->Text = userCoordinate;
+
+	// TODO: retrieve the closest mote
+
+	RetrieveTemperatureFromIoTLab();
 }

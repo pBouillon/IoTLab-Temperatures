@@ -66,6 +66,7 @@ void Mote::LoadLatestMeasure()
 	{
 		JsonObject^ jsonResponse = JsonObject::Parse(IoTLabResponse);
 
+		delete this->measure;
 		this->measure = MeasureReport::FromIotlabResponse(jsonResponse);
 
 		return task_from_result();
