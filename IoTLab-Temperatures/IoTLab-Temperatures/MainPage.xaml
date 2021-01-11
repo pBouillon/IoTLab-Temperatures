@@ -24,8 +24,8 @@
         </ComboBox>
         <TextBlock x:Name="AppTitle" HorizontalAlignment="Center" Margin="0,1,0,0" Text="IoTLab sensors" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20"/>
         <Image x:Name="MoteImage" HorizontalAlignment="Center" Height="84" Margin="0,228,0,0" VerticalAlignment="Top" Width="87" Source="/Assets/icons8-iot-sensor-100.png" Visibility="Collapsed"/>
-        <TextBlock x:Name="MoteTextBlock" HorizontalAlignment="Center" Margin="0,314,0,0" Text="Mote 42.2" TextWrapping="Wrap" VerticalAlignment="Top" Visibility="Collapsed"/>
-        <TextBlock x:Name="MoteLocationTextBlock" HorizontalAlignment="Left" Margin="133,333,0,0" Text="Mr. CHOLEZ's Office" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="10" FocusVisualPrimaryBrush="White" Visibility="Collapsed">
+        <TextBlock x:Name="MoteTextBlock" HorizontalAlignment="Center" Margin="0,314,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" Visibility="Collapsed"/>
+        <TextBlock x:Name="MoteLocationTextBlock" HorizontalAlignment="Left" Margin="133,333,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="10" FocusVisualPrimaryBrush="White" TextAlignment="Center" Visibility="Collapsed">
             <TextBlock.Foreground>
                 <SolidColorBrush Color="#FFC7C0C2"/>
             </TextBlock.Foreground>

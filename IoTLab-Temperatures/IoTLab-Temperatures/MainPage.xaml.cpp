@@ -125,6 +125,13 @@ void IoTLab_Temperatures::MainPage::RenderClosestMoteMeasure() {
 	// Collapse the default text when no mote's measure is displayed
 	NoMoteDisplayedTextBlock->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
 
+	// Update the mote's label
+	Platform::String^ moteName = typeConversion::ToPlatformString(closestMote->GetName());
+	MoteTextBlock->Text = moteName;
+
+	Platform::String^ moteCommonName = typeConversion::ToPlatformString(closestMote->GetCommonName());
+	MoteLocationTextBlock->Text = moteCommonName;
+
 	// Display Mote information (name and location) & measures (battery, brightness, humidity and temperature)
 	RenderClosestMote();
 	RenderClosestMoteBattery();

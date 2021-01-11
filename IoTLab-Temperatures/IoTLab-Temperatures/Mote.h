@@ -36,11 +36,15 @@ public:
 	// Get a default set of motes to work with and put it in the buffer
 	static void Mote::GenerateDefaultMoteSet(std::vector<Mote>&);
 
+	std::string GetCommonName();
+
 	// Get the distance between this mote and a coordinate in kilometers
 	double GetDistanceToThisMoteInKm(GeographicCoordinate&);
 
 	// Get the mote's measure
 	MeasureReport* GetMeasure();
+
+	std::string GetName();
 
 	// Retrieve the latest measure of the mote from the IoTLab base station
 	void LoadLatestMeasure();

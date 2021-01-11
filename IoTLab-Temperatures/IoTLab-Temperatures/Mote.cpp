@@ -47,9 +47,19 @@ double Mote::GetDistanceToThisMoteInKm(GeographicCoordinate& coordinate)
 	return this->coordinate->GetDistanceFromInKm(coordinate);
 }
 
+std::string Mote::GetCommonName()
+{
+	return this->commonName;
+}
+
 MeasureReport* Mote::GetMeasure()
 {
 	return this->measure;
+}
+
+std::string Mote::GetName()
+{
+	return this->name;
 }
 
 void Mote::LoadLatestMeasure()
