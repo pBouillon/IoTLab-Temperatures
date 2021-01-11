@@ -33,7 +33,6 @@ class MeasureReport
 	void SetTemperature(double);
 
 public:
-
 	// Create an empty measure report with all default values (0)
 	MeasureReport();
 
@@ -43,5 +42,12 @@ public:
 
 	// Create the report from the IoTLab response
 	static MeasureReport* FromIotlabResponse(JsonObject^);
-};
 
+	double GetBattery();
+
+	double GetBrightness();
+
+	double GetHumidity();
+
+	double GetTemperature();
+};

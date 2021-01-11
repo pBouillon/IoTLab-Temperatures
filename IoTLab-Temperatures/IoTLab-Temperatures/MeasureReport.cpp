@@ -107,6 +107,30 @@ MeasureReport* MeasureReport::FromIotlabResponse(JsonObject^ json)
 }
 
 
+double MeasureReport::GetBattery()
+{
+	return battery;
+}
+
+
+double MeasureReport::GetBrightness()
+{
+	return brightness;
+}
+
+
+double MeasureReport::GetHumidity()
+{
+	return humidity;
+}
+
+
+double MeasureReport::GetTemperature()
+{
+	return temperature;
+}
+
+
 void MeasureReport::SetBattery(double battery)
 {
 	this->battery = battery;
@@ -129,4 +153,3 @@ void MeasureReport::SetTemperature(double temperature)
 {
 	this->temperature = temperature;
 }
-
