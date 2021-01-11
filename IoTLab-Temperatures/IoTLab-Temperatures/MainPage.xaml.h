@@ -17,7 +17,7 @@ namespace IoTLab_Temperatures
 
 	private:
 		Mote* closestMote;
-		std::vector<Mote> motes;
+		std::vector<Mote*> motes;
 
 		~MainPage();
 

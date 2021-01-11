@@ -26,7 +26,7 @@ GeographicCoordinate::GeographicCoordinate(double latitude, double longitude)
 	this->longitude = longitude;
 }
 
-// Evaluate the distance between two geographic coordinates in kilometers
+// Evaluate the distance between two geographic coordinates in kilometers using the Haversine formula
 // Algorithm from: http://www.movable-type.co.uk/scripts/latlong.html
 // And an implementation in JS from: https://stackoverflow.com/a/365853
 double GeographicCoordinate::GetDistanceFromInKm(GeographicCoordinate& coordinate)
@@ -37,8 +37,8 @@ double GeographicCoordinate::GetDistanceFromInKm(GeographicCoordinate& coordinat
 	double latitudeInRadian = degree::ToRadians(this->latitude);
 	double targetLatitudeInRadian = degree::ToRadians(coordinate.GetLatitude());
 
-	double a = sin(distanceBetweenLatitudesInRadian / 2) * sin(distanceBetweenLatitudesInRadian / 2)
-		+ sin(distanceBetweenLongitudesInRadian / 2) * sin(distanceBetweenLongitudesInRadian / 2)
+	double a =  pow(sin(distanceBetweenLatitudesInRadian / 2), 2)
+		+  pow(sin(distanceBetweenLongitudesInRadian / 2), 2)
 		* cos(latitudeInRadian)
 		* cos(targetLatitudeInRadian);
 
