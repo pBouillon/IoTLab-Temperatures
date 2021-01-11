@@ -80,7 +80,7 @@ MeasureReport* MeasureReport::FromIotlabResponse(JsonObject^ json)
 		->GetArray();
 
 	// Iterate on the measures and extract their values to populate the created report
-	for (int i = 0; i < measures->Size; ++i) {
+	for (unsigned int i = 0; i < measures->Size; ++i) {
 		JsonObject^ row = measures->GetObjectAt(i);
 
 		double measure = ExtractValue(row);

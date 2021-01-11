@@ -3,8 +3,6 @@
 // Implementation of the MainPage class.
 //
 
-#define _CRT_SECURE_NO_DEPRECATE
-
 #include <codecvt>
 #include <iterator>
 #include <locale> 
@@ -42,13 +40,9 @@ using namespace Windows::Web::Http;
 // Separator used when displaying alongside the latitude and the longitude of the user
 const Platform::String^ GEOGRAPHIC_COORDINATE_SEPARATOR = ", ";
 
-// IoTLab API URI
-const Platform::String^ IOTLAB_URI = "http://iotlab.telecomnancy.eu:8080/iotlab/rest";
-
 
 MainPage::MainPage()
 {
-	// TODO: remove
 	RetrieveTemperatureFromIoTLab();
 
 	InitializeComponent();
@@ -88,7 +82,7 @@ void IoTLab_Temperatures::MainPage::LongitudeBox_TextChanged(
 // TODO: Update the closest mote's measure instead of creating a record
 void IoTLab_Temperatures::MainPage::RetrieveTemperatureFromIoTLab()
 {
-	Platform::String^ url = IOTLAB_URI + "/data/1/temperature-light2-light1-battery_indicator-humidity/1/";
+	Platform::String^ url = "" + "/data/1/temperature-light2-light1-battery_indicator-humidity/1/";
 	Windows::Foundation::Uri^ uri = ref new Uri(url);
 
 	Windows::Web::Http::HttpClient^ httpClient = ref new HttpClient();
