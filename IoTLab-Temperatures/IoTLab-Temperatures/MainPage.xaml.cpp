@@ -104,6 +104,7 @@ void IoTLab_Temperatures::MainPage::RenderClosestMote() {
 	MoteTextBlock->Visibility = Windows::UI::Xaml::Visibility::Visible;
 }
 
+
 void IoTLab_Temperatures::MainPage::RenderClosestMoteBattery() {
 	BatteryImage->Visibility = Windows::UI::Xaml::Visibility::Visible;
 	BatteryTextBlock->Visibility = Windows::UI::Xaml::Visibility::Visible;
@@ -196,10 +197,6 @@ void IoTLab_Temperatures::MainPage::ValidateButton_Click(
 	Platform::String^ longitudeValue = LongitudeBox->Text;
 	Platform::String^ longitudeSign = LongitudeSignComboBox->SelectedItem->ToString();
 	Platform::String^ formattedLongitude = longitudeSign + longitudeValue;
-
-	Platform::String^ displayedUserCoordinate = formattedLatitude + GEOGRAPHIC_COORDINATE_SEPARATOR + formattedLongitude;
-
-	CoordinatesBox->Text = displayedUserCoordinate;
 
 	GeographicCoordinate userCoordinate (
 		typeConversion::ToDouble(formattedLatitude), typeConversion::ToDouble(formattedLongitude));
