@@ -47,6 +47,11 @@ double Mote::GetDistanceToThisMoteInKm(GeographicCoordinate& coordinate)
 	return this->coordinate->GetDistanceFromInKm(coordinate);
 }
 
+MeasureReport* Mote::GetMeasure()
+{
+	return this->measure;
+}
+
 void Mote::LoadLatestMeasure()
 {
 	Platform::String^ measureUri = IOTLAB_URI + MOTE_MEASURE_URI

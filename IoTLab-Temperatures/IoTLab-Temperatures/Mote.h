@@ -39,6 +39,9 @@ public:
 	// Get the distance between this mote and a coordinate in kilometers
 	double GetDistanceToThisMoteInKm(GeographicCoordinate&);
 
+	// Get the mote's measure
+	MeasureReport* GetMeasure();
+
 	// Retrieve the latest measure of the mote from the IoTLab base station
 	void LoadLatestMeasure();
 };
