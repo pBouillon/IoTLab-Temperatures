@@ -22,5 +22,6 @@ namespace IoTLab_Temperatures
 		double ToDouble(Platform::String ^ value);
 		void UpdateValidateButtonValidity();
 		void ValidateButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
+		void UpdateDisplayedMeasures(double battery, double brightness, double humidity, double temperature);
 	};
 }

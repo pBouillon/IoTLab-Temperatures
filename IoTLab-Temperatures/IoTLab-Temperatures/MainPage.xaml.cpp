@@ -28,6 +28,14 @@ using namespace Windows::UI::Xaml::Navigation;
 const Platform::String^ GEOGRAPHIC_COORDINATE_SEPARATOR = ", ";
 
 
+// TODO: Replace with mote
+double battery = 50.0;
+double brightness = 210.0;
+double humidity = 75.0;
+double temperature = 22.0;
+
+
+
 MainPage::MainPage()
 {
 	InitializeComponent();
@@ -95,4 +103,19 @@ void IoTLab_Temperatures::MainPage::ValidateButton_Click(
 	Platform::String^ formattedLongitude = longitudeSign + longitudeValue;
 
 	Platform::String^ userCoordinate = formattedLatitude + GEOGRAPHIC_COORDINATE_SEPARATOR + formattedLongitude;
+
+	// TODO: replace with mote's measures
+	battery += 4;
+	brightness += 4;
+	humidity += 4;
+	temperature += 4;
+	UpdateDisplayedMeasures(battery, brightness, humidity, temperature);
+}
+
+void IoTLab_Temperatures::MainPage::UpdateDisplayedMeasures(double battery, double brightness, double humidity, double temperature) {
+
+	BatteryValueTextBlock->Text = battery.ToString() + " %";
+	BrightnessValueTextBlock->Text = brightness.ToString() + " Lx";
+	HumidityValueTextBlock->Text = humidity.ToString() + " %";
+	TemperatureValueTextBlock->Text = temperature.ToString() + " °C";
 }

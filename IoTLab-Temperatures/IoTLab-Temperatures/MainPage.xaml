@@ -37,14 +37,14 @@
         <TextBlock x:Name="TemperatureTextBlock" HorizontalAlignment="Left" Margin="64,369,0,0" Text="Temperature" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <TextBlock x:Name="HumidityTextBlock" HorizontalAlignment="Left" Margin="227,369,0,0" Text="Humidity" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <TextBlock x:Name="BatteryTextBlock" HorizontalAlignment="Left" Margin="79,494,0,0" Text="Battery" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <TextBlock x:Name="LuminosityTextBlock" HorizontalAlignment="Left" Margin="222,494,0,0" Text="Luminosity" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TextBlock x:Name="BrightnessTextBlock" HorizontalAlignment="Left" Margin="222,494,0,0" Text="Brightness" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <Image x:Name="ThermometerImage" HorizontalAlignment="Left" Height="37" Margin="85,397,0,0" VerticalAlignment="Top" Width="37" Source="/Assets/icons8-thermometer-40.png"/>
         <Image x:Name="HumidityImage" HorizontalAlignment="Left" Height="37" Margin="237,397,0,0" VerticalAlignment="Top" Width="37" Source="/Assets/icons8-wet-80.png"/>
         <Image x:Name="BatteryImage" HorizontalAlignment="Left" Height="37" Margin="82,522,0,0" VerticalAlignment="Top" Width="37" Source="/Assets/icons8-battery-level-96.png"/>
-        <Image x:Name="LuminosityImage" HorizontalAlignment="Left" Height="37" Margin="237,522,0,0" VerticalAlignment="Top" Width="37" Source="/Assets/icons8-ceiling-light-64.png"/>
+        <Image x:Name="BrightnessImage" HorizontalAlignment="Left" Height="37" Margin="237,522,0,0" VerticalAlignment="Top" Width="37" Source="/Assets/icons8-ceiling-light-64.png"/>
         <TextBlock x:Name="TemperatureValueTextBlock" HorizontalAlignment="Left" Margin="51,442,0,0" Text="22 °C" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold" Width="104" TextAlignment="Center"/>
         <TextBlock x:Name="HumidityValueTextBlock" HorizontalAlignment="Left" Margin="202,443,0,0" Text="75 %" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold" Width="107" TextAlignment="Center"/>
         <TextBlock x:Name="BatteryValueTextBlock" HorizontalAlignment="Left" Margin="49,568,0,0" Text="50 %" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold" Width="107" TextAlignment="Center"/>
-        <TextBlock x:Name="LuminosityValueTextBlock" HorizontalAlignment="Left" Margin="202,568,0,0" Text="210 Lx" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold" Width="107" TextAlignment="Center"/>
+        <TextBlock x:Name="BrightnessValueTextBlock" HorizontalAlignment="Left" Margin="202,568,0,0" Text="210 Lx" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold" Width="107" TextAlignment="Center"/>
     </Grid>
 </Page>
