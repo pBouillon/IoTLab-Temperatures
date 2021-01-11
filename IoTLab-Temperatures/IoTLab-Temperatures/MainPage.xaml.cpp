@@ -72,11 +72,61 @@ void IoTLab_Temperatures::MainPage::LongitudeBox_TextChanged(
 }
 
 
+void IoTLab_Temperatures::MainPage::RenderClosestMote() {
+	MoteImage->Visibility = Windows::UI::Xaml::Visibility::Visible;
+	MoteLocationTextBlock->Visibility = Windows::UI::Xaml::Visibility::Visible;
+	MoteTextBlock->Visibility = Windows::UI::Xaml::Visibility::Visible;
+}
+
+void IoTLab_Temperatures::MainPage::RenderClosestMoteBattery() {
+	BatteryImage->Visibility = Windows::UI::Xaml::Visibility::Visible;
+	BatteryTextBlock->Visibility = Windows::UI::Xaml::Visibility::Visible;
+	BatteryRectangle->Visibility = Windows::UI::Xaml::Visibility::Visible;
+	BatteryValueTextBlock->Visibility = Windows::UI::Xaml::Visibility::Visible;
+}
+
+
+void IoTLab_Temperatures::MainPage::RenderClosestMoteBrightness() {
+	BrightnessImage->Visibility = Windows::UI::Xaml::Visibility::Visible;
+	BrightnessTextBlock->Visibility = Windows::UI::Xaml::Visibility::Visible;
+	BrightnessRectangle->Visibility = Windows::UI::Xaml::Visibility::Visible;
+	BrightnessValueTextBlock->Visibility = Windows::UI::Xaml::Visibility::Visible;
+}
+
+
+void IoTLab_Temperatures::MainPage::RenderClosestMoteHumidity() {
+	HumidityImage->Visibility = Windows::UI::Xaml::Visibility::Visible;
+	HumidityTextBlock->Visibility = Windows::UI::Xaml::Visibility::Visible;
+	HumidityRectangle->Visibility = Windows::UI::Xaml::Visibility::Visible;
+	HumidityValueTextBlock->Visibility = Windows::UI::Xaml::Visibility::Visible;
+}
+
+void IoTLab_Temperatures::MainPage::RenderClosestMoteMeasure() {
+
+	// Collapse the default text when no mote's measure is displayed
+	NoMoteDisplayedTextBlock->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
+
+	// Display Mote information (name and location) & measures (battery, brightness, humidity and temperature)
+	RenderClosestMote();
+	RenderClosestMoteBattery();
+	RenderClosestMoteBrightness();
+	RenderClosestMoteHumidity();
+	RenderClosestMoteTemperature();
+}
+
+
+void IoTLab_Temperatures::MainPage::RenderClosestMoteTemperature() {
+	TemperatureImage->Visibility = Windows::UI::Xaml::Visibility::Visible;
+	TemperatureTextBlock->Visibility = Windows::UI::Xaml::Visibility::Visible;
+	TemperatureRectangle->Visibility = Windows::UI::Xaml::Visibility::Visible;
+	TemperatureValueTextBlock->Visibility = Windows::UI::Xaml::Visibility::Visible;
+}
+
 double IoTLab_Temperatures::MainPage::ToDouble(Platform::String^ value) {
 	std::wstring tmp(value->Begin());
 
 	std::string stringifiedValue(tmp.begin(), tmp.end());
-	
+
 	return atof(stringifiedValue.c_str());
 }
 
@@ -86,6 +136,15 @@ void IoTLab_Temperatures::MainPage::UpdateValidateButtonValidity()
 {
 	ValidateButton->IsEnabled = IsLatitudeValid()
 		&& IsLongitudeValid();
+}
+
+
+void IoTLab_Temperatures::MainPage::UpdateDisplayedMeasures(double battery, double brightness, double humidity, double temperature) {
+
+	BatteryValueTextBlock->Text = battery.ToString() + " %";
+	BrightnessValueTextBlock->Text = brightness.ToString() + " Lx";
+	HumidityValueTextBlock->Text = humidity.ToString() + " %";
+	TemperatureValueTextBlock->Text = temperature.ToString() + " °C";
 }
 
 
@@ -110,12 +169,7 @@ void IoTLab_Temperatures::MainPage::ValidateButton_Click(
 	humidity += 4;
 	temperature += 4;
 	UpdateDisplayedMeasures(battery, brightness, humidity, temperature);
+
+	RenderClosestMoteMeasure();
 }
 
-void IoTLab_Temperatures::MainPage::UpdateDisplayedMeasures(double battery, double brightness, double humidity, double temperature) {
-
-	BatteryValueTextBlock->Text = battery.ToString() + " %";
-	BrightnessValueTextBlock->Text = brightness.ToString() + " Lx";
-	HumidityValueTextBlock->Text = humidity.ToString() + " %";
-	TemperatureValueTextBlock->Text = temperature.ToString() + " °C";
-}
