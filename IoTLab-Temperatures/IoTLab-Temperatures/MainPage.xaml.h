@@ -33,7 +33,7 @@ namespace IoTLab_Temperatures
 		void RenderClosestMoteTemperature();
 		void RetrieveTemperatureFromIoTLab();
 		void SetClosestMoteFromCoordinate(GeographicCoordinate& coordinate);
-		void UpdateDisplayedMeasures(double battery, double brightness, double humidity, double temperature);
+		void UpdateDisplayedMeasures();
 		void UpdateValidateButtonValidity();
 		void ValidateButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 	};

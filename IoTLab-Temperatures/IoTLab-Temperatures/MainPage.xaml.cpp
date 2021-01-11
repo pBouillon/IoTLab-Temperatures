@@ -41,14 +41,6 @@ using namespace Windows::Web::Http;
 const Platform::String^ GEOGRAPHIC_COORDINATE_SEPARATOR = ", ";
 
 
-// TODO: Replace with mote
-double battery = 50.0;
-double brightness = 210.0;
-double humidity = 75.0;
-double temperature = 22.0;
-
-
-
 MainPage::MainPage()
 {
 	InitializeComponent();
@@ -177,11 +169,16 @@ void IoTLab_Temperatures::MainPage::UpdateValidateButtonValidity()
 }
 
 
-void IoTLab_Temperatures::MainPage::UpdateDisplayedMeasures(double battery, double brightness, double humidity, double temperature) {
-	BatteryValueTextBlock->Text = battery.ToString() + " %";
-	BrightnessValueTextBlock->Text = brightness.ToString() + " Lx";
-	HumidityValueTextBlock->Text = humidity.ToString() + " %";
-	TemperatureValueTextBlock->Text = temperature.ToString() + " °C";
+void IoTLab_Temperatures::MainPage::UpdateDisplayedMeasures() {
+	MeasureReport* measure = this->closestMote->GetMeasure();
+
+	BatteryValueTextBlock->Text = measure->GetBattery().ToString() + " %";
+	
+	BrightnessValueTextBlock->Text = measure->GetBrightness().ToString() + " Lx";
+	
+	HumidityValueTextBlock->Text = measure->GetHumidity().ToString() + " %";
+
+	TemperatureValueTextBlock->Text = measure->GetTemperature().ToString() + " °C";
 }
 
 
@@ -205,12 +202,7 @@ void IoTLab_Temperatures::MainPage::ValidateButton_Click(
 
 	RetrieveTemperatureFromIoTLab();
 
-	// TODO: replace with mote's measures
-	battery += 4;
-	brightness += 4;
-	humidity += 4;
-	temperature += 4;
-	UpdateDisplayedMeasures(battery, brightness, humidity, temperature);
+	UpdateDisplayedMeasures();
 
 	RenderClosestMoteMeasure();
 }
