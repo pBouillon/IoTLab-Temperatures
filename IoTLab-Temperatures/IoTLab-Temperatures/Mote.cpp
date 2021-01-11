@@ -16,11 +16,6 @@ const Platform::String^ IOTLAB_URI = "http://iotlab.telecomnancy.eu:8080/iotlab/
 // The mote name should be appended to query only one mote.
 const Platform::String^ MOTE_MEASURE_URI = "/data/1/temperature-light2-light1-battery_indicator-humidity/1";
 
-Mote::~Mote()
-{
-	delete this->measure;
-}
-
 Mote::Mote(GeographicCoordinate* coordinate, std::string name, std::string commonName)
 {
 	this->commonName = commonName;

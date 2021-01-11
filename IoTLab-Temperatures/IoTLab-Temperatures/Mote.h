@@ -27,8 +27,6 @@ class Mote
 	std::string name;
 
 public:
-	~Mote();
-
 	// Create a new mote from a geographic coordinate, its identifier and its name
 	Mote(GeographicCoordinate*, std::string, std::string);
 

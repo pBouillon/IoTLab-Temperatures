@@ -56,6 +56,9 @@ MainPage::MainPage()
 	// No mote can be defined as the closest on startup since
 	// we do not know the current user's position
 	closestMote = NULL;
+
+	// Generate the default mote set with whom the app will be working
+	Mote::GenerateDefaultMoteSet(motes);
 }
 
 
@@ -100,6 +103,7 @@ void IoTLab_Temperatures::MainPage::RenderClosestMote() {
 	MoteLocationTextBlock->Visibility = Windows::UI::Xaml::Visibility::Visible;
 	MoteTextBlock->Visibility = Windows::UI::Xaml::Visibility::Visible;
 }
+
 
 void IoTLab_Temperatures::MainPage::RenderClosestMoteBattery() {
 	BatteryImage->Visibility = Windows::UI::Xaml::Visibility::Visible;
@@ -152,6 +156,19 @@ void IoTLab_Temperatures::MainPage::RetrieveTemperatureFromIoTLab()
 }
 
 
+void IoTLab_Temperatures::MainPage::SetClosestMoteFromCoordinate(GeographicCoordinate& coordinate) {
+	double shortestDistance = INT_MAX;
+
+	for (unsigned int i = 0; i < motes.size(); ++i) {
+		Mote current = motes[i];
+		double distance = current.GetDistanceToThisMoteInKm(coordinate);
+
+		if (distance < shortestDistance) {
+			closestMote = &motes[i];
+		}
+	}
+}
+
 // Enable the "Validate" button depending of the validity of the other fields
 void IoTLab_Temperatures::MainPage::UpdateValidateButtonValidity()
 {
@@ -181,7 +198,12 @@ void IoTLab_Temperatures::MainPage::ValidateButton_Click(
 	Platform::String^ longitudeSign = LongitudeSignComboBox->SelectedItem->ToString();
 	Platform::String^ formattedLongitude = longitudeSign + longitudeValue;
 
-	Platform::String^ userCoordinate = formattedLatitude + GEOGRAPHIC_COORDINATE_SEPARATOR + formattedLongitude;
+	GeographicCoordinate userCoordinate (
+		typeConversion::ToDouble(formattedLatitude), typeConversion::ToDouble(formattedLongitude));
+
+	SetClosestMoteFromCoordinate(userCoordinate);
+
+	RetrieveTemperatureFromIoTLab();
 
 	// TODO: replace with mote's measures
 	battery += 4;
@@ -191,9 +213,5 @@ void IoTLab_Temperatures::MainPage::ValidateButton_Click(
 	UpdateDisplayedMeasures(battery, brightness, humidity, temperature);
 
 	RenderClosestMoteMeasure();
-
-	// TODO: retrieve the closest mote
-
-	RetrieveTemperatureFromIoTLab();
 }
 

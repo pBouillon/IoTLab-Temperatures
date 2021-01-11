@@ -17,6 +17,7 @@ namespace IoTLab_Temperatures
 
 	private:
 		Mote* closestMote;
+		std::vector<Mote> motes;
 
 		~MainPage();
 
@@ -31,6 +32,7 @@ namespace IoTLab_Temperatures
 		void RenderClosestMoteMeasure();
 		void RenderClosestMoteTemperature();
 		void RetrieveTemperatureFromIoTLab();
+		void SetClosestMoteFromCoordinate(GeographicCoordinate& coordinate);
 		void UpdateDisplayedMeasures(double battery, double brightness, double humidity, double temperature);
 		void UpdateValidateButtonValidity();
 		void ValidateButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
