@@ -17,10 +17,11 @@ namespace IoTLab_Temperatures
 
 	private:
 		Mote* closestMote;
-		std::vector<Mote> motes;
+		std::vector<Mote*> motes;
 
 		~MainPage();
 
+		void InitializeMotes();
 		bool IsLatitudeValid();
 		bool IsLongitudeValid();
 		void LatitudeBox_TextChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e);
@@ -33,7 +34,7 @@ namespace IoTLab_Temperatures
 		void RenderClosestMoteTemperature();
 		void RetrieveTemperatureFromIoTLab();
 		void SetClosestMoteFromCoordinate(GeographicCoordinate& coordinate);
-		void UpdateDisplayedMeasures(double battery, double brightness, double humidity, double temperature);
+		void UpdateDisplayedMeasures();
 		void UpdateValidateButtonValidity();
 		void ValidateButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 	};

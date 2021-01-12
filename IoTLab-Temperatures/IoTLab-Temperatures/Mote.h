@@ -27,17 +27,23 @@ class Mote
 	std::string name;
 
 public:
+	Mote();
+
 	// Create a new mote from a geographic coordinate, its identifier and its name
 	Mote(GeographicCoordinate*, std::string, std::string);
 
 	// Create a new mote from its coordinates, its identifier and its name
 	Mote(double, double, std::string, std::string);
 
-	// Get a default set of motes to work with and put it in the buffer
-	static void Mote::GenerateDefaultMoteSet(std::vector<Mote>&);
+	std::string GetCommonName();
 
 	// Get the distance between this mote and a coordinate in kilometers
 	double GetDistanceToThisMoteInKm(GeographicCoordinate&);
+
+	// Get the mote's measure
+	MeasureReport* GetMeasure();
+
+	std::string GetName();
 
 	// Retrieve the latest measure of the mote from the IoTLab base station
 	void LoadLatestMeasure();

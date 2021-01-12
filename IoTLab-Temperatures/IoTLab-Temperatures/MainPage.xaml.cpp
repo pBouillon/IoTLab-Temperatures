@@ -41,14 +41,6 @@ using namespace Windows::Web::Http;
 const Platform::String^ GEOGRAPHIC_COORDINATE_SEPARATOR = ", ";
 
 
-// TODO: Replace with mote
-double battery = 50.0;
-double brightness = 210.0;
-double humidity = 75.0;
-double temperature = 22.0;
-
-
-
 MainPage::MainPage()
 {
 	InitializeComponent();
@@ -58,13 +50,33 @@ MainPage::MainPage()
 	closestMote = NULL;
 
 	// Generate the default mote set with whom the app will be working
-	Mote::GenerateDefaultMoteSet(motes);
+	InitializeMotes();
 }
 
 
 MainPage::~MainPage()
 {
 	delete closestMote;
+}
+
+
+void IoTLab_Temperatures::MainPage::InitializeMotes()
+{
+	motes = {
+		new Mote(48.669422, 6.155112, "9.138", "amphiNord"),
+		new Mote(48.668837, 6.154990, "111.130", "amphiSud"),
+		new Mote(48.668922, 6.155363, "151.105", "salle_E - 1.22"),
+		new Mote(48.669400, 6.155340, "32.131", "salle_N - 0.3"),
+		new Mote(48.669439, 6.155265, "97.145", "bureau_2.6"),
+		new Mote(48.669419, 6.155269, "120.99", "bureau_2.7"),
+		new Mote(48.669394, 6.155287, "200.124", "bureau_2.8"),
+		new Mote(48.669350, 6.155310, "53.105", "bureau_2.9")
+	};
+
+	for (unsigned int i = 0; i < motes.size(); ++i)
+	{
+		motes[i]->LoadLatestMeasure();
+	}
 }
 
 
@@ -133,6 +145,13 @@ void IoTLab_Temperatures::MainPage::RenderClosestMoteMeasure() {
 	// Collapse the default text when no mote's measure is displayed
 	NoMoteDisplayedTextBlock->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
 
+	// Update the mote's label
+	Platform::String^ moteName = typeConversion::ToPlatformString(closestMote->GetName());
+	MoteTextBlock->Text = moteName;
+
+	Platform::String^ moteCommonName = typeConversion::ToPlatformString(closestMote->GetCommonName());
+	MoteLocationTextBlock->Text = moteCommonName;
+
 	// Display Mote information (name and location) & measures (battery, brightness, humidity and temperature)
 	RenderClosestMote();
 	RenderClosestMoteBattery();
@@ -160,11 +179,12 @@ void IoTLab_Temperatures::MainPage::SetClosestMoteFromCoordinate(GeographicCoord
 	double shortestDistance = INT_MAX;
 
 	for (unsigned int i = 0; i < motes.size(); ++i) {
-		Mote current = motes[i];
-		double distance = current.GetDistanceToThisMoteInKm(coordinate);
+		Mote* current = motes[i];
+		double distance = current->GetDistanceToThisMoteInKm(coordinate);
 
 		if (distance < shortestDistance) {
-			closestMote = &motes[i];
+			closestMote = current;
+			shortestDistance = distance;
 		}
 	}
 }
@@ -177,11 +197,16 @@ void IoTLab_Temperatures::MainPage::UpdateValidateButtonValidity()
 }
 
 
-void IoTLab_Temperatures::MainPage::UpdateDisplayedMeasures(double battery, double brightness, double humidity, double temperature) {
-	BatteryValueTextBlock->Text = battery.ToString() + " %";
-	BrightnessValueTextBlock->Text = brightness.ToString() + " Lx";
-	HumidityValueTextBlock->Text = humidity.ToString() + " %";
-	TemperatureValueTextBlock->Text = temperature.ToString() + " °C";
+void IoTLab_Temperatures::MainPage::UpdateDisplayedMeasures() {
+	MeasureReport* measure = this->closestMote->GetMeasure();
+
+	BatteryValueTextBlock->Text = measure->GetBattery().ToString() + " %";
+	
+	BrightnessValueTextBlock->Text = measure->GetBrightness().ToString() + " Lx";
+	
+	HumidityValueTextBlock->Text = measure->GetHumidity().ToString() + " %";
+
+	TemperatureValueTextBlock->Text = measure->GetTemperature().ToString() + " °C";
 }
 
 
@@ -205,12 +230,7 @@ void IoTLab_Temperatures::MainPage::ValidateButton_Click(
 
 	RetrieveTemperatureFromIoTLab();
 
-	// TODO: replace with mote's measures
-	battery += 4;
-	brightness += 4;
-	humidity += 4;
-	temperature += 4;
-	UpdateDisplayedMeasures(battery, brightness, humidity, temperature);
+	UpdateDisplayedMeasures();
 
 	RenderClosestMoteMeasure();
 }
