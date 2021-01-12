@@ -111,33 +111,7 @@ void IoTLab_Temperatures::MainPage::LongitudeBox_TextChanged(
 
 
 void IoTLab_Temperatures::MainPage::RenderClosestMote() {
-	MoteImage->Visibility = Windows::UI::Xaml::Visibility::Visible;
-	MoteLocationTextBlock->Visibility = Windows::UI::Xaml::Visibility::Visible;
-	MoteTextBlock->Visibility = Windows::UI::Xaml::Visibility::Visible;
-}
-
-
-void IoTLab_Temperatures::MainPage::RenderClosestMoteBattery() {
-	BatteryImage->Visibility = Windows::UI::Xaml::Visibility::Visible;
-	BatteryTextBlock->Visibility = Windows::UI::Xaml::Visibility::Visible;
-	BatteryRectangle->Visibility = Windows::UI::Xaml::Visibility::Visible;
-	BatteryValueTextBlock->Visibility = Windows::UI::Xaml::Visibility::Visible;
-}
-
-
-void IoTLab_Temperatures::MainPage::RenderClosestMoteBrightness() {
-	BrightnessImage->Visibility = Windows::UI::Xaml::Visibility::Visible;
-	BrightnessTextBlock->Visibility = Windows::UI::Xaml::Visibility::Visible;
-	BrightnessRectangle->Visibility = Windows::UI::Xaml::Visibility::Visible;
-	BrightnessValueTextBlock->Visibility = Windows::UI::Xaml::Visibility::Visible;
-}
-
-
-void IoTLab_Temperatures::MainPage::RenderClosestMoteHumidity() {
-	HumidityImage->Visibility = Windows::UI::Xaml::Visibility::Visible;
-	HumidityTextBlock->Visibility = Windows::UI::Xaml::Visibility::Visible;
-	HumidityRectangle->Visibility = Windows::UI::Xaml::Visibility::Visible;
-	HumidityValueTextBlock->Visibility = Windows::UI::Xaml::Visibility::Visible;
+	MoteMeasureGrid->Visibility = Windows::UI::Xaml::Visibility::Visible;
 }
 
 
@@ -154,18 +128,6 @@ void IoTLab_Temperatures::MainPage::RenderClosestMoteMeasure() {
 
 	// Display Mote information (name and location) & measures (battery, brightness, humidity and temperature)
 	RenderClosestMote();
-	RenderClosestMoteBattery();
-	RenderClosestMoteBrightness();
-	RenderClosestMoteHumidity();
-	RenderClosestMoteTemperature();
-}
-
-
-void IoTLab_Temperatures::MainPage::RenderClosestMoteTemperature() {
-	TemperatureImage->Visibility = Windows::UI::Xaml::Visibility::Visible;
-	TemperatureTextBlock->Visibility = Windows::UI::Xaml::Visibility::Visible;
-	TemperatureRectangle->Visibility = Windows::UI::Xaml::Visibility::Visible;
-	TemperatureValueTextBlock->Visibility = Windows::UI::Xaml::Visibility::Visible;
 }
 
 
