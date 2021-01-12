@@ -50,6 +50,18 @@ MainPage::MainPage()
 	closestMote = NULL;
 
 	// Generate the default mote set with whom the app will be working
+	InitializeMotes();
+}
+
+
+MainPage::~MainPage()
+{
+	delete closestMote;
+}
+
+
+void IoTLab_Temperatures::MainPage::InitializeMotes()
+{
 	motes = {
 		new Mote(48.669422, 6.155112, "9.138", "amphiNord"),
 		new Mote(48.668837, 6.154990, "111.130", "amphiSud"),
@@ -60,12 +72,11 @@ MainPage::MainPage()
 		new Mote(48.669394, 6.155287, "200.124", "bureau_2.8"),
 		new Mote(48.669350, 6.155310, "53.105", "bureau_2.9")
 	};
-}
 
-
-MainPage::~MainPage()
-{
-	delete closestMote;
+	for (unsigned int i = 0; i < motes.size(); ++i)
+	{
+		motes[i]->LoadLatestMeasure();
+	}
 }
 
 

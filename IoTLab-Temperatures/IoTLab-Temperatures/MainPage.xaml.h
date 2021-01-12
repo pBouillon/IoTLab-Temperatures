@@ -21,6 +21,7 @@ namespace IoTLab_Temperatures
 
 		~MainPage();
 
+		void InitializeMotes();
 		bool IsLatitudeValid();
 		bool IsLongitudeValid();
 		void LatitudeBox_TextChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e);
