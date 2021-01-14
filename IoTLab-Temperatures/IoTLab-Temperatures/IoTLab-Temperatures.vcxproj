@@ -197,11 +197,16 @@
     <None Include="IoTLab-Temperatures_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Assets\icons8--low-wet-80.png" />
+    <Image Include="Assets\icons8-average-wet-80.png" />
     <Image Include="Assets\icons8-battery-level-96.png" />
     <Image Include="Assets\icons8-capteur-iot-applogo-100 (1).png" />
     <Image Include="Assets\icons8-ceiling-light-64.png" />
     <Image Include="Assets\icons8-iot-sensor-100.png" />
+    <Image Include="Assets\icons8-low-batterie-96.png" />
+    <Image Include="Assets\icons8-plafonnier-64.png" />
     <Image Include="Assets\icons8-thermometer-40.png" />
+    <Image Include="Assets\icons8-thermometer-80.png" />
     <Image Include="Assets\icons8-wet-80.png" />
     <Image Include="Assets\LargeTile.scale-100.png" />
     <Image Include="Assets\LargeTile.scale-125.png" />
