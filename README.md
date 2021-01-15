@@ -18,7 +18,7 @@ deployed web platform, acting as a broker for the various sensors.
     <img src="./docs/assets/overview.png" width="600px"/>
 </div>
 
-> 📑 Note: The IoTLab is deployed with
+> 📑 Note: The IoTLab is deployed within
 > [TELECOM Nancy](https://telecomnancy.univ-lorraine.fr/), and can't be reached
 > without the university's VPN
 
