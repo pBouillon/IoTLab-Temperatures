@@ -3,7 +3,7 @@
 UWP application with C++ displaying the temperature retrieved by the closest mote using the IoTLab API
 
 <div style="text-align:center">
-    <img src="./docs/assets/demo_v1.gif" width="300px"/>
+    <img src="./docs/assets/demo.gif" width="300px"/>
 </div>
 
 ## Overview
