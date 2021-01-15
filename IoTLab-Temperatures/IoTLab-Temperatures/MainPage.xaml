@@ -8,12 +8,12 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid Visibility="Visible" RequestedTheme="Default">
+    <Grid x:Name="MainPage1" Visibility="Visible" RequestedTheme="Default">
         <TextBox x:Name="LatitudeBox" HorizontalAlignment="Left" Margin="112,56,0,0" Text="" VerticalAlignment="Top" Width="223" FontFamily="Segoe UI" PlaceholderText="Latitude" InputScope="Number" MaxLength="9" TextChanged="LatitudeBox_TextChanged"/>
         <TextBlock x:Name="LatitudeTextBlock" HorizontalAlignment="Left" Margin="18,30,0,0" Text="Latitude" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Segoe UI"/>
         <TextBox x:Name="LongitudeBox" HorizontalAlignment="Left" Margin="112,131,0,0" Text="" VerticalAlignment="Top" RenderTransformOrigin="0.475,0.134" Width="223" PlaceholderText="Longitude" InputScope="Number" MaxLength="10" TextChanged="LongitudeBox_TextChanged"/>
         <TextBlock x:Name="LongitudeTextBlock" HorizontalAlignment="Left" Margin="18,103,0,0" Text="Longitude" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Segoe UI"/>
-        <Button x:Name="ValidateButton" Content="Validate" HorizontalAlignment="Left" Margin="18,184,0,0" VerticalAlignment="Top" FontFamily="Segoe UI" Width="317" Click="ValidateButton_Click" IsEnabled="False"/>
+        <Button x:Name="ValidateButton" Content="Validate" HorizontalAlignment="Left" Margin="184,184,0,0" VerticalAlignment="Top" FontFamily="Segoe UI" Width="150" Click="ValidateButton_Click" IsEnabled="False"/>
         <ComboBox x:Name="LatitudeSignComboBox" HorizontalAlignment="Left" Margin="18,56,0,0" VerticalAlignment="Top" Width="65" Height="32" SelectedIndex="0" FontFamily="Segoe UI">
             <x:String>+</x:String>
             <x:String>-</x:String>
@@ -55,5 +55,6 @@
         <Image x:Name="LowHumidityImage" HorizontalAlignment="Left" Height="37" Margin="237,397,0,0" VerticalAlignment="Top" Width="37" Source="/Assets/icons8--low-wet-80.png" Visibility="Collapsed"/>
         <Image x:Name="LowBatteryImage" HorizontalAlignment="Left" Height="37" Margin="82,522,0,0" VerticalAlignment="Top" Width="37" Source="/Assets/icons8-low-batterie-96.png" Visibility="Collapsed"/>
         <Image x:Name="LowBrightnessImage" HorizontalAlignment="Left" Height="37" Margin="237,522,0,0" VerticalAlignment="Top" Width="37" Source="/Assets/icons8-plafonnier-64.png" Visibility="Collapsed"/>
+        <Button x:Name="LocateButton" Content="Geolocate Me" HorizontalAlignment="Left" Margin="18,184,0,0" VerticalAlignment="Top" Width="150" Foreground="White" Click="LocateButton_Click"/>
     </Grid>
 </Page>
