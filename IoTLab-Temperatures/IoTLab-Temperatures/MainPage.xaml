@@ -49,5 +49,6 @@
             <TextBlock x:Name="BatteryValueTextBlock" HorizontalAlignment="Left" Margin="49,568,0,0" Text="50 %" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold" Width="107" TextAlignment="Center" Visibility="Visible"/>
             <TextBlock x:Name="BrightnessValueTextBlock" HorizontalAlignment="Left" Margin="202,568,0,0" Text="210 Lx" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold" Width="107" TextAlignment="Center" Visibility="Visible"/>
         </Grid>
+        <TextBlock x:Name="CreditsTextBlock" HorizontalAlignment="Center" Margin="0,596,0,0" Text="Icons by Icons8" TextWrapping="Wrap" VerticalAlignment="Top" Foreground="#FF656565" Width="358" TextAlignment="Center" FontSize="10"/>
     </Grid>
 </Page>
