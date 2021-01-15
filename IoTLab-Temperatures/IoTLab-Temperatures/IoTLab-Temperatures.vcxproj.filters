@@ -212,6 +212,21 @@
     <Image Include="Assets\StoreLogo.scale-400.png">
       <Filter>Assets</Filter>
     </Image>
+    <Image Include="Assets\icons8-thermometer-80.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\icons8-plafonnier-64.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\icons8-average-wet-80.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\icons8-low-batterie-96.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\icons8--low-wet-80.png">
+      <Filter>Assets</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />

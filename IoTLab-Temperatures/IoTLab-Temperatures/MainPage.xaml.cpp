@@ -40,6 +40,24 @@ using namespace Windows::Web::Http;
 // Separator used when displaying alongside the latitude and the longitude of the user
 const Platform::String^ GEOGRAPHIC_COORDINATE_SEPARATOR = ", ";
 
+// Threshold value used for updating battery image based on mote's measure.
+// Below this threshold, the battery is shown as almost empty and above it's shown as almost filled
+const double BATTERY_THRESHOLD = 25.0;
+
+// Threshold value used for updating brightess image based on mote's measure
+// Below this threshold, the brightness is shown as a turned off light and above it's shown as a turned on light 
+const double BRIGHTNESS_THRESHOLD = 200.0;
+
+// Threshold value used for updating humidity image based on mote's measure
+// Below the low humidity threshold, the humidity is shown as a single droplet
+// Between the low humidity threshold and the medium humidity threshold, the humidity is shown as two droplets
+// Above the medium humidity threshold, it is shown as three droplets
+const double LOW_HUMIDITY_THRESHOLD = 33.0;
+const double MEDIUM_HUMIDITY_THRESHOLD = 66.0;
+
+// Threshold value used for updating temperature image based on mote's measure
+// Below this threshold, the temperature is shown as a cold thermometer and above it's shown as a warm thermometer
+const double TEMPERATURE_THRESHOLD = 20.0;
 
 MainPage::MainPage()
 {
@@ -110,12 +128,7 @@ void IoTLab_Temperatures::MainPage::LongitudeBox_TextChanged(
 }
 
 
-void IoTLab_Temperatures::MainPage::RenderClosestMote() {
-	MoteMeasureGrid->Visibility = Windows::UI::Xaml::Visibility::Visible;
-}
-
-
-void IoTLab_Temperatures::MainPage::RenderClosestMoteMeasure() {
+void IoTLab_Temperatures::MainPage::RenderMoteContainer() {
 	// Collapse the default text when no mote's measure is displayed
 	NoMoteDisplayedTextBlock->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
 
@@ -126,14 +139,28 @@ void IoTLab_Temperatures::MainPage::RenderClosestMoteMeasure() {
 	Platform::String^ moteCommonName = typeConversion::ToPlatformString(closestMote->GetCommonName());
 	MoteLocationTextBlock->Text = moteCommonName;
 
-	// Display Mote information (name and location) & measures (battery, brightness, humidity and temperature)
-	RenderClosestMote();
+	// Display the mote's measure cards
+	MoteMeasureGrid->Visibility = Windows::UI::Xaml::Visibility::Visible;
 }
 
 
 void IoTLab_Temperatures::MainPage::RetrieveTemperatureFromIoTLab()
 {
 	closestMote->LoadLatestMeasure();
+}
+
+
+void IoTLab_Temperatures::MainPage::SetBatteryImageFromMeasure(double batteryValue) {
+	batteryValue >= BATTERY_THRESHOLD
+		? ToggleImages(MediumBatteryImage, LowBatteryImage)
+		: ToggleImages(LowBatteryImage, MediumBatteryImage);
+}
+
+
+void IoTLab_Temperatures::MainPage::SetBrightnessImageFromMeasure(double brightnessValue) {
+	brightnessValue >= BRIGHTNESS_THRESHOLD
+		? ToggleImages(MediumBrightnessImage, LowBrightnessImage)
+		: ToggleImages(LowBrightnessImage, MediumBrightnessImage);
 }
 
 
@@ -151,6 +178,100 @@ void IoTLab_Temperatures::MainPage::SetClosestMoteFromCoordinate(GeographicCoord
 	}
 }
 
+
+void IoTLab_Temperatures::MainPage::SetHumidityImageFromMeasure(double humidityRate) {
+	LowHumidityImage->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
+	MediumHumidityImage->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
+	HighHumidityImage->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
+	
+	if (humidityRate < LOW_HUMIDITY_THRESHOLD) {
+		LowHumidityImage->Visibility = Windows::UI::Xaml::Visibility::Visible;
+		return;
+	}
+
+	if (humidityRate < MEDIUM_HUMIDITY_THRESHOLD) {
+		MediumHumidityImage->Visibility = Windows::UI::Xaml::Visibility::Visible;
+		return;
+	}
+
+	HighHumidityImage->Visibility = Windows::UI::Xaml::Visibility::Visible;
+}
+
+
+void IoTLab_Temperatures::MainPage::SetTemperatureImageFromMeasure(double temperatureValue) {
+	temperatureValue >= TEMPERATURE_THRESHOLD
+		? ToggleImages(WarmTemperatureImage, ColdTemperatureImage)
+		: ToggleImages(ColdTemperatureImage, WarmTemperatureImage);
+}
+
+
+void IoTLab_Temperatures::MainPage::ToggleImages(Windows::UI::Xaml::Controls::Image^ toActivate, Windows::UI::Xaml::Controls::Image^ toDeactivate) {
+	toActivate->Visibility = Windows::UI::Xaml::Visibility::Visible;
+	toDeactivate->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
+}
+
+
+void IoTLab_Temperatures::MainPage::UpdateBatteryCard(MeasureReport& measure) {
+	double batteryValue = measure.GetBattery();
+
+	// Update the battery label
+	BatteryValueTextBlock->Text = batteryValue.ToString() + " %";
+
+	// Update the associated image
+	SetBatteryImageFromMeasure(batteryValue);
+}
+
+
+void IoTLab_Temperatures::MainPage::UpdateBrightnessCard(MeasureReport& measure) {
+	double brightnessValue = measure.GetBrightness();
+
+	// Update the brightness label
+	BrightnessValueTextBlock->Text = brightnessValue.ToString() + " Lx";
+
+	// Update the associated image
+	SetBrightnessImageFromMeasure(brightnessValue);
+}
+
+
+void IoTLab_Temperatures::MainPage::UpdateCards() {
+	MeasureReport* measure = closestMote->GetMeasure();
+
+	UpdateBatteryCard(*measure);
+	UpdateBrightnessCard(*measure);
+	UpdateHumidityCard(*measure);
+	UpdateTemperatureCard(*measure);
+}
+
+
+void IoTLab_Temperatures::MainPage::UpdateDisplay() {
+	RenderMoteContainer();
+
+	UpdateCards();
+}
+
+
+void IoTLab_Temperatures::MainPage::UpdateHumidityCard(MeasureReport& measure) {
+	double humidityRate = measure.GetHumidity();
+
+	// Update the humidity label
+	HumidityValueTextBlock->Text = humidityRate.ToString() + " %";
+
+	// Update the associated image
+	SetHumidityImageFromMeasure(humidityRate);
+}
+
+
+void IoTLab_Temperatures::MainPage::UpdateTemperatureCard(MeasureReport& measure) {
+	double temperatureValue = measure.GetTemperature();
+
+	// Update the temperature label
+	TemperatureValueTextBlock->Text = temperatureValue.ToString() + " °C";
+
+	// Update the associated image
+	SetTemperatureImageFromMeasure(temperatureValue);
+}
+
+
 // Enable the "Validate" button depending of the validity of the other fields
 void IoTLab_Temperatures::MainPage::UpdateValidateButtonValidity()
 {
@@ -159,24 +280,12 @@ void IoTLab_Temperatures::MainPage::UpdateValidateButtonValidity()
 }
 
 
-void IoTLab_Temperatures::MainPage::UpdateDisplayedMeasures() {
-	MeasureReport* measure = this->closestMote->GetMeasure();
-
-	BatteryValueTextBlock->Text = measure->GetBattery().ToString() + " %";
-	
-	BrightnessValueTextBlock->Text = measure->GetBrightness().ToString() + " Lx";
-	
-	HumidityValueTextBlock->Text = measure->GetHumidity().ToString() + " %";
-
-	TemperatureValueTextBlock->Text = measure->GetTemperature().ToString() + " °C";
-}
-
-
 // On click, build the user's geographic coordinate from the latitude and the longitude input fields
 // and display it
 void IoTLab_Temperatures::MainPage::ValidateButton_Click(
 	Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
+	// Retrieve the inputed coordinates
 	Platform::String^ latitudeValue = LatitudeBox->Text;
 	Platform::String^ latitudeSign = LatitudeSignComboBox->SelectedItem->ToString();
 	Platform::String^ formattedLatitude = latitudeSign + latitudeValue;
@@ -185,6 +294,7 @@ void IoTLab_Temperatures::MainPage::ValidateButton_Click(
 	Platform::String^ longitudeSign = LongitudeSignComboBox->SelectedItem->ToString();
 	Platform::String^ formattedLongitude = longitudeSign + longitudeValue;
 
+	// Compute the user's coordinates and retrieve the closest mote's measures
 	GeographicCoordinate userCoordinate (
 		typeConversion::ToDouble(formattedLatitude), typeConversion::ToDouble(formattedLongitude));
 
@@ -192,8 +302,8 @@ void IoTLab_Temperatures::MainPage::ValidateButton_Click(
 
 	RetrieveTemperatureFromIoTLab();
 
-	UpdateDisplayedMeasures();
-
-	RenderClosestMoteMeasure();
+	// Update the UI according to the new values
+	UpdateDisplay();
 }
+
 
