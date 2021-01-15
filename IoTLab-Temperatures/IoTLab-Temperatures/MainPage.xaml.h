@@ -17,6 +17,7 @@ namespace IoTLab_Temperatures
 
 	private:
 		Mote* closestMote;
+		concurrency::cancellation_token_source geopositionTaskTokenSource;
 		std::vector<Mote*> motes;
 
 		~MainPage();
@@ -24,8 +25,12 @@ namespace IoTLab_Temperatures
 		void InitializeMotes();
 		bool IsLatitudeValid();
 		bool IsLongitudeValid();
-		void LatitudeBox_TextChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e);
-		void LongitudeBox_TextChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e);
+		void LatitudeBox_TextChanged(
+			Platform::Object^ sender,
+			Windows::UI::Xaml::Controls::TextChangedEventArgs^ e);
+		void LongitudeBox_TextChanged(
+			Platform::Object^ sender,
+			Windows::UI::Xaml::Controls::TextChangedEventArgs^ e);
 		void RenderClosestMoteBattery();
 		void RenderClosestMoteBrightness();
 		void RenderClosestMoteHumidity();
@@ -35,9 +40,16 @@ namespace IoTLab_Temperatures
 		void SetBatteryImageFromMeasure(double batteryValue);
 		void SetBrightnessImageFromMeasure(double brightnessValue);
 		void SetClosestMoteFromCoordinate(GeographicCoordinate& coordinate);
+		void SetGeolocationPropertiesText(Platform::String^ latitudeText, Platform::String^ longitudeText);
+		void SetGeolocationPropertyFromValue(
+			Platform::String^ value,
+			Windows::UI::Xaml::Controls::ComboBox^ signComboBox,
+			Windows::UI::Xaml::Controls::TextBox^ valueTextBox);
 		void SetHumidityImageFromMeasure(double humidityRate);
 		void SetTemperatureImageFromMeasure(double temperatureValue);
-		void ToggleImages(Windows::UI::Xaml::Controls::Image^ toActivate, Windows::UI::Xaml::Controls::Image^ toDeactivate);
+		void ToggleImages(
+			Windows::UI::Xaml::Controls::Image^ toActivate,
+			Windows::UI::Xaml::Controls::Image^ toDeactivate);
 		void UpdateBatteryCard(MeasureReport& measure);
 		void UpdateBrightnessCard(MeasureReport& measure);
 		void UpdateCards();
@@ -46,5 +58,7 @@ namespace IoTLab_Temperatures
 		void UpdateTemperatureCard(MeasureReport& measure);
 		void UpdateValidateButtonValidity();
 		void ValidateButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
+		void LocateButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
+		void UpdateLocationData(Windows::Devices::Geolocation::Geoposition^ position);
 	};
 }
