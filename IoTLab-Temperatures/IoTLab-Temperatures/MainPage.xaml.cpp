@@ -40,11 +40,23 @@ using namespace Windows::Web::Http;
 // Separator used when displaying alongside the latitude and the longitude of the user
 const Platform::String^ GEOGRAPHIC_COORDINATE_SEPARATOR = ", ";
 
-// Threshold values used for updating measures-related images
+// Threshold value used for updating battery image based on mote's measure.
+// Below this threshold, the battery is shown as almost empty and above it's shown as almost filled
 const double BATTERY_THRESHOLD = 25.0;
+
+// Threshold value used for updating brightess image based on mote's measure
+// Below this threshold, the brightness is shown as a turned off light and above it's shown as a turned on light 
 const double BRIGHTNESS_THRESHOLD = 200.0;
+
+// Threshold value used for updating humidity image based on mote's measure
+// Below the low humidity threshold, the humidity is shown as a single droplet
+// Between the low humidity threshold and the medium humidity threshold, the humidity is shown as two droplets
+// Above the medium humidity threshold, it is shown as three droplets
 const double LOW_HUMIDITY_THRESHOLD = 33.0;
 const double MEDIUM_HUMIDITY_THRESHOLD = 66.0;
+
+// Threshold value used for updating temperature image based on mote's measure
+// Below this threshold, the temperature is shown as a cold thermometer and above it's shown as a warm thermometer
 const double TEMPERATURE_THRESHOLD = 20.0;
 
 MainPage::MainPage()
