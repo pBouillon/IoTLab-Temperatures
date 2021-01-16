@@ -34,7 +34,11 @@ using namespace Windows::UI::Xaml::Input;
 using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 using namespace Windows::UI::Xaml::Navigation;
+using namespace Windows::Devices::Geolocation;
 using namespace Windows::Web::Http;
+using namespace Windows::UI::Core;
+using namespace Platform;
+using namespace concurrency;
 
 // Number of milliseconds during which the thread will halted
 // while looping when awaiting an incoming event
@@ -352,4 +356,69 @@ void IoTLab_Temperatures::MainPage::ValidateButton_Click(
 
 	// Update the UI according to the new values
 	UpdateDisplay();
+}
+
+
+void IoTLab_Temperatures::MainPage::LocateButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+	try
+	{
+		task<GeolocationAccessStatus> geolocationAccessRequestTask(Windows::Devices::Geolocation::Geolocator::RequestAccessAsync());
+		geolocationAccessRequestTask.then([this](task<GeolocationAccessStatus> accessStatusTask)
+		{
+			// Get will throw an exception if the task was canceled or failed with an error
+			auto accessStatus = accessStatusTask.get();
+
+			if (accessStatus != GeolocationAccessStatus::Allowed) {
+				SetGeolocationPropertiesText("Access denied", "");
+				return;
+			}
+
+			auto geolocator = ref new Windows::Devices::Geolocation::Geolocator();
+
+			task<Geoposition^> geopositionTask(geolocator->GetGeopositionAsync(), geopositionTaskTokenSource.get_token());
+			geopositionTask.then([this](task<Geoposition^> getPosTask)
+			{
+				// Get will throw an exception if the task was canceled or failed with an error
+				UpdateLocationData(getPosTask.get());
+			});
+		});
+	}
+	catch (task_canceled&) { /* Silenced */ }
+	catch (Exception^ ex)
+	{
+		SetGeolocationPropertiesText("Failed to fetch", "");
+	}
+}
+
+
+void IoTLab_Temperatures::MainPage::UpdateLocationData(Windows::Devices::Geolocation::Geoposition^ position)
+{
+	position != nullptr
+		? SetGeolocationPropertiesText(
+			position->Coordinate->Point->Position.Latitude.ToString(),
+			position->Coordinate->Point->Position.Longitude.ToString())
+		: SetGeolocationPropertiesText("No data", "No data");
+}
+
+void IoTLab_Temperatures::MainPage::SetGeolocationPropertiesText(Platform::String^ latitudeText, Platform::String^ longitudeText) {
+	SetGeolocationPropertyFromValue(latitudeText, LatitudeSignComboBox, LatitudeBox);
+	SetGeolocationPropertyFromValue(longitudeText, LongitudeSignComboBox, LongitudeBox);
+}
+
+void IoTLab_Temperatures::MainPage::SetGeolocationPropertyFromValue(
+	Platform::String^ value,
+	Windows::UI::Xaml::Controls::ComboBox^ signComboBox,
+	Windows::UI::Xaml::Controls::TextBox^ valueTextBox)
+{
+	std::string longitude = typeConversion::ToString(value);
+
+	if (!value->IsEmpty()
+		&& longitude[0] == '-')
+	{
+		longitude = longitude.substr(1, longitude.length() - 1);
+		signComboBox->SelectedIndex = 1;
+	}
+
+	valueTextBox->Text = typeConversion::ToPlatformString(longitude);
 }
