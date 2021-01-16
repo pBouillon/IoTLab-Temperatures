@@ -356,7 +356,6 @@ void IoTLab_Temperatures::MainPage::ValidateButton_Click(
 	SetClosestMoteFromCoordinate(userCoordinate);
 
 	SetEvent(hUpdateMoteMeasureReportEvent);
-	// RetrieveTemperatureFromIoTLab();
 
 	// Update the UI according to the new values
 	UpdateDisplay();
