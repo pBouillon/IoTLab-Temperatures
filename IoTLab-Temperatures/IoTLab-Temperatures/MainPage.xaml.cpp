@@ -90,14 +90,18 @@ DWORD WINAPI updateMoteMeasureReportRoutine(LPVOID hEvent)
 		Sleep(THREAD_HALT_MS);
 		dwWait = WaitForSingleObject(hEvent, INFINITE);
 
-		// If the incoming event is the one the thread is expecting, we
-		// update the mote's measure report
-		if (dwWait == WAIT_OBJECT_0)
+		// If the incoming event is the one the thread is not the one requesting
+		// the closest mote's newest measure, we discard the request and continue
+		// to await for the one we are expecting
+		if (dwWait != WAIT_OBJECT_0)
 		{
-			closestMote->LoadLatestMeasure();
+			continue;
 		}
 
-		return 0;
+		closestMote->LoadLatestMeasure();
+
+		// Once the event is handled, we can clear it
+		ResetEvent(hUpdateMoteMeasureReportEvent);
 	}
 	
 	return 0;
