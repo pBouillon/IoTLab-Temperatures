@@ -26,10 +26,6 @@ namespace IoTLab_Temperatures
 		bool IsLongitudeValid();
 		void LatitudeBox_TextChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e);
 		void LongitudeBox_TextChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e);
-		void RenderClosestMoteBattery();
-		void RenderClosestMoteBrightness();
-		void RenderClosestMoteHumidity();
-		void RenderClosestMoteTemperature();
 		void RenderMoteContainer();
 		void RetrieveTemperatureFromIoTLab();
 		void SetBatteryImageFromMeasure(double batteryValue);
