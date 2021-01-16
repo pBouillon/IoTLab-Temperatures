@@ -8,6 +8,7 @@
 #include "MainPage.g.h"
 #include "Mote.h"
 
+
 namespace IoTLab_Temperatures
 {
 	public ref class MainPage sealed
@@ -16,12 +17,12 @@ namespace IoTLab_Temperatures
 		MainPage();
 
 	private:
-		Mote* closestMote;
 		std::vector<Mote*> motes;
 
 		~MainPage();
 
 		void InitializeMotes();
+		void InitializeThreads();
 		bool IsLatitudeValid();
 		bool IsLongitudeValid();
 		void LatitudeBox_TextChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e);

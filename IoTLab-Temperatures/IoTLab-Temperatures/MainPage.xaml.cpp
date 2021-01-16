@@ -36,17 +36,24 @@ using namespace Windows::UI::Xaml::Navigation;
 using namespace Windows::UI::Xaml::Navigation;
 using namespace Windows::Web::Http;
 
+// Number of milliseconds during which the thread will halted
+// while looping when awaiting an incoming event
+#define THREAD_HALT_MS 100
+
 
 // Separator used when displaying alongside the latitude and the longitude of the user
 const Platform::String^ GEOGRAPHIC_COORDINATE_SEPARATOR = ", ";
+
 
 // Threshold value used for updating battery image based on mote's measure.
 // Below this threshold, the battery is shown as almost empty and above it's shown as almost filled
 const double BATTERY_THRESHOLD = 25.0;
 
+
 // Threshold value used for updating brightess image based on mote's measure
 // Below this threshold, the brightness is shown as a turned off light and above it's shown as a turned on light 
 const double BRIGHTNESS_THRESHOLD = 200.0;
+
 
 // Threshold value used for updating humidity image based on mote's measure
 // Below the low humidity threshold, the humidity is shown as a single droplet
@@ -55,9 +62,43 @@ const double BRIGHTNESS_THRESHOLD = 200.0;
 const double LOW_HUMIDITY_THRESHOLD = 33.0;
 const double MEDIUM_HUMIDITY_THRESHOLD = 66.0;
 
+
 // Threshold value used for updating temperature image based on mote's measure
 // Below this threshold, the temperature is shown as a cold thermometer and above it's shown as a warm thermometer
 const double TEMPERATURE_THRESHOLD = 20.0;
+
+
+// The mote that is the closest of the user's according to his
+// coordinates
+Mote* closestMote;
+
+HANDLE hUpdateMoteMeasureReportEvent;
+DWORD WINAPI updateMoteMeasureReportRoutine(LPVOID hEvent);
+
+
+DWORD WINAPI updateMoteMeasureReportRoutine(LPVOID hEvent)
+{
+	DWORD dwWait;
+	
+	// Wait indefinitely for an incoming event
+	for (;;)
+	{
+		Sleep(THREAD_HALT_MS);
+		dwWait = WaitForSingleObject(hEvent, INFINITE);
+
+		// If the incoming event is the one the thread is expecting, we
+		// update the mote's measure report
+		if (dwWait == WAIT_OBJECT_0)
+		{
+			closestMote->LoadLatestMeasure();
+		}
+
+		return 0;
+	}
+	
+	return 0;
+}
+
 
 MainPage::MainPage()
 {
@@ -69,6 +110,9 @@ MainPage::MainPage()
 
 	// Generate the default mote set with whom the app will be working
 	InitializeMotes();
+
+	// Initialize the background tasks
+	InitializeThreads();
 }
 
 
@@ -95,6 +139,15 @@ void IoTLab_Temperatures::MainPage::InitializeMotes()
 	{
 		motes[i]->LoadLatestMeasure();
 	}
+}
+
+
+void IoTLab_Temperatures::MainPage::InitializeThreads()
+{
+	hUpdateMoteMeasureReportEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+
+	DWORD threadId;
+	CreateThread(NULL, 0, updateMoteMeasureReportRoutine, (LPVOID)hUpdateMoteMeasureReportEvent, 0, &threadId);
 }
 
 
@@ -141,12 +194,6 @@ void IoTLab_Temperatures::MainPage::RenderMoteContainer() {
 
 	// Display the mote's measure cards
 	MoteMeasureGrid->Visibility = Windows::UI::Xaml::Visibility::Visible;
-}
-
-
-void IoTLab_Temperatures::MainPage::RetrieveTemperatureFromIoTLab()
-{
-	closestMote->LoadLatestMeasure();
 }
 
 
@@ -300,10 +347,9 @@ void IoTLab_Temperatures::MainPage::ValidateButton_Click(
 
 	SetClosestMoteFromCoordinate(userCoordinate);
 
-	RetrieveTemperatureFromIoTLab();
+	SetEvent(hUpdateMoteMeasureReportEvent);
+	// RetrieveTemperatureFromIoTLab();
 
 	// Update the UI according to the new values
 	UpdateDisplay();
 }
-
-
