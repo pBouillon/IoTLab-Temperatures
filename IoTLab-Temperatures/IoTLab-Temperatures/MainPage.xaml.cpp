@@ -88,6 +88,11 @@ DWORD WINAPI UpdateClosestMoteRoutine(LPVOID hEvent);
 HANDLE hUpdateMoteMeasureReportEvent;
 DWORD WINAPI UpdateMoteMeasureReportRoutine(LPVOID hEvent);
 
+
+// Mutex preventing the HTTP call to be made before the closest mote is adequately set
+std::shared_mutex iotlabHttpCallMutex;
+
+
 void SetClosestMoteFromCoordinate(GeographicCoordinate& coordinate);
 
 
@@ -124,7 +129,15 @@ DWORD WINAPI UpdateClosestMoteRoutine(LPVOID hEvent)
 			continue;
 		}
 
+		// Lock the mutex to prevent the other thread to perform the HTTP call
+		// before that the closest mote has been retrieved
+		iotlabHttpCallMutex.lock_shared();
+
 		SetClosestMoteFromCoordinate(userCoordinate);
+
+		// Once that the closest mote is found, we can release the mutex
+		// so that the other thread can perform the HTTP call
+		iotlabHttpCallMutex.unlock_shared();
 
 		// Once the event is handled, we can clear it
 		ResetEvent(hUpdateMoteMeasureReportEvent);
@@ -152,7 +165,14 @@ DWORD WINAPI UpdateMoteMeasureReportRoutine(LPVOID hEvent)
 			continue;
 		}
 
+		// Lock the mutex to perform the http call based on the closest mote
+		iotlabHttpCallMutex.lock_shared();
+
 		closestMote->LoadLatestMeasure();
+
+		// Release the mutex once the call has been made so that the closest mote
+		// can be computed again
+		iotlabHttpCallMutex.unlock_shared();
 
 		// Once the event is handled, we can clear it
 		ResetEvent(hUpdateMoteMeasureReportEvent);
