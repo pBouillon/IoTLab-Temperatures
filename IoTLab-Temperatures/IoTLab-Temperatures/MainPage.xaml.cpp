@@ -131,15 +131,14 @@ DWORD WINAPI UpdateClosestMoteRoutine(LPVOID hEvent)
 			continue;
 		}
 
-		// Lock the mutex to prevent the other thread to perform the HTTP call
-		// before that the closest mote has been retrieved
-		iotlabHttpCallMutex.lock_shared();
-
 		SetClosestMoteFromCoordinate(userCoordinate);
 
 		// Once that the closest mote is found, we can release the mutex
 		// so that the other thread can perform the HTTP call
 		iotlabHttpCallMutex.unlock_shared();
+
+		// Lock the mutex to prevent the other thread to perform other API calls
+		iotlabHttpCallMutex.lock_shared();
 
 		// Once the event is handled, we can clear it
 		ResetEvent(hUpdateMoteMeasureReportEvent);
@@ -228,6 +227,10 @@ void IoTLab_Temperatures::MainPage::InitializeMotes()
 
 void IoTLab_Temperatures::MainPage::InitializeThreads()
 {
+	// Lock the mutex by default in order to let the thread handling the closest mote
+	// handle the workflow
+	iotlabHttpCallMutex.lock_shared();
+
 	DWORD threadId;
 	
 	// Initialize the thread in charge of retrieving the closest mote
