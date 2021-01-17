@@ -18,7 +18,6 @@ namespace IoTLab_Temperatures
 
 	private:
 		concurrency::cancellation_token_source geopositionTaskTokenSource;
-		std::vector<Mote*> motes;
 
 		~MainPage();
 
@@ -40,7 +39,6 @@ namespace IoTLab_Temperatures
 		void RetrieveTemperatureFromIoTLab();
 		void SetBatteryImageFromMeasure(double batteryValue);
 		void SetBrightnessImageFromMeasure(double brightnessValue);
-		void SetClosestMoteFromCoordinate(GeographicCoordinate& coordinate);
 		void SetGeolocationPropertiesText(Platform::String^ latitudeText, Platform::String^ longitudeText);
 		void SetGeolocationPropertyFromValue(
 			Platform::String^ value,

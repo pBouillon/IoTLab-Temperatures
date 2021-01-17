@@ -76,8 +76,62 @@ const double TEMPERATURE_THRESHOLD = 20.0;
 // coordinates
 Mote* closestMote;
 
+// A list containing all the motes used for the application and on the IoTLab
+std::vector<Mote*> motes;
+
+// The user coordinates, by default (0, 0)
+GeographicCoordinate userCoordinate = GeographicCoordinate(0, 0);
+
+HANDLE hUpdateClosestMoteEvent;
+DWORD WINAPI UpdateClosestMoteRoutine(LPVOID hEvent);
+
 HANDLE hUpdateMoteMeasureReportEvent;
 DWORD WINAPI UpdateMoteMeasureReportRoutine(LPVOID hEvent);
+
+void SetClosestMoteFromCoordinate(GeographicCoordinate& coordinate);
+
+
+void SetClosestMoteFromCoordinate(GeographicCoordinate& coordinate) {
+	double shortestDistance = INT_MAX;
+
+	for (unsigned int i = 0; i < motes.size(); ++i) {
+		Mote* current = motes[i];
+		double distance = current->GetDistanceToThisMoteInKm(coordinate);
+
+		if (distance < shortestDistance) {
+			closestMote = current;
+			shortestDistance = distance;
+		}
+	}
+}
+
+
+DWORD WINAPI UpdateClosestMoteRoutine(LPVOID hEvent)
+{
+	DWORD dwWait;
+
+	// Wait indefinitely for an incoming event
+	for (;;)
+	{
+		Sleep(THREAD_HALT_MS);
+		dwWait = WaitForSingleObject(hEvent, INFINITE);
+
+		// If the incoming event is the one the thread is not the one requesting
+		// to find the closest mote, we discard the request and continue
+		// to await for the one we are expecting
+		if (dwWait != WAIT_OBJECT_0)
+		{
+			continue;
+		}
+
+		SetClosestMoteFromCoordinate(userCoordinate);
+
+		// Once the event is handled, we can clear it
+		ResetEvent(hUpdateMoteMeasureReportEvent);
+	}
+
+	return 0;
+}
 
 
 DWORD WINAPI UpdateMoteMeasureReportRoutine(LPVOID hEvent)
@@ -152,10 +206,17 @@ void IoTLab_Temperatures::MainPage::InitializeMotes()
 
 void IoTLab_Temperatures::MainPage::InitializeThreads()
 {
+	DWORD threadId;
+	
+	// Initialize the thread in charge of retrieving the closest mote
+	hUpdateClosestMoteEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+
+	CreateThread(NULL, 0, UpdateClosestMoteRoutine, (LPVOID) hUpdateClosestMoteEvent, 0, &threadId);
+
+	// Initialize the thread in charge of retrieving the latest measure of a mote
 	hUpdateMoteMeasureReportEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
 
-	DWORD threadId;
-	CreateThread(NULL, 0, updateMoteMeasureReportRoutine, (LPVOID)hUpdateMoteMeasureReportEvent, 0, &threadId);
+	CreateThread(NULL, 0, UpdateMoteMeasureReportRoutine, (LPVOID) hUpdateMoteMeasureReportEvent, 0, &threadId);
 }
 
 
@@ -216,21 +277,6 @@ void IoTLab_Temperatures::MainPage::SetBrightnessImageFromMeasure(double brightn
 	brightnessValue >= BRIGHTNESS_THRESHOLD
 		? ToggleImages(MediumBrightnessImage, LowBrightnessImage)
 		: ToggleImages(LowBrightnessImage, MediumBrightnessImage);
-}
-
-
-void IoTLab_Temperatures::MainPage::SetClosestMoteFromCoordinate(GeographicCoordinate& coordinate) {
-	double shortestDistance = INT_MAX;
-
-	for (unsigned int i = 0; i < motes.size(); ++i) {
-		Mote* current = motes[i];
-		double distance = current->GetDistanceToThisMoteInKm(coordinate);
-
-		if (distance < shortestDistance) {
-			closestMote = current;
-			shortestDistance = distance;
-		}
-	}
 }
 
 
@@ -350,11 +396,14 @@ void IoTLab_Temperatures::MainPage::ValidateButton_Click(
 	Platform::String^ formattedLongitude = longitudeSign + longitudeValue;
 
 	// Compute the user's coordinates and retrieve the closest mote's measures
-	GeographicCoordinate userCoordinate (
-		typeConversion::ToDouble(formattedLatitude), typeConversion::ToDouble(formattedLongitude));
+	userCoordinate = GeographicCoordinate(typeConversion::ToDouble(formattedLatitude), typeConversion::ToDouble(formattedLongitude));
 
-	SetClosestMoteFromCoordinate(userCoordinate);
+	// Fire the event requesting for the app to asynchronously compute the closest
+	// mote of the user, according to his updated coordinates
+	SetEvent(hUpdateClosestMoteEvent);
 
+	// Fire the event requesting for the app to asynchronously retrieve the latest
+	// measure report of the closest mote
 	SetEvent(hUpdateMoteMeasureReportEvent);
 
 	// Update the UI according to the new values
