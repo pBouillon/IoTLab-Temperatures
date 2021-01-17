@@ -3,6 +3,8 @@
 // Implementation of the MainPage class.
 //
 
+#include "pch.h"
+
 #include <codecvt>
 #include <iterator>
 #include <locale> 
@@ -13,11 +15,12 @@
 #include <thread>
 #include <vector>
 
-#include "pch.h"
+
 #include "GeographicCoordinate.h"
 #include "MainPage.xaml.h"
 #include "Mote.h"
 #include "TypeConversion.h"
+
 
 using namespace IoTLab_Temperatures;
 
@@ -39,6 +42,7 @@ using namespace Windows::Web::Http;
 using namespace Windows::UI::Core;
 using namespace Platform;
 using namespace concurrency;
+
 
 // Number of milliseconds during which the thread will halted
 // while looping when awaiting an incoming event
@@ -88,10 +92,8 @@ DWORD WINAPI UpdateClosestMoteRoutine(LPVOID hEvent);
 HANDLE hUpdateMoteMeasureReportEvent;
 DWORD WINAPI UpdateMoteMeasureReportRoutine(LPVOID hEvent);
 
-
 // Mutex preventing the HTTP call to be made before the closest mote is adequately set
 std::shared_mutex iotlabHttpCallMutex;
-
 
 void SetClosestMoteFromCoordinate(GeographicCoordinate& coordinate);
 
