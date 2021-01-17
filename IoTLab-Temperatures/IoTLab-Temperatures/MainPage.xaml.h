@@ -31,12 +31,7 @@ namespace IoTLab_Temperatures
 		void LongitudeBox_TextChanged(
 			Platform::Object^ sender,
 			Windows::UI::Xaml::Controls::TextChangedEventArgs^ e);
-		void RenderClosestMoteBattery();
-		void RenderClosestMoteBrightness();
-		void RenderClosestMoteHumidity();
-		void RenderClosestMoteTemperature();
 		void RenderMoteContainer();
-		void RetrieveTemperatureFromIoTLab();
 		void SetBatteryImageFromMeasure(double batteryValue);
 		void SetBrightnessImageFromMeasure(double brightnessValue);
 		void SetGeolocationPropertiesText(Platform::String^ latitudeText, Platform::String^ longitudeText);
