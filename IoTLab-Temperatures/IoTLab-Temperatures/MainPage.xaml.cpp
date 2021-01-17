@@ -77,10 +77,10 @@ const double TEMPERATURE_THRESHOLD = 20.0;
 Mote* closestMote;
 
 HANDLE hUpdateMoteMeasureReportEvent;
-DWORD WINAPI updateMoteMeasureReportRoutine(LPVOID hEvent);
+DWORD WINAPI UpdateMoteMeasureReportRoutine(LPVOID hEvent);
 
 
-DWORD WINAPI updateMoteMeasureReportRoutine(LPVOID hEvent)
+DWORD WINAPI UpdateMoteMeasureReportRoutine(LPVOID hEvent)
 {
 	DWORD dwWait;
 	
