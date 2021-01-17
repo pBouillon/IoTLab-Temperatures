@@ -8,6 +8,7 @@
 #include "MainPage.g.h"
 #include "Mote.h"
 
+
 namespace IoTLab_Temperatures
 {
 	public ref class MainPage sealed
@@ -16,13 +17,13 @@ namespace IoTLab_Temperatures
 		MainPage();
 
 	private:
-		Mote* closestMote;
 		concurrency::cancellation_token_source geopositionTaskTokenSource;
 		std::vector<Mote*> motes;
 
 		~MainPage();
 
 		void InitializeMotes();
+		void InitializeThreads();
 		bool IsLatitudeValid();
 		bool IsLongitudeValid();
 		void LatitudeBox_TextChanged(
