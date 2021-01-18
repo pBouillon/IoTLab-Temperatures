@@ -22,7 +22,7 @@
             <x:String>+</x:String>
             <x:String>-</x:String>
         </ComboBox>
-        <TextBlock x:Name="AppTitle" HorizontalAlignment="Center" Margin="0,1,0,0" Text="IoTLab sensors" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20"/>
+        <TextBlock x:Name="AppTitle" HorizontalAlignment="Center" Margin="0,1,0,0" Text="IoTLab Sensors" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20"/>
         <TextBlock x:Name="NoMoteDisplayedTextBlock" HorizontalAlignment="Center" Margin="0,0,0,199" Text="Please enter your coordinates to show the closest mote's measure" TextWrapping="Wrap" VerticalAlignment="Bottom" FontSize="18" Width="260" TextAlignment="Center" FontFamily="Segoe UI" FocusVisualPrimaryBrush="White" Foreground="#FF656565"/>
         <Grid x:Name="MoteMeasureGrid" Visibility="Collapsed" RequestedTheme="Default">
             <Image x:Name="MoteImage" HorizontalAlignment="Center" Height="60" Margin="0,233,0,0" VerticalAlignment="Top" Width="60" Source="/Assets/icons8-iot-sensor-100.png" Visibility="Visible"/>
