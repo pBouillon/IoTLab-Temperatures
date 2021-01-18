@@ -432,7 +432,12 @@ void IoTLab_Temperatures::MainPage::ValidateButton_Click(
 	SetEvent(hUpdateMoteMeasureReportEvent);
 
 	// Update the UI according to the new values
-	UpdateDisplay();
+	Windows::ApplicationModel::Core::CoreApplication::MainView->CoreWindow->Dispatcher->RunAsync(
+		CoreDispatcherPriority::Normal,
+		ref new Windows::UI::Core::DispatchedHandler([this]()
+	{
+		UpdateDisplay();
+	}));
 }
 
 
