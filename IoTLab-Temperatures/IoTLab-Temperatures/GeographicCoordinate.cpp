@@ -16,12 +16,16 @@ const double EARTH_RADIUS_IN_KM = 6356.752;
 GeographicCoordinate::GeographicCoordinate(double latitude, double longitude)
 {
 	if (!IsValidLatitude(latitude))
+	{
 		throw std::invalid_argument("Incorrect latitude provided");
+	}
 
 	this->latitude = latitude;
 
 	if (!IsValidLongitude(longitude))
+	{
 		throw std::invalid_argument("Incorrect longitude provided");
+	}
 
 	this->longitude = longitude;
 }

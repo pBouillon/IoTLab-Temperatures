@@ -46,10 +46,8 @@ Platform::String^ IOTLAB_JSON_TEMPERATURE_KEY = "temperature";
 //     which allows only 'Platform::String^' and not 'const Platform::String^'
 Platform::String^ IOTLAB_JSON_VALUE_KEY = "value";
 
-
 MeasureReport::MeasureReport()
 	: MeasureReport(0, 0, 0, 0) { }
-
 
 MeasureReport::MeasureReport(
 	double battery, double brightness, double humidity, double temperature)
@@ -60,7 +58,6 @@ MeasureReport::MeasureReport(
 	this->temperature = temperature;
 }
 
-
 double MeasureReport::ExtractValue(JsonObject^ json)
 {
 	Platform::String^ rawValue = json->GetNamedValue(IOTLAB_JSON_VALUE_KEY)
@@ -68,7 +65,6 @@ double MeasureReport::ExtractValue(JsonObject^ json)
 
 	return typeConversion::ToDouble(rawValue);
 }
-
 
 MeasureReport* MeasureReport::FromIotlabResponse(JsonObject^ json)
 {
@@ -80,25 +76,30 @@ MeasureReport* MeasureReport::FromIotlabResponse(JsonObject^ json)
 		->GetArray();
 
 	// Iterate on the measures and extract their values to populate the created report
-	for (unsigned int i = 0; i < measures->Size; ++i) {
+	for (unsigned int i = 0; i < measures->Size; ++i) 
+	{
 		JsonObject^ row = measures->GetObjectAt(i);
 
 		double measure = ExtractValue(row);
 		Platform::String^ measureType = row->GetNamedString(IOTLAB_JSON_LABEL_KEY);
 
-		if (measureType->Equals(IOTLAB_JSON_BATTERY_KEY)) {
+		if (measureType->Equals(IOTLAB_JSON_BATTERY_KEY)) 
+		{
 			report->SetBattery(measure);
 		}
 
-		else if (measureType->Equals(IOTLAB_JSON_BRIGHTNESS_KEY)) {
+		else if (measureType->Equals(IOTLAB_JSON_BRIGHTNESS_KEY)) 
+		{
 			report->SetBrightness(measure);
 		}
 
-		else if (measureType->Equals(IOTLAB_JSON_HUMIDITY_KEY)) {
+		else if (measureType->Equals(IOTLAB_JSON_HUMIDITY_KEY)) 
+		{
 			report->SetHumidity(measure);
 		}
 
-		else if (measureType->Equals(IOTLAB_JSON_TEMPERATURE_KEY)) {
+		else if (measureType->Equals(IOTLAB_JSON_TEMPERATURE_KEY))
+		{
 			report->SetTemperature(measure);
 		}
 	}
@@ -106,48 +107,40 @@ MeasureReport* MeasureReport::FromIotlabResponse(JsonObject^ json)
 	return report;
 }
 
-
 double MeasureReport::GetBattery()
 {
 	return battery;
 }
-
 
 double MeasureReport::GetBrightness()
 {
 	return brightness;
 }
 
-
 double MeasureReport::GetHumidity()
 {
 	return humidity;
 }
-
 
 double MeasureReport::GetTemperature()
 {
 	return temperature;
 }
 
-
 void MeasureReport::SetBattery(double battery)
 {
 	this->battery = battery;
 }
-
 
 void MeasureReport::SetBrightness(double brightness)
 {
 	this->brightness = brightness;
 }
 
-
 void MeasureReport::SetHumidity(double humidity)
 {
 	this->humidity = humidity;
 }
-
 
 void MeasureReport::SetTemperature(double temperature)
 {
