@@ -49,6 +49,7 @@ using namespace concurrency;
 #define THREAD_HALT_MS 100
 
 
+// Number of ticks elapsed in a second
 // https://docs.microsoft.com/fr-fr/windows/uwp/threading-async/use-a-timer-to-submit-a-work-item
 #define TICKS_PER_SECOND 10000000
 
