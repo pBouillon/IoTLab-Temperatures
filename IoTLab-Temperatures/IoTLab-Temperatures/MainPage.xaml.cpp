@@ -115,6 +115,12 @@ MainPage::MainPage()
 	// we do not know the current user's position
 	closestMote = NULL;
 
+	// We initialize the motes with their current measure on startup
+	for (unsigned int i = 0; i < motes.size(); ++i)
+	{
+		motes[i]->LoadLatestMeasure();
+	}
+
 	// Initialize the background tasks
 	InitializeThreads();
 }
