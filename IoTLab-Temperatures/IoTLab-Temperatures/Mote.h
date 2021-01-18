@@ -30,15 +30,15 @@ public:
 	Mote();
 
 	// Create a new mote from a geographic coordinate, its identifier and its name
-	Mote(GeographicCoordinate*, std::string, std::string);
+	Mote(GeographicCoordinate* coordinate, std::string name, std::string commonName);
 
 	// Create a new mote from its coordinates, its identifier and its name
-	Mote(double, double, std::string, std::string);
+	Mote(double latitude, double longitude, std::string name, std::string commonName);
 
 	std::string GetCommonName();
 
 	// Get the distance between this mote and a coordinate in kilometers
-	double GetDistanceToThisMoteInKm(GeographicCoordinate&);
+	double GetDistanceToThisMoteInKm(GeographicCoordinate& coordinate);
 
 	// Get the mote's measure
 	MeasureReport* GetMeasure();

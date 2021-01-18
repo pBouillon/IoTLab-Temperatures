@@ -74,9 +74,13 @@ namespace IoTLab_Temperatures
 
 		void UpdateValidateButtonValidity();
 		
-		void ValidateButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
+		void ValidateButton_Click(
+			Platform::Object^ sender, 
+			Windows::UI::Xaml::RoutedEventArgs^ e);
 		
-		void LocateButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
+		void LocateButton_Click(
+			Platform::Object^ sender, 
+			Windows::UI::Xaml::RoutedEventArgs^ e);
 		
 		void UpdateLocationData(Windows::Devices::Geolocation::Geoposition^ position);
 	};

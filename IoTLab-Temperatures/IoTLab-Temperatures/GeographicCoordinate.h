@@ -20,10 +20,10 @@ class GeographicCoordinate
 public:
 	// Create a new instance of a geographic coordinate, based on the provided
 	// angles
-	GeographicCoordinate(double, double);
+	GeographicCoordinate(double latitude, double longitude);
 
 	// Evaluate the distance between two geographic coordinates in kilometers
-	double GetDistanceFromInKm(GeographicCoordinate&);
+	double GetDistanceFromInKm(GeographicCoordinate& coordinate);
 
 	// Get the latitude
 	double GetLatitude();
@@ -33,9 +33,9 @@ public:
 
 	// Check if a latitude is within the allowed bounds of
 	// +- MAX_ABSOLUTE_LATITUDE_DEGREE
-	static bool IsValidLatitude(double);
+	static bool IsValidLatitude(double latitude);
 
 	// Check if a longitude is within the allowed bounds of
 	// +- MAX_ABSOLUTE_LONGITUDE_DEGREE
-	static bool IsValidLongitude(double);
+	static bool IsValidLongitude(double longitude);
 };

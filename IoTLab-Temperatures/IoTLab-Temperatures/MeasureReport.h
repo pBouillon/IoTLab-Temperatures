@@ -22,15 +22,15 @@ class MeasureReport
 
 	// Extract the value of a standardize IoTLab JSON row such as:
 	// { "timestamp": 1608301045, "label": "battery_indicator", "value": 0.0, "mote": "9.138" }
-	static double MeasureReport::ExtractValue(JsonObject^);
+	static double MeasureReport::ExtractValue(JsonObject^ json);
 
-	void SetBattery(double);
+	void SetBattery(double battery);
 
-	void SetBrightness(double);
+	void SetBrightness(double brightness);
 
-	void SetHumidity(double);
+	void SetHumidity(double humidity);
 
-	void SetTemperature(double);
+	void SetTemperature(double temperature);
 
 public:
 	// Create an empty measure report with all default values (0)
@@ -38,10 +38,10 @@ public:
 
 	// Create a new report based on the battery, the brightness,
 	// the humidity and the temperature
-	MeasureReport(double, double, double, double);
+	MeasureReport(double battery, double brightness, double humidity, double temperature);
 
 	// Create the report from the IoTLab response
-	static MeasureReport* FromIotlabResponse(JsonObject^);
+	static MeasureReport* FromIotlabResponse(JsonObject^ json);
 
 	double GetBattery();
 

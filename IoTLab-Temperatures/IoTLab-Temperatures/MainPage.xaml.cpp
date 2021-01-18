@@ -21,7 +21,6 @@
 #include "Mote.h"
 #include "TypeConversion.h"
 
-
 using namespace IoTLab_Temperatures;
 
 using namespace Concurrency;
@@ -43,30 +42,24 @@ using namespace Windows::UI::Core;
 using namespace Platform;
 using namespace concurrency;
 
-
 // Number of milliseconds during which the thread will halted
 // while looping when awaiting an incoming event
 #define THREAD_HALT_MS 100
-
 
 // Number of ticks elapsed in a second
 // https://docs.microsoft.com/fr-fr/windows/uwp/threading-async/use-a-timer-to-submit-a-work-item
 #define TICKS_PER_SECOND 10000000
 
-
 // Separator used when displaying alongside the latitude and the longitude of the user
 const Platform::String^ GEOGRAPHIC_COORDINATE_SEPARATOR = ", ";
-
 
 // Threshold value used for updating battery image based on mote's measure.
 // Below this threshold, the battery is shown as almost empty and above it's shown as almost filled
 const double BATTERY_THRESHOLD = 25.0;
 
-
 // Threshold value used for updating brightess image based on mote's measure
 // Below this threshold, the brightness is shown as a turned off light and above it's shown as a turned on light 
 const double BRIGHTNESS_THRESHOLD = 200.0;
-
 
 // Threshold value used for updating humidity image based on mote's measure
 // Below the low humidity threshold, the humidity is shown as a single droplet
@@ -75,18 +68,17 @@ const double BRIGHTNESS_THRESHOLD = 200.0;
 const double LOW_HUMIDITY_THRESHOLD = 33.0;
 const double MEDIUM_HUMIDITY_THRESHOLD = 66.0;
 
-
 // Threshold value used for updating temperature image based on mote's measure
 // Below this threshold, the temperature is shown as a cold thermometer and above it's shown as a warm thermometer
 const double TEMPERATURE_THRESHOLD = 20.0;
-
 
 // The mote that is the closest of the user's according to his
 // coordinates
 Mote* closestMote;
 
 // A list containing all the motes used for the application and on the IoTLab
-std::vector<Mote*> motes = {
+std::vector<Mote*> motes = 
+{
 		new Mote(48.669422, 6.155112, "9.138", "North Amphitheater"),
 		new Mote(48.668837, 6.154990, "111.130", "South Amphitheater"),
 		new Mote(48.668922, 6.155363, "151.105", "Room E - 1.22"),
@@ -96,6 +88,8 @@ std::vector<Mote*> motes = {
 		new Mote(48.669394, 6.155287, "200.124", "Office 2.8"),
 		new Mote(48.669350, 6.155310, "53.105", "Office 2.9")
 };
+
+void SetClosestMoteFromCoordinate(GeographicCoordinate& coordinate);
 
 // The user coordinates, by default (0, 0)
 GeographicCoordinate userCoordinate = GeographicCoordinate(0, 0);
@@ -113,23 +107,207 @@ std::shared_mutex closestMoteUpdateMutex;
 // Mutex preventing the HTTP call to be made before the closest mote is adequately set
 std::shared_mutex iotlabHttpCallMutex;
 
-void SetClosestMoteFromCoordinate(GeographicCoordinate& coordinate);
+MainPage::MainPage()
+{
+	InitializeComponent();
 
+	// No mote can be defined as the closest on startup since
+	// we do not know the current user's position
+	closestMote = NULL;
 
-void SetClosestMoteFromCoordinate(GeographicCoordinate& coordinate) {
+	// Initialize the background tasks
+	InitializeThreads();
+}
+
+MainPage::~MainPage()
+{
+	delete closestMote;
+}
+
+void IoTLab_Temperatures::MainPage::InitializeThreads()
+{
+	// Lock the mutex by default in order to let the thread handling the closest mote
+	// handle the workflow
+	iotlabHttpCallMutex.lock_shared();
+
+	DWORD threadId;
+	
+	// Initialize the thread in charge of retrieving the closest mote
+	hUpdateClosestMoteEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+
+	CreateThread(NULL, 0, UpdateClosestMoteRoutine, (LPVOID) hUpdateClosestMoteEvent, 0, &threadId);
+
+	// Initialize the thread in charge of retrieving the latest measure of a mote
+	hUpdateMoteMeasureReportEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+
+	CreateThread(NULL, 0, UpdateMoteMeasureReportRoutine, (LPVOID) hUpdateMoteMeasureReportEvent, 0, &threadId);
+
+	// Initialize the refresh period so that the UI is refreshed every 0.5 second
+	TimeSpan delay;
+	delay.Duration = 0.5 * TICKS_PER_SECOND;
+
+	// Initialize the refresh timer
+	DispatcherTimer^ timer = ref new DispatcherTimer();
+	timer->Interval = delay;
+	timer->Start();
+	timer->Tick += ref new EventHandler<Object^>(this, &MainPage::OnTick);
+}
+
+bool IoTLab_Temperatures::MainPage::IsLatitudeValid() 
+{
+	Platform::String^ content = LatitudeBox->Text;
+
+	return !content->IsEmpty()
+		&& GeographicCoordinate::IsValidLatitude(typeConversion::ToDouble(content));
+}
+
+bool IoTLab_Temperatures::MainPage::IsLongitudeValid() 
+{
+	Platform::String^ content = LongitudeBox->Text;
+
+	return !content->IsEmpty()
+		&& GeographicCoordinate::IsValidLongitude(typeConversion::ToDouble(content));
+}
+
+bool IoTLab_Temperatures::MainPage::IsUserPositionSet()
+{
+	return closestMote != NULL;
+}
+
+void IoTLab_Temperatures::MainPage::LatitudeBox_TextChanged(
+	Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e)
+{
+	UpdateValidateButtonValidity();
+}
+
+void IoTLab_Temperatures::MainPage::LongitudeBox_TextChanged(
+	Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e)
+{
+	UpdateValidateButtonValidity();
+}
+
+void IoTLab_Temperatures::MainPage::OnTick(Platform::Object^ sender, Platform::Object^ e)
+{
+	if (IsUserPositionSet())
+	{
+		UpdateDisplay();
+	}
+}
+
+void IoTLab_Temperatures::MainPage::RenderMoteContainer() 
+{
+	// Collapse the default text when no mote's measure is displayed
+	NoMoteDisplayedTextBlock->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
+
+	// Update the mote's label
+	Platform::String^ moteName = typeConversion::ToPlatformString(closestMote->GetName());
+	MoteTextBlock->Text = moteName;
+
+	Platform::String^ moteCommonName = typeConversion::ToPlatformString(closestMote->GetCommonName());
+	MoteLocationTextBlock->Text = moteCommonName;
+
+	// Display the mote's measure cards
+	MoteMeasureGrid->Visibility = Windows::UI::Xaml::Visibility::Visible;
+}
+
+void IoTLab_Temperatures::MainPage::SetBatteryImageFromMeasure(double batteryValue) 
+{
+	batteryValue >= BATTERY_THRESHOLD
+		? ToggleImages(MediumBatteryImage, LowBatteryImage)
+		: ToggleImages(LowBatteryImage, MediumBatteryImage);
+}
+
+void IoTLab_Temperatures::MainPage::SetBrightnessImageFromMeasure(double brightnessValue) 
+{
+	brightnessValue >= BRIGHTNESS_THRESHOLD
+		? ToggleImages(MediumBrightnessImage, LowBrightnessImage)
+		: ToggleImages(LowBrightnessImage, MediumBrightnessImage);
+}
+
+void SetClosestMoteFromCoordinate(GeographicCoordinate& coordinate) 
+{
 	double shortestDistance = INT_MAX;
 
-	for (unsigned int i = 0; i < motes.size(); ++i) {
+	for (unsigned int i = 0; i < motes.size(); ++i) 
+	{
 		Mote* current = motes[i];
 		double distance = current->GetDistanceToThisMoteInKm(coordinate);
 
-		if (distance < shortestDistance) {
+		if (distance < shortestDistance)
+		{
 			closestMote = current;
 			shortestDistance = distance;
 		}
 	}
 }
 
+void IoTLab_Temperatures::MainPage::SetHumidityImageFromMeasure(double humidityRate) 
+{
+	LowHumidityImage->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
+	MediumHumidityImage->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
+	HighHumidityImage->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
+	
+	if (humidityRate < LOW_HUMIDITY_THRESHOLD) 
+	{
+		LowHumidityImage->Visibility = Windows::UI::Xaml::Visibility::Visible;
+		return;
+	}
+
+	if (humidityRate < MEDIUM_HUMIDITY_THRESHOLD) 
+	{
+		MediumHumidityImage->Visibility = Windows::UI::Xaml::Visibility::Visible;
+		return;
+	}
+
+	HighHumidityImage->Visibility = Windows::UI::Xaml::Visibility::Visible;
+}
+
+void IoTLab_Temperatures::MainPage::SetTemperatureImageFromMeasure(double temperatureValue) 
+{
+	temperatureValue >= TEMPERATURE_THRESHOLD
+		? ToggleImages(WarmTemperatureImage, ColdTemperatureImage)
+		: ToggleImages(ColdTemperatureImage, WarmTemperatureImage);
+}
+
+void IoTLab_Temperatures::MainPage::ToggleImages(
+	Windows::UI::Xaml::Controls::Image^ toActivate,
+	Windows::UI::Xaml::Controls::Image^ toDeactivate) 
+{
+	toActivate->Visibility = Windows::UI::Xaml::Visibility::Visible;
+	toDeactivate->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
+}
+
+void IoTLab_Temperatures::MainPage::UpdateBatteryCard(MeasureReport& measure) 
+{
+	double batteryValue = measure.GetBattery();
+
+	// Update the battery label
+	BatteryValueTextBlock->Text = batteryValue.ToString() + " %";
+
+	// Update the associated image
+	SetBatteryImageFromMeasure(batteryValue);
+}
+
+void IoTLab_Temperatures::MainPage::UpdateBrightnessCard(MeasureReport& measure) 
+{
+	double brightnessValue = measure.GetBrightness();
+
+	// Update the brightness label
+	BrightnessValueTextBlock->Text = brightnessValue.ToString() + " Lx";
+
+	// Update the associated image
+	SetBrightnessImageFromMeasure(brightnessValue);
+}
+
+void IoTLab_Temperatures::MainPage::UpdateCards() 
+{
+	MeasureReport* measure = closestMote->GetMeasure();
+
+	UpdateBatteryCard(*measure);
+	UpdateBrightnessCard(*measure);
+	UpdateHumidityCard(*measure);
+	UpdateTemperatureCard(*measure);
+}
 
 DWORD WINAPI UpdateClosestMoteRoutine(LPVOID hEvent)
 {
@@ -171,11 +349,27 @@ DWORD WINAPI UpdateClosestMoteRoutine(LPVOID hEvent)
 	return 0;
 }
 
+void IoTLab_Temperatures::MainPage::UpdateDisplay() 
+{
+	RenderMoteContainer();
+	UpdateCards();
+}
+
+void IoTLab_Temperatures::MainPage::UpdateHumidityCard(MeasureReport& measure) 
+{
+	double humidityRate = measure.GetHumidity();
+
+	// Update the humidity label
+	HumidityValueTextBlock->Text = humidityRate.ToString() + " %";
+
+	// Update the associated image
+	SetHumidityImageFromMeasure(humidityRate);
+}
 
 DWORD WINAPI UpdateMoteMeasureReportRoutine(LPVOID hEvent)
 {
 	DWORD dwWait;
-	
+
 	// Wait indefinitely for an incoming event
 	for (;;)
 	{
@@ -202,218 +396,12 @@ DWORD WINAPI UpdateMoteMeasureReportRoutine(LPVOID hEvent)
 		// Once the event is handled, we can clear it
 		ResetEvent(hUpdateMoteMeasureReportEvent);
 	}
-	
+
 	return 0;
 }
 
-
-MainPage::MainPage()
+void IoTLab_Temperatures::MainPage::UpdateTemperatureCard(MeasureReport& measure) 
 {
-	InitializeComponent();
-
-	// No mote can be defined as the closest on startup since
-	// we do not know the current user's position
-	closestMote = NULL;
-
-	// Initialize the refresh period so that the UI is refreshed every 0.5 second
-	TimeSpan delay;
-	delay.Duration = 0.5 * TICKS_PER_SECOND;
-
-	// Initialize the refresh timer
-	DispatcherTimer^ timer = ref new DispatcherTimer();
-	timer->Interval = delay;
-	timer->Start();
-	timer->Tick += ref new EventHandler<Object^>(this, &MainPage::OnTick);
-
-	// Initialize the background tasks
-	InitializeThreads();
-}
-
-
-MainPage::~MainPage()
-{
-	delete closestMote;
-}
-
-
-void IoTLab_Temperatures::MainPage::InitializeThreads()
-{
-	// Lock the mutex by default in order to let the thread handling the closest mote
-	// handle the workflow
-	iotlabHttpCallMutex.lock_shared();
-
-	DWORD threadId;
-	
-	// Initialize the thread in charge of retrieving the closest mote
-	hUpdateClosestMoteEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
-
-	CreateThread(NULL, 0, UpdateClosestMoteRoutine, (LPVOID) hUpdateClosestMoteEvent, 0, &threadId);
-
-	// Initialize the thread in charge of retrieving the latest measure of a mote
-	hUpdateMoteMeasureReportEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
-
-	CreateThread(NULL, 0, UpdateMoteMeasureReportRoutine, (LPVOID) hUpdateMoteMeasureReportEvent, 0, &threadId);
-}
-
-
-bool IoTLab_Temperatures::MainPage::IsLatitudeValid() {
-	Platform::String^ content = LatitudeBox->Text;
-
-	return !content->IsEmpty()
-		&& GeographicCoordinate::IsValidLatitude(typeConversion::ToDouble(content));
-}
-
-
-bool IoTLab_Temperatures::MainPage::IsLongitudeValid() {
-	Platform::String^ content = LongitudeBox->Text;
-
-	return !content->IsEmpty()
-		&& GeographicCoordinate::IsValidLongitude(typeConversion::ToDouble(content));
-}
-
-
-bool IoTLab_Temperatures::MainPage::IsUserPositionSet()
-{
-	return closestMote != NULL;
-}
-
-
-void IoTLab_Temperatures::MainPage::LatitudeBox_TextChanged(
-	Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e)
-{
-	UpdateValidateButtonValidity();
-}
-
-
-void IoTLab_Temperatures::MainPage::LongitudeBox_TextChanged(
-	Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e)
-{
-	UpdateValidateButtonValidity();
-}
-
-
-void IoTLab_Temperatures::MainPage::OnTick(Platform::Object^ sender, Platform::Object^ e)
-{
-	if (IsUserPositionSet())
-	{
-		UpdateDisplay();
-	}
-}
-
-
-void IoTLab_Temperatures::MainPage::RenderMoteContainer() {
-	// Collapse the default text when no mote's measure is displayed
-	NoMoteDisplayedTextBlock->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
-
-	// Update the mote's label
-	Platform::String^ moteName = typeConversion::ToPlatformString(closestMote->GetName());
-	MoteTextBlock->Text = moteName;
-
-	Platform::String^ moteCommonName = typeConversion::ToPlatformString(closestMote->GetCommonName());
-	MoteLocationTextBlock->Text = moteCommonName;
-
-	// Display the mote's measure cards
-	MoteMeasureGrid->Visibility = Windows::UI::Xaml::Visibility::Visible;
-}
-
-
-void IoTLab_Temperatures::MainPage::SetBatteryImageFromMeasure(double batteryValue) {
-	batteryValue >= BATTERY_THRESHOLD
-		? ToggleImages(MediumBatteryImage, LowBatteryImage)
-		: ToggleImages(LowBatteryImage, MediumBatteryImage);
-}
-
-
-void IoTLab_Temperatures::MainPage::SetBrightnessImageFromMeasure(double brightnessValue) {
-	brightnessValue >= BRIGHTNESS_THRESHOLD
-		? ToggleImages(MediumBrightnessImage, LowBrightnessImage)
-		: ToggleImages(LowBrightnessImage, MediumBrightnessImage);
-}
-
-
-void IoTLab_Temperatures::MainPage::SetHumidityImageFromMeasure(double humidityRate) {
-	LowHumidityImage->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
-	MediumHumidityImage->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
-	HighHumidityImage->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
-	
-	if (humidityRate < LOW_HUMIDITY_THRESHOLD) {
-		LowHumidityImage->Visibility = Windows::UI::Xaml::Visibility::Visible;
-		return;
-	}
-
-	if (humidityRate < MEDIUM_HUMIDITY_THRESHOLD) {
-		MediumHumidityImage->Visibility = Windows::UI::Xaml::Visibility::Visible;
-		return;
-	}
-
-	HighHumidityImage->Visibility = Windows::UI::Xaml::Visibility::Visible;
-}
-
-
-void IoTLab_Temperatures::MainPage::SetTemperatureImageFromMeasure(double temperatureValue) {
-	temperatureValue >= TEMPERATURE_THRESHOLD
-		? ToggleImages(WarmTemperatureImage, ColdTemperatureImage)
-		: ToggleImages(ColdTemperatureImage, WarmTemperatureImage);
-}
-
-
-void IoTLab_Temperatures::MainPage::ToggleImages(Windows::UI::Xaml::Controls::Image^ toActivate, Windows::UI::Xaml::Controls::Image^ toDeactivate) {
-	toActivate->Visibility = Windows::UI::Xaml::Visibility::Visible;
-	toDeactivate->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
-}
-
-
-void IoTLab_Temperatures::MainPage::UpdateBatteryCard(MeasureReport& measure) {
-	double batteryValue = measure.GetBattery();
-
-	// Update the battery label
-	BatteryValueTextBlock->Text = batteryValue.ToString() + " %";
-
-	// Update the associated image
-	SetBatteryImageFromMeasure(batteryValue);
-}
-
-
-void IoTLab_Temperatures::MainPage::UpdateBrightnessCard(MeasureReport& measure) {
-	double brightnessValue = measure.GetBrightness();
-
-	// Update the brightness label
-	BrightnessValueTextBlock->Text = brightnessValue.ToString() + " Lx";
-
-	// Update the associated image
-	SetBrightnessImageFromMeasure(brightnessValue);
-}
-
-
-void IoTLab_Temperatures::MainPage::UpdateCards() {
-	MeasureReport* measure = closestMote->GetMeasure();
-
-	UpdateBatteryCard(*measure);
-	UpdateBrightnessCard(*measure);
-	UpdateHumidityCard(*measure);
-	UpdateTemperatureCard(*measure);
-}
-
-
-void IoTLab_Temperatures::MainPage::UpdateDisplay() {
-	RenderMoteContainer();
-
-	UpdateCards();
-}
-
-
-void IoTLab_Temperatures::MainPage::UpdateHumidityCard(MeasureReport& measure) {
-	double humidityRate = measure.GetHumidity();
-
-	// Update the humidity label
-	HumidityValueTextBlock->Text = humidityRate.ToString() + " %";
-
-	// Update the associated image
-	SetHumidityImageFromMeasure(humidityRate);
-}
-
-
-void IoTLab_Temperatures::MainPage::UpdateTemperatureCard(MeasureReport& measure) {
 	double temperatureValue = measure.GetTemperature();
 
 	// Update the temperature label
@@ -423,14 +411,12 @@ void IoTLab_Temperatures::MainPage::UpdateTemperatureCard(MeasureReport& measure
 	SetTemperatureImageFromMeasure(temperatureValue);
 }
 
-
 // Enable the "Validate" button depending of the validity of the other fields
 void IoTLab_Temperatures::MainPage::UpdateValidateButtonValidity()
 {
 	ValidateButton->IsEnabled = IsLatitudeValid()
 		&& IsLongitudeValid();
 }
-
 
 // On click, build the user's geographic coordinate from the latitude and the longitude input fields
 // and display it
@@ -458,8 +444,9 @@ void IoTLab_Temperatures::MainPage::ValidateButton_Click(
 	SetEvent(hUpdateMoteMeasureReportEvent);
 }
 
-
-void IoTLab_Temperatures::MainPage::LocateButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+void IoTLab_Temperatures::MainPage::LocateButton_Click(
+	Platform::Object^ sender,
+	Windows::UI::Xaml::RoutedEventArgs^ e)
 {
 	try
 	{
@@ -491,7 +478,6 @@ void IoTLab_Temperatures::MainPage::LocateButton_Click(Platform::Object^ sender,
 	}
 }
 
-
 void IoTLab_Temperatures::MainPage::UpdateLocationData(Windows::Devices::Geolocation::Geoposition^ position)
 {
 	position != nullptr
@@ -501,12 +487,13 @@ void IoTLab_Temperatures::MainPage::UpdateLocationData(Windows::Devices::Geoloca
 		: SetGeolocationPropertiesText("No data", "No data");
 }
 
-
-void IoTLab_Temperatures::MainPage::SetGeolocationPropertiesText(Platform::String^ latitudeText, Platform::String^ longitudeText) {
+void IoTLab_Temperatures::MainPage::SetGeolocationPropertiesText(
+	Platform::String^ latitudeText, 
+	Platform::String^ longitudeText) 
+{
 	SetGeolocationPropertyFromValue(latitudeText, LatitudeSignComboBox, LatitudeBox);
 	SetGeolocationPropertyFromValue(longitudeText, LongitudeSignComboBox, LongitudeBox);
 }
-
 
 void IoTLab_Temperatures::MainPage::SetGeolocationPropertyFromValue(
 	Platform::String^ value,
