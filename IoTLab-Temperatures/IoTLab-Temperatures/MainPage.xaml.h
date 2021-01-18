@@ -21,38 +21,63 @@ namespace IoTLab_Temperatures
 
 		~MainPage();
 
-		void InitializeMotes();
 		void InitializeThreads();
+		
 		bool IsLatitudeValid();
+		
 		bool IsLongitudeValid();
+
+		bool IsUserPositionSet();
+		
 		void LatitudeBox_TextChanged(
 			Platform::Object^ sender,
 			Windows::UI::Xaml::Controls::TextChangedEventArgs^ e);
+		
 		void LongitudeBox_TextChanged(
 			Platform::Object^ sender,
 			Windows::UI::Xaml::Controls::TextChangedEventArgs^ e);
+
+		void OnTick(Platform::Object^ sender, Platform::Object^ e);
+		
 		void RenderMoteContainer();
+		
 		void SetBatteryImageFromMeasure(double batteryValue);
+		
 		void SetBrightnessImageFromMeasure(double brightnessValue);
+		
 		void SetGeolocationPropertiesText(Platform::String^ latitudeText, Platform::String^ longitudeText);
+		
 		void SetGeolocationPropertyFromValue(
 			Platform::String^ value,
 			Windows::UI::Xaml::Controls::ComboBox^ signComboBox,
 			Windows::UI::Xaml::Controls::TextBox^ valueTextBox);
+		
 		void SetHumidityImageFromMeasure(double humidityRate);
+		
 		void SetTemperatureImageFromMeasure(double temperatureValue);
+		
 		void ToggleImages(
 			Windows::UI::Xaml::Controls::Image^ toActivate,
 			Windows::UI::Xaml::Controls::Image^ toDeactivate);
+		
 		void UpdateBatteryCard(MeasureReport& measure);
+		
 		void UpdateBrightnessCard(MeasureReport& measure);
+		
 		void UpdateCards();
+
 		void UpdateDisplay();
+		
 		void UpdateHumidityCard(MeasureReport& measure);
+		
 		void UpdateTemperatureCard(MeasureReport& measure);
+
 		void UpdateValidateButtonValidity();
+		
 		void ValidateButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
+		
 		void LocateButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
+		
 		void UpdateLocationData(Windows::Devices::Geolocation::Geoposition^ position);
 	};
 }

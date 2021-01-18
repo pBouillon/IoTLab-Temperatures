@@ -49,6 +49,10 @@ using namespace concurrency;
 #define THREAD_HALT_MS 100
 
 
+// https://docs.microsoft.com/fr-fr/windows/uwp/threading-async/use-a-timer-to-submit-a-work-item
+#define TICKS_PER_SECOND 10000000
+
+
 // Separator used when displaying alongside the latitude and the longitude of the user
 const Platform::String^ GEOGRAPHIC_COORDINATE_SEPARATOR = ", ";
 
@@ -81,7 +85,16 @@ const double TEMPERATURE_THRESHOLD = 20.0;
 Mote* closestMote;
 
 // A list containing all the motes used for the application and on the IoTLab
-std::vector<Mote*> motes;
+std::vector<Mote*> motes = {
+		new Mote(48.669422, 6.155112, "9.138", "North Amphitheater"),
+		new Mote(48.668837, 6.154990, "111.130", "South Amphitheater"),
+		new Mote(48.668922, 6.155363, "151.105", "Room E - 1.22"),
+		new Mote(48.669400, 6.155340, "32.131", "Room N - 0.3"),
+		new Mote(48.669439, 6.155265, "97.145", "Office 2.6"),
+		new Mote(48.669419, 6.155269, "120.99", "Office 2.7"),
+		new Mote(48.669394, 6.155287, "200.124", "Office 2.8"),
+		new Mote(48.669350, 6.155310, "53.105", "Office 2.9")
+};
 
 // The user coordinates, by default (0, 0)
 GeographicCoordinate userCoordinate = GeographicCoordinate(0, 0);
@@ -191,8 +204,15 @@ MainPage::MainPage()
 	// we do not know the current user's position
 	closestMote = NULL;
 
-	// Generate the default mote set with whom the app will be working
-	InitializeMotes();
+	// Initialize the refresh period so that the UI is refreshed every 0.5 second
+	TimeSpan delay;
+	delay.Duration = 0.5 * TICKS_PER_SECOND;
+
+	// Initialize the refresh timer
+	DispatcherTimer^ timer = ref new DispatcherTimer();
+	timer->Interval = delay;
+	timer->Start();
+	timer->Tick += ref new EventHandler<Object^>(this, &MainPage::OnTick);
 
 	// Initialize the background tasks
 	InitializeThreads();
@@ -202,26 +222,6 @@ MainPage::MainPage()
 MainPage::~MainPage()
 {
 	delete closestMote;
-}
-
-
-void IoTLab_Temperatures::MainPage::InitializeMotes()
-{
-	motes = {
-		new Mote(48.669422, 6.155112, "9.138", "North Amphitheater"),
-		new Mote(48.668837, 6.154990, "111.130", "South Amphitheater"),
-		new Mote(48.668922, 6.155363, "151.105", "Room E - 1.22"),
-		new Mote(48.669400, 6.155340, "32.131", "Room N - 0.3"),
-		new Mote(48.669439, 6.155265, "97.145", "Office 2.6"),
-		new Mote(48.669419, 6.155269, "120.99", "Office 2.7"),
-		new Mote(48.669394, 6.155287, "200.124", "Office 2.8"),
-		new Mote(48.669350, 6.155310, "53.105", "Office 2.9")
-	};
-
-	for (unsigned int i = 0; i < motes.size(); ++i)
-	{
-		motes[i]->LoadLatestMeasure();
-	}
 }
 
 
@@ -261,6 +261,12 @@ bool IoTLab_Temperatures::MainPage::IsLongitudeValid() {
 }
 
 
+bool IoTLab_Temperatures::MainPage::IsUserPositionSet()
+{
+	return closestMote != NULL;
+}
+
+
 void IoTLab_Temperatures::MainPage::LatitudeBox_TextChanged(
 	Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e)
 {
@@ -272,6 +278,15 @@ void IoTLab_Temperatures::MainPage::LongitudeBox_TextChanged(
 	Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e)
 {
 	UpdateValidateButtonValidity();
+}
+
+
+void IoTLab_Temperatures::MainPage::OnTick(Platform::Object^ sender, Platform::Object^ e)
+{
+	if (IsUserPositionSet())
+	{
+		UpdateDisplay();
+	}
 }
 
 
@@ -430,14 +445,6 @@ void IoTLab_Temperatures::MainPage::ValidateButton_Click(
 	// Fire the event requesting for the app to asynchronously retrieve the latest
 	// measure report of the closest mote
 	SetEvent(hUpdateMoteMeasureReportEvent);
-
-	// Update the UI according to the new values
-	Windows::ApplicationModel::Core::CoreApplication::MainView->CoreWindow->Dispatcher->RunAsync(
-		CoreDispatcherPriority::Normal,
-		ref new Windows::UI::Core::DispatchedHandler([this]()
-	{
-		UpdateDisplay();
-	}));
 }
 
 
@@ -483,10 +490,12 @@ void IoTLab_Temperatures::MainPage::UpdateLocationData(Windows::Devices::Geoloca
 		: SetGeolocationPropertiesText("No data", "No data");
 }
 
+
 void IoTLab_Temperatures::MainPage::SetGeolocationPropertiesText(Platform::String^ latitudeText, Platform::String^ longitudeText) {
 	SetGeolocationPropertyFromValue(latitudeText, LatitudeSignComboBox, LatitudeBox);
 	SetGeolocationPropertyFromValue(longitudeText, LongitudeSignComboBox, LongitudeBox);
 }
+
 
 void IoTLab_Temperatures::MainPage::SetGeolocationPropertyFromValue(
 	Platform::String^ value,
