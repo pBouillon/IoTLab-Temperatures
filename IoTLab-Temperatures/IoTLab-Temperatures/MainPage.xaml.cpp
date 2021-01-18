@@ -3,6 +3,8 @@
 // Implementation of the MainPage class.
 //
 
+#include "pch.h"
+
 #include <codecvt>
 #include <iterator>
 #include <locale> 
@@ -13,11 +15,12 @@
 #include <thread>
 #include <vector>
 
-#include "pch.h"
+
 #include "GeographicCoordinate.h"
 #include "MainPage.xaml.h"
 #include "Mote.h"
 #include "TypeConversion.h"
+
 
 using namespace IoTLab_Temperatures;
 
@@ -40,9 +43,15 @@ using namespace Windows::UI::Core;
 using namespace Platform;
 using namespace concurrency;
 
+
 // Number of milliseconds during which the thread will halted
 // while looping when awaiting an incoming event
 #define THREAD_HALT_MS 100
+
+
+// Number of ticks elapsed in a second
+// https://docs.microsoft.com/fr-fr/windows/uwp/threading-async/use-a-timer-to-submit-a-work-item
+#define TICKS_PER_SECOND 10000000
 
 
 // Separator used when displaying alongside the latitude and the longitude of the user
@@ -76,8 +85,91 @@ const double TEMPERATURE_THRESHOLD = 20.0;
 // coordinates
 Mote* closestMote;
 
+// A list containing all the motes used for the application and on the IoTLab
+std::vector<Mote*> motes = {
+		new Mote(48.669422, 6.155112, "9.138", "North Amphitheater"),
+		new Mote(48.668837, 6.154990, "111.130", "South Amphitheater"),
+		new Mote(48.668922, 6.155363, "151.105", "Room E - 1.22"),
+		new Mote(48.669400, 6.155340, "32.131", "Room N - 0.3"),
+		new Mote(48.669439, 6.155265, "97.145", "Office 2.6"),
+		new Mote(48.669419, 6.155269, "120.99", "Office 2.7"),
+		new Mote(48.669394, 6.155287, "200.124", "Office 2.8"),
+		new Mote(48.669350, 6.155310, "53.105", "Office 2.9")
+};
+
+// The user coordinates, by default (0, 0)
+GeographicCoordinate userCoordinate = GeographicCoordinate(0, 0);
+
+HANDLE hUpdateClosestMoteEvent;
+DWORD WINAPI UpdateClosestMoteRoutine(LPVOID hEvent);
+
 HANDLE hUpdateMoteMeasureReportEvent;
 DWORD WINAPI UpdateMoteMeasureReportRoutine(LPVOID hEvent);
+
+// Mutex to prevent an incoherent behaviour if several update requests of the closest
+// mote are sent
+std::shared_mutex closestMoteUpdateMutex;
+
+// Mutex preventing the HTTP call to be made before the closest mote is adequately set
+std::shared_mutex iotlabHttpCallMutex;
+
+void SetClosestMoteFromCoordinate(GeographicCoordinate& coordinate);
+
+
+void SetClosestMoteFromCoordinate(GeographicCoordinate& coordinate) {
+	double shortestDistance = INT_MAX;
+
+	for (unsigned int i = 0; i < motes.size(); ++i) {
+		Mote* current = motes[i];
+		double distance = current->GetDistanceToThisMoteInKm(coordinate);
+
+		if (distance < shortestDistance) {
+			closestMote = current;
+			shortestDistance = distance;
+		}
+	}
+}
+
+
+DWORD WINAPI UpdateClosestMoteRoutine(LPVOID hEvent)
+{
+	DWORD dwWait;
+
+	// Wait indefinitely for an incoming event
+	for (;;)
+	{
+		Sleep(THREAD_HALT_MS);
+		dwWait = WaitForSingleObject(hEvent, INFINITE);
+
+		// If the incoming event is the one the thread is not the one requesting
+		// to find the closest mote, we discard the request and continue
+		// to await for the one we are expecting
+		if (dwWait != WAIT_OBJECT_0)
+		{
+			continue;
+		}
+
+		// Prevent this function to be executed if another update is requested
+		closestMoteUpdateMutex.lock_shared();
+
+		SetClosestMoteFromCoordinate(userCoordinate);
+
+		// Once that the closest mote is found, we can release the mutex
+		// so that the other thread can perform the HTTP call
+		iotlabHttpCallMutex.unlock_shared();
+
+		// Lock the mutex to prevent the other thread to perform other API calls
+		iotlabHttpCallMutex.lock_shared();
+
+		// Once the event is handled, we can clear it
+		ResetEvent(hUpdateMoteMeasureReportEvent);
+
+		// Allows for a new update to be performed by releasing the mutex
+		closestMoteUpdateMutex.unlock_shared();
+	}
+
+	return 0;
+}
 
 
 DWORD WINAPI UpdateMoteMeasureReportRoutine(LPVOID hEvent)
@@ -98,7 +190,14 @@ DWORD WINAPI UpdateMoteMeasureReportRoutine(LPVOID hEvent)
 			continue;
 		}
 
+		// Lock the mutex to perform the http call based on the closest mote
+		iotlabHttpCallMutex.lock_shared();
+
 		closestMote->LoadLatestMeasure();
+
+		// Release the mutex once the call has been made so that the closest mote
+		// can be computed again
+		iotlabHttpCallMutex.unlock_shared();
 
 		// Once the event is handled, we can clear it
 		ResetEvent(hUpdateMoteMeasureReportEvent);
@@ -116,8 +215,15 @@ MainPage::MainPage()
 	// we do not know the current user's position
 	closestMote = NULL;
 
-	// Generate the default mote set with whom the app will be working
-	InitializeMotes();
+	// Initialize the refresh period so that the UI is refreshed every 0.5 second
+	TimeSpan delay;
+	delay.Duration = 0.5 * TICKS_PER_SECOND;
+
+	// Initialize the refresh timer
+	DispatcherTimer^ timer = ref new DispatcherTimer();
+	timer->Interval = delay;
+	timer->Start();
+	timer->Tick += ref new EventHandler<Object^>(this, &MainPage::OnTick);
 
 	// Initialize the background tasks
 	InitializeThreads();
@@ -130,32 +236,23 @@ MainPage::~MainPage()
 }
 
 
-void IoTLab_Temperatures::MainPage::InitializeMotes()
-{
-	motes = {
-		new Mote(48.669422, 6.155112, "9.138", "North Amphitheater"),
-		new Mote(48.668837, 6.154990, "111.130", "South Amphitheater"),
-		new Mote(48.668922, 6.155363, "151.105", "Room E - 1.22"),
-		new Mote(48.669400, 6.155340, "32.131", "Room N - 0.3"),
-		new Mote(48.669439, 6.155265, "97.145", "Office 2.6"),
-		new Mote(48.669419, 6.155269, "120.99", "Office 2.7"),
-		new Mote(48.669394, 6.155287, "200.124", "Office 2.8"),
-		new Mote(48.669350, 6.155310, "53.105", "Office 2.9")
-	};
-
-	for (unsigned int i = 0; i < motes.size(); ++i)
-	{
-		motes[i]->LoadLatestMeasure();
-	}
-}
-
-
 void IoTLab_Temperatures::MainPage::InitializeThreads()
 {
-	hUpdateMoteMeasureReportEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+	// Lock the mutex by default in order to let the thread handling the closest mote
+	// handle the workflow
+	iotlabHttpCallMutex.lock_shared();
 
 	DWORD threadId;
-	CreateThread(NULL, 0, updateMoteMeasureReportRoutine, (LPVOID)hUpdateMoteMeasureReportEvent, 0, &threadId);
+	
+	// Initialize the thread in charge of retrieving the closest mote
+	hUpdateClosestMoteEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+
+	CreateThread(NULL, 0, UpdateClosestMoteRoutine, (LPVOID) hUpdateClosestMoteEvent, 0, &threadId);
+
+	// Initialize the thread in charge of retrieving the latest measure of a mote
+	hUpdateMoteMeasureReportEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+
+	CreateThread(NULL, 0, UpdateMoteMeasureReportRoutine, (LPVOID) hUpdateMoteMeasureReportEvent, 0, &threadId);
 }
 
 
@@ -175,6 +272,12 @@ bool IoTLab_Temperatures::MainPage::IsLongitudeValid() {
 }
 
 
+bool IoTLab_Temperatures::MainPage::IsUserPositionSet()
+{
+	return closestMote != NULL;
+}
+
+
 void IoTLab_Temperatures::MainPage::LatitudeBox_TextChanged(
 	Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e)
 {
@@ -186,6 +289,15 @@ void IoTLab_Temperatures::MainPage::LongitudeBox_TextChanged(
 	Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e)
 {
 	UpdateValidateButtonValidity();
+}
+
+
+void IoTLab_Temperatures::MainPage::OnTick(Platform::Object^ sender, Platform::Object^ e)
+{
+	if (IsUserPositionSet())
+	{
+		UpdateDisplay();
+	}
 }
 
 
@@ -216,21 +328,6 @@ void IoTLab_Temperatures::MainPage::SetBrightnessImageFromMeasure(double brightn
 	brightnessValue >= BRIGHTNESS_THRESHOLD
 		? ToggleImages(MediumBrightnessImage, LowBrightnessImage)
 		: ToggleImages(LowBrightnessImage, MediumBrightnessImage);
-}
-
-
-void IoTLab_Temperatures::MainPage::SetClosestMoteFromCoordinate(GeographicCoordinate& coordinate) {
-	double shortestDistance = INT_MAX;
-
-	for (unsigned int i = 0; i < motes.size(); ++i) {
-		Mote* current = motes[i];
-		double distance = current->GetDistanceToThisMoteInKm(coordinate);
-
-		if (distance < shortestDistance) {
-			closestMote = current;
-			shortestDistance = distance;
-		}
-	}
 }
 
 
@@ -350,15 +447,15 @@ void IoTLab_Temperatures::MainPage::ValidateButton_Click(
 	Platform::String^ formattedLongitude = longitudeSign + longitudeValue;
 
 	// Compute the user's coordinates and retrieve the closest mote's measures
-	GeographicCoordinate userCoordinate (
-		typeConversion::ToDouble(formattedLatitude), typeConversion::ToDouble(formattedLongitude));
+	userCoordinate = GeographicCoordinate(typeConversion::ToDouble(formattedLatitude), typeConversion::ToDouble(formattedLongitude));
 
-	SetClosestMoteFromCoordinate(userCoordinate);
+	// Fire the event requesting for the app to asynchronously compute the closest
+	// mote of the user, according to his updated coordinates
+	SetEvent(hUpdateClosestMoteEvent);
 
+	// Fire the event requesting for the app to asynchronously retrieve the latest
+	// measure report of the closest mote
 	SetEvent(hUpdateMoteMeasureReportEvent);
-
-	// Update the UI according to the new values
-	UpdateDisplay();
 }
 
 
@@ -404,10 +501,12 @@ void IoTLab_Temperatures::MainPage::UpdateLocationData(Windows::Devices::Geoloca
 		: SetGeolocationPropertiesText("No data", "No data");
 }
 
+
 void IoTLab_Temperatures::MainPage::SetGeolocationPropertiesText(Platform::String^ latitudeText, Platform::String^ longitudeText) {
 	SetGeolocationPropertyFromValue(latitudeText, LatitudeSignComboBox, LatitudeBox);
 	SetGeolocationPropertyFromValue(longitudeText, LongitudeSignComboBox, LongitudeBox);
 }
+
 
 void IoTLab_Temperatures::MainPage::SetGeolocationPropertyFromValue(
 	Platform::String^ value,
