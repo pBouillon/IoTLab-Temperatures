@@ -41,7 +41,7 @@ CardinalPointFlags GeographicCoordinate::GetDirectionTo(GeographicCoordinate& co
 {
 	bool isNorthFromCurrentPosition = this->latitude > coordinate.latitude;
 		
-	bool isEastFromCurrentPosition = this->longitude > coordinate.longitude;
+	bool isEastFromCurrentPosition = this->longitude < coordinate.longitude;
 
 	CardinalPointFlags direction = isNorthFromCurrentPosition
 		? NORTH
