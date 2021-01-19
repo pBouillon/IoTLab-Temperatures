@@ -186,6 +186,40 @@ void IoTLab_Temperatures::MainPage::LatitudeBox_TextChanged(
 	UpdateValidateButtonValidity();
 }
 
+void IoTLab_Temperatures::MainPage::LocateButton_Click(
+	Platform::Object^ sender,
+	Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+	try
+	{
+		task<GeolocationAccessStatus> geolocationAccessRequestTask(Windows::Devices::Geolocation::Geolocator::RequestAccessAsync());
+		geolocationAccessRequestTask.then([this](task<GeolocationAccessStatus> accessStatusTask)
+		{
+			// Get will throw an exception if the task was canceled or failed with an error
+			auto accessStatus = accessStatusTask.get();
+
+			if (accessStatus != GeolocationAccessStatus::Allowed) {
+				SetGeolocationPropertiesText("Access denied", "");
+				return;
+			}
+
+			auto geolocator = ref new Windows::Devices::Geolocation::Geolocator();
+
+			task<Geoposition^> geopositionTask(geolocator->GetGeopositionAsync(), geopositionTaskTokenSource.get_token());
+			geopositionTask.then([this](task<Geoposition^> getPosTask)
+			{
+				// Get will throw an exception if the task was canceled or failed with an error
+				UpdateLocationData(getPosTask.get());
+			});
+		});
+	}
+	catch (task_canceled&) { /* Silenced */ }
+	catch (Exception^ ex)
+	{
+		SetGeolocationPropertiesText("Failed to fetch", "");
+	}
+}
+
 void IoTLab_Temperatures::MainPage::LongitudeBox_TextChanged(
 	Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e)
 {
@@ -282,6 +316,31 @@ void SetClosestMoteFromCoordinate(GeographicCoordinate& coordinate)
 			shortestDistance = distance;
 		}
 	}
+}
+
+void IoTLab_Temperatures::MainPage::SetGeolocationPropertiesText(
+	Platform::String^ latitudeText, 
+	Platform::String^ longitudeText) 
+{
+	SetGeolocationPropertyFromValue(latitudeText, LatitudeSignComboBox, LatitudeBox);
+	SetGeolocationPropertyFromValue(longitudeText, LongitudeSignComboBox, LongitudeBox);
+}
+
+void IoTLab_Temperatures::MainPage::SetGeolocationPropertyFromValue(
+	Platform::String^ value,
+	Windows::UI::Xaml::Controls::ComboBox^ signComboBox,
+	Windows::UI::Xaml::Controls::TextBox^ valueTextBox)
+{
+	std::string longitude = typeConversion::ToString(value);
+
+	if (!value->IsEmpty()
+		&& longitude[0] == '-')
+	{
+		longitude = longitude.substr(1, longitude.length() - 1);
+		signComboBox->SelectedIndex = 1;
+	}
+
+	valueTextBox->Text = typeConversion::ToPlatformString(longitude);
 }
 
 void IoTLab_Temperatures::MainPage::SetHumidityImageFromMeasure(double humidityRate) 
@@ -455,11 +514,35 @@ void IoTLab_Temperatures::MainPage::UpdateTemperatureCard(MeasureReport& measure
 	SetTemperatureImageFromMeasure(temperatureValue);
 }
 
+void IoTLab_Temperatures::MainPage::UpdateUserCoordinatesFromFields()
+{
+	// Retrieve the inputed coordinates
+	Platform::String^ latitudeValue = LatitudeBox->Text;
+	Platform::String^ latitudeSign = LatitudeSignComboBox->SelectedItem->ToString();
+	Platform::String^ formattedLatitude = latitudeSign + latitudeValue;
+
+	Platform::String^ longitudeValue = LongitudeBox->Text;
+	Platform::String^ longitudeSign = LongitudeSignComboBox->SelectedItem->ToString();
+	Platform::String^ formattedLongitude = longitudeSign + longitudeValue;
+
+	// Compute the user's coordinates and retrieve the closest mote's measures
+	userCoordinate = GeographicCoordinate(typeConversion::ToDouble(formattedLatitude), typeConversion::ToDouble(formattedLongitude));
+}
+
 // Enable the "Validate" button depending of the validity of the other fields
 void IoTLab_Temperatures::MainPage::UpdateValidateButtonValidity()
 {
 	ValidateButton->IsEnabled = IsLatitudeValid()
 		&& IsLongitudeValid();
+}
+
+void IoTLab_Temperatures::MainPage::UpdateLocationData(Windows::Devices::Geolocation::Geoposition^ position)
+{
+	position != nullptr
+		? SetGeolocationPropertiesText(
+			position->Coordinate->Point->Position.Latitude.ToString(),
+			position->Coordinate->Point->Position.Longitude.ToString())
+		: SetGeolocationPropertiesText("No data", "No data");
 }
 
 // On click, build the user's geographic coordinate from the latitude and the longitude input fields
@@ -476,87 +559,4 @@ void IoTLab_Temperatures::MainPage::ValidateButton_Click(
 	// Fire the event requesting for the app to asynchronously retrieve the latest
 	// measure report of the closest mote
 	SetEvent(hUpdateMoteMeasureReportEvent);
-}
-
-void IoTLab_Temperatures::MainPage::UpdateUserCoordinatesFromFields()
-{
-	// Retrieve the inputed coordinates
-	Platform::String^ latitudeValue = LatitudeBox->Text;
-	Platform::String^ latitudeSign = LatitudeSignComboBox->SelectedItem->ToString();
-	Platform::String^ formattedLatitude = latitudeSign + latitudeValue;
-
-	Platform::String^ longitudeValue = LongitudeBox->Text;
-	Platform::String^ longitudeSign = LongitudeSignComboBox->SelectedItem->ToString();
-	Platform::String^ formattedLongitude = longitudeSign + longitudeValue;
-
-	// Compute the user's coordinates and retrieve the closest mote's measures
-	userCoordinate = GeographicCoordinate(typeConversion::ToDouble(formattedLatitude), typeConversion::ToDouble(formattedLongitude));
-}
-
-void IoTLab_Temperatures::MainPage::LocateButton_Click(
-	Platform::Object^ sender,
-	Windows::UI::Xaml::RoutedEventArgs^ e)
-{
-	try
-	{
-		task<GeolocationAccessStatus> geolocationAccessRequestTask(Windows::Devices::Geolocation::Geolocator::RequestAccessAsync());
-		geolocationAccessRequestTask.then([this](task<GeolocationAccessStatus> accessStatusTask)
-		{
-			// Get will throw an exception if the task was canceled or failed with an error
-			auto accessStatus = accessStatusTask.get();
-
-			if (accessStatus != GeolocationAccessStatus::Allowed) {
-				SetGeolocationPropertiesText("Access denied", "");
-				return;
-			}
-
-			auto geolocator = ref new Windows::Devices::Geolocation::Geolocator();
-
-			task<Geoposition^> geopositionTask(geolocator->GetGeopositionAsync(), geopositionTaskTokenSource.get_token());
-			geopositionTask.then([this](task<Geoposition^> getPosTask)
-			{
-				// Get will throw an exception if the task was canceled or failed with an error
-				UpdateLocationData(getPosTask.get());
-			});
-		});
-	}
-	catch (task_canceled&) { /* Silenced */ }
-	catch (Exception^ ex)
-	{
-		SetGeolocationPropertiesText("Failed to fetch", "");
-	}
-}
-
-void IoTLab_Temperatures::MainPage::UpdateLocationData(Windows::Devices::Geolocation::Geoposition^ position)
-{
-	position != nullptr
-		? SetGeolocationPropertiesText(
-			position->Coordinate->Point->Position.Latitude.ToString(),
-			position->Coordinate->Point->Position.Longitude.ToString())
-		: SetGeolocationPropertiesText("No data", "No data");
-}
-
-void IoTLab_Temperatures::MainPage::SetGeolocationPropertiesText(
-	Platform::String^ latitudeText, 
-	Platform::String^ longitudeText) 
-{
-	SetGeolocationPropertyFromValue(latitudeText, LatitudeSignComboBox, LatitudeBox);
-	SetGeolocationPropertyFromValue(longitudeText, LongitudeSignComboBox, LongitudeBox);
-}
-
-void IoTLab_Temperatures::MainPage::SetGeolocationPropertyFromValue(
-	Platform::String^ value,
-	Windows::UI::Xaml::Controls::ComboBox^ signComboBox,
-	Windows::UI::Xaml::Controls::TextBox^ valueTextBox)
-{
-	std::string longitude = typeConversion::ToString(value);
-
-	if (!value->IsEmpty()
-		&& longitude[0] == '-')
-	{
-		longitude = longitude.substr(1, longitude.length() - 1);
-		signComboBox->SelectedIndex = 1;
-	}
-
-	valueTextBox->Text = typeConversion::ToPlatformString(longitude);
 }
