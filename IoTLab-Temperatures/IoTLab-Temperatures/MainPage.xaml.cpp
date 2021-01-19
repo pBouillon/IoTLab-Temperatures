@@ -236,39 +236,46 @@ void IoTLab_Temperatures::MainPage::OnTick(Platform::Object^ sender, Platform::O
 
 void IoTLab_Temperatures::MainPage::RenderDirectionContainer()
 {
+	// Display the container containing the direction information toward the mote
 	MoteDirectionGrid->Visibility = Windows::UI::Xaml::Visibility::Visible;
 
+	// Display the distance to the mote, in km
 	DirectionDistanceTextBlock->Text = closestMote->GetDistanceToThisMoteInKm(userCoordinate) + " km";
 
+	// If the user coordinates are on the same place as the mote, their is no direction to indicate
 	if (closestMote->HasSameCoordinateAs(userCoordinate))
 	{
 		DirectionValueTextBlock->Text = "On your position";
 		return;
 	}
 
+	// Build the direction indication
 	CardinalPointFlags directionToMote = closestMote->GetDirectionToThisMote(userCoordinate);
 	
-	DirectionValueTextBlock->Text = directionToMote & NORTH
-		? "NORTH"
-		: "SOUTH";
+	Platform::String^ directionIndication = "";
+	Platform::String^ spacing = "";
 
-	DirectionValueTextBlock->Text += directionToMote & EAST
-		? " EAST"
-		: " WEST";
-
-	if (closestMote->HasSameLatitudeAs(userCoordinate)) 
+	// If the user has not the same latitude as the mote, we guide him to the North or the South
+	if (!closestMote->HasSameLatitudeAs(userCoordinate))
 	{
-		DirectionValueTextBlock->Text = directionToMote & EAST
-			? " EAST"
-			: " WEST";
-	}
-
-	if (closestMote->HasSameLongitudeAs(userCoordinate))
-	{
-		DirectionValueTextBlock->Text = directionToMote & NORTH
+		directionIndication += directionToMote & NORTH
 			? "NORTH"
 			: "SOUTH";
+
+		// Since the indication contains a direction regarding the latitude, we append a space
+		// if an indication containing the longitude is also appended
+		spacing = " ";
 	}
+
+	// If the user has not the same longitude as the mote, we guide him to the East or the West
+	if (!closestMote->HasSameLongitudeAs(userCoordinate))
+	{
+		directionIndication += directionToMote & EAST
+			? spacing + "EAST"
+			: spacing + "WEST";
+	}
+	
+	DirectionValueTextBlock->Text = directionIndication;
 }
 
 void IoTLab_Temperatures::MainPage::RenderMoteContainer() 
