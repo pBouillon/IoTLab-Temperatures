@@ -170,6 +170,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CardinalPoint.h" />
     <ClInclude Include="GeographicCoordinate.h" />
     <ClInclude Include="Degree.h" />
     <ClInclude Include="MeasureReport.h" />
