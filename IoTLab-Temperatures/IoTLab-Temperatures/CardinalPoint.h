@@ -20,7 +20,7 @@ inline CardinalPointFlag operator|(CardinalPointFlag a, CardinalPointFlag b)
 // Example:
 //     CardinalPointFlag northEast = CardinalPointFlag.NORTH;
 //     northEast |= CardinalPointFlag.EAST;
-inline CardinalPointFlag operator|=(CardinalPointFlag a, CardinalPointFlag b)
+inline CardinalPointFlag operator|=(CardinalPointFlag originalFlag, CardinalPointFlag flagToAdd)
 {
-	return a = a | b;
+	return originalFlag = originalFlag | flagToAdd;
 }

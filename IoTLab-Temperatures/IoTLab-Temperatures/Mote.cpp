@@ -40,6 +40,11 @@ std::string Mote::GetCommonName()
 	return this->commonName;
 }
 
+CardinalPointFlag Mote::GetDirectionToThisMote(GeographicCoordinate& coordinate)
+{
+	return coordinate.GetDirectionTo(*(this->coordinate));
+}
+
 MeasureReport* Mote::GetMeasure()
 {
 	return this->measure;
