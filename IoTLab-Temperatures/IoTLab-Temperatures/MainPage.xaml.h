@@ -38,6 +38,8 @@ namespace IoTLab_Temperatures
 			Windows::UI::Xaml::Controls::TextChangedEventArgs^ e);
 
 		void OnTick(Platform::Object^ sender, Platform::Object^ e);
+
+		void RenderDirectionContainer();
 		
 		void RenderMoteContainer();
 		

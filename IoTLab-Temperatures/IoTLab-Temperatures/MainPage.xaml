@@ -48,6 +48,8 @@
             <TextBlock x:Name="HumidityValueTextBlock" HorizontalAlignment="Left" Margin="202,430,0,0" Text="75 %" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold" Width="107" TextAlignment="Center" Visibility="Visible"/>
             <TextBlock x:Name="BatteryValueTextBlock" HorizontalAlignment="Left" Margin="49,556,0,0" Text="50 %" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold" Width="107" TextAlignment="Center" Visibility="Visible"/>
             <TextBlock x:Name="BrightnessValueTextBlock" HorizontalAlignment="Left" Margin="202,556,0,0" Text="210 Lx" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold" Width="107" TextAlignment="Center" Visibility="Visible"/>
+        </Grid>
+        <Grid x:Name="MoteDirectionGrid" Visibility="Collapsed" RequestedTheme="Default">
             <TextBlock x:Name="DirectionValueTextBlock" Margin="202,297,47,0" Text="North" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" FontSize="14" FontFamily="Segoe UI" Height="20"/>
             <TextBlock x:Name="DirectionDistanceTextBlock" Margin="202,318,47,0" Text="200 meters" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" FocusVisualPrimaryBrush="#FF656565" Foreground="#FFC7C0C2" FontSize="10"/>
             <Image x:Name="CompassImage" HorizontalAlignment="Left" Height="50" Margin="233,238,0,0" VerticalAlignment="Top" Width="50" Source="/Assets/icons8-compass-96.png"/>

@@ -200,9 +200,14 @@ void IoTLab_Temperatures::MainPage::OnTick(Platform::Object^ sender, Platform::O
 	}
 }
 
+void IoTLab_Temperatures::MainPage::RenderDirectionContainer()
+{
+	MoteDirectionGrid->Visibility = Windows::UI::Xaml::Visibility::Visible;
+}
+
 void IoTLab_Temperatures::MainPage::RenderMoteContainer() 
 {
-	// Collapse the default text when no mote's measure is displayed
+	// Collapse the default text when a mote's measure is displayed
 	NoMoteDisplayedTextBlock->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
 
 	// Update the mote's label
@@ -358,6 +363,7 @@ DWORD WINAPI UpdateClosestMoteRoutine(LPVOID hEvent)
 void IoTLab_Temperatures::MainPage::UpdateDisplay() 
 {
 	RenderMoteContainer();
+	RenderDirectionContainer();
 	UpdateCards();
 }
 
