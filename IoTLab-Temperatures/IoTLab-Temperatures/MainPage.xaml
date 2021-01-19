@@ -25,9 +25,9 @@
         <TextBlock x:Name="AppTitle" HorizontalAlignment="Center" Margin="0,1,0,0" Text="IoTLab Sensors" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20"/>
         <TextBlock x:Name="NoMoteDisplayedTextBlock" HorizontalAlignment="Center" Margin="0,0,0,199" Text="Please enter your coordinates to show the closest mote's measure" TextWrapping="Wrap" VerticalAlignment="Bottom" FontSize="18" Width="260" TextAlignment="Center" FontFamily="Segoe UI" FocusVisualPrimaryBrush="White" Foreground="#FF656565"/>
         <Grid x:Name="MoteMeasureGrid" Visibility="Collapsed" RequestedTheme="Default">
-            <Image x:Name="MoteImage" HorizontalAlignment="Center" Height="60" Margin="0,233,0,0" VerticalAlignment="Top" Width="60" Source="/Assets/icons8-iot-sensor-100.png" Visibility="Visible"/>
-            <TextBlock x:Name="MoteLocationTextBlock" HorizontalAlignment="Center" Margin="0,294,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" Width="340" Visibility="Visible" Height="20"/>
-            <TextBlock x:Name="MoteTextBlock" HorizontalAlignment="Center" Margin="0,315,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="10" FocusVisualPrimaryBrush="White" TextAlignment="Center" Visibility="Visible" Width="340">
+            <Image x:Name="MoteImage" HorizontalAlignment="Left" Height="60" Margin="73,231,0,0" VerticalAlignment="Top" Width="60" Source="/Assets/icons8-iot-sensor-100.png" Visibility="Visible"/>
+            <TextBlock x:Name="MoteLocationTextBlock" Margin="17,297,179,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" Visibility="Visible" Height="20" HorizontalAlignment="Stretch"/>
+            <TextBlock x:Name="MoteTextBlock" HorizontalAlignment="Stretch" Margin="47,318,201,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="10" FocusVisualPrimaryBrush="White" TextAlignment="Center" Visibility="Visible">
                 <TextBlock.Foreground>
                     <SolidColorBrush Color="#FFC7C0C2"/>
                 </TextBlock.Foreground>
@@ -48,6 +48,9 @@
             <TextBlock x:Name="HumidityValueTextBlock" HorizontalAlignment="Left" Margin="202,430,0,0" Text="75 %" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold" Width="107" TextAlignment="Center" Visibility="Visible"/>
             <TextBlock x:Name="BatteryValueTextBlock" HorizontalAlignment="Left" Margin="49,556,0,0" Text="50 %" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold" Width="107" TextAlignment="Center" Visibility="Visible"/>
             <TextBlock x:Name="BrightnessValueTextBlock" HorizontalAlignment="Left" Margin="202,556,0,0" Text="210 Lx" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold" Width="107" TextAlignment="Center" Visibility="Visible"/>
+            <TextBlock x:Name="DirectionValueTextBlock" Margin="202,297,47,0" Text="North" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" FontSize="14" FontFamily="Segoe UI" Height="20"/>
+            <TextBlock x:Name="DirectionDistanceTextBlock" Margin="202,318,47,0" Text="200 meters" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" FocusVisualPrimaryBrush="#FF656565" Foreground="#FFC7C0C2" FontSize="10"/>
+            <Image x:Name="CompassImage" HorizontalAlignment="Left" Height="50" Margin="233,238,0,0" VerticalAlignment="Top" Width="50" Source="/Assets/icons8-compass-96.png"/>
         </Grid>
         <TextBlock x:Name="CreditsTextBlock" HorizontalAlignment="Center" Margin="0,596,0,0" Text="Icons by Icons8" TextWrapping="Wrap" VerticalAlignment="Top" Foreground="#FF656565" Width="358" TextAlignment="Center" FontSize="10"/>
         <Image x:Name="WarmTemperatureImage" HorizontalAlignment="Left" Height="37" Margin="85,385,0,0" VerticalAlignment="Top" Width="37" Source="/Assets/icons8-thermometer-80.png" Visibility="Collapsed"/>

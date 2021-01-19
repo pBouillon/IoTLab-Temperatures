@@ -230,6 +230,9 @@
     <Image Include="Assets\icons8--low-wet-80.png">
       <Filter>Assets</Filter>
     </Image>
+    <Image Include="Assets\icons8-compass-96.png">
+      <Filter>Assets</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />
