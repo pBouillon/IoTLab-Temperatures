@@ -40,7 +40,7 @@ std::string Mote::GetCommonName()
 	return this->commonName;
 }
 
-CardinalPointFlag Mote::GetDirectionToThisMote(GeographicCoordinate& coordinate)
+CardinalPointFlags Mote::GetDirectionToThisMote(GeographicCoordinate& coordinate)
 {
 	return coordinate.GetDirectionTo(*(this->coordinate));
 }

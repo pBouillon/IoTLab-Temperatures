@@ -25,7 +25,7 @@ public:
 	GeographicCoordinate(double latitude, double longitude);
 
 	// Get the direction to the current coordinate from the provided ones
-	CardinalPointFlag GetDirectionTo(GeographicCoordinate& coordinate);
+	CardinalPointFlags GetDirectionTo(GeographicCoordinate& coordinate);
 
 	// Evaluate the distance between two geographic coordinates in kilometers
 	double GetDistanceFromInKm(GeographicCoordinate& coordinate);

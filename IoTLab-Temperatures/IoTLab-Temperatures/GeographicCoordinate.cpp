@@ -30,13 +30,13 @@ GeographicCoordinate::GeographicCoordinate(double latitude, double longitude)
 	this->longitude = longitude;
 }
 
-CardinalPointFlag GeographicCoordinate::GetDirectionTo(GeographicCoordinate& coordinate)
+CardinalPointFlags GeographicCoordinate::GetDirectionTo(GeographicCoordinate& coordinate)
 {
-	bool isNorthFromCurrentPosition = this->longitude < coordinate.longitude;
+	bool isNorthFromCurrentPosition = this->longitude > coordinate.longitude;
 
-	bool isEastFromCurrentPosition = this->latitude < coordinate.latitude;
+	bool isEastFromCurrentPosition = this->latitude > coordinate.latitude;
 
-	CardinalPointFlag direction = isNorthFromCurrentPosition
+	CardinalPointFlags direction = isNorthFromCurrentPosition
 		? NORTH
 		: SOUTH;
 

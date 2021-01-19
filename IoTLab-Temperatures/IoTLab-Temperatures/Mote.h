@@ -38,7 +38,7 @@ public:
 	std::string GetCommonName();
 
 	// Get the direction to the mote from the current coordinate
-	CardinalPointFlag GetDirectionToThisMote(GeographicCoordinate& coordinate);
+	CardinalPointFlags GetDirectionToThisMote(GeographicCoordinate& coordinate);
 
 	// Get the distance between this mote and a coordinate in kilometers
 	double GetDistanceToThisMoteInKm(GeographicCoordinate& coordinate);

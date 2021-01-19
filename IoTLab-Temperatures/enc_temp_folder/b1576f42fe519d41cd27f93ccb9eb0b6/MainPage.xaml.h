@@ -74,13 +74,13 @@ namespace IoTLab_Temperatures
 		
 		void UpdateTemperatureCard(MeasureReport& measure);
 
-		void UpdateUserCoordinatesFromFields();
-
 		void UpdateValidateButtonValidity();
 		
 		void ValidateButton_Click(
 			Platform::Object^ sender, 
 			Windows::UI::Xaml::RoutedEventArgs^ e);
+
+		void UpdateUserCoordinatesFromFields();
 		
 		void LocateButton_Click(
 			Platform::Object^ sender, 
