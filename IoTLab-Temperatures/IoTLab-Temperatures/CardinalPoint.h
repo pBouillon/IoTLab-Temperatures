@@ -11,7 +11,7 @@ enum CardinalPointFlags
 // Allows for a CardinalPointFlag to hold multiple flags of the same type
 // Example:
 //     CardinalPointFlag northEast = CardinalPointFlag.NORTH | CardinalPointFlag.EAST;
-inline CardinalPointFlags operator|(CardinalPointFlags a, CardinalPointFlags b)
+inline CardinalPointFlags operator|(CardinalPointFlags& a, CardinalPointFlags& b)
 {
 	return static_cast<CardinalPointFlags>(static_cast<int>(a) | static_cast<int>(b));
 }
@@ -20,7 +20,8 @@ inline CardinalPointFlags operator|(CardinalPointFlags a, CardinalPointFlags b)
 // Example:
 //     CardinalPointFlag northEast = CardinalPointFlag.NORTH;
 //     northEast |= CardinalPointFlag.EAST;
-inline CardinalPointFlags operator|=(CardinalPointFlags originalFlag, CardinalPointFlags flagToAdd)
+inline CardinalPointFlags& operator|=(CardinalPointFlags& originalFlag, CardinalPointFlags flagToAdd)
 {
-	return originalFlag = originalFlag | flagToAdd;
+	originalFlag = originalFlag | flagToAdd;
+	return originalFlag;
 }
