@@ -36,6 +36,12 @@ public:
 	// Get the longitude
 	double GetLongitude();
 
+	bool HasSameCoordinateAs(GeographicCoordinate & coordinate);
+
+	bool HasSameLatitudeAs(GeographicCoordinate & coordinate);
+
+	bool HasSameLongitudeAs(GeographicCoordinate & coordinate);
+
 	// Check if a latitude is within the allowed bounds of
 	// +- MAX_ABSOLUTE_LATITUDE_DEGREE
 	static bool IsValidLatitude(double latitude);

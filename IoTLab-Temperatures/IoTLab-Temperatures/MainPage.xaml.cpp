@@ -15,7 +15,6 @@
 #include <thread>
 #include <vector>
 
-
 #include "CardinalPoint.h"
 #include "GeographicCoordinate.h"
 #include "MainPage.xaml.h"
@@ -205,6 +204,14 @@ void IoTLab_Temperatures::MainPage::RenderDirectionContainer()
 {
 	MoteDirectionGrid->Visibility = Windows::UI::Xaml::Visibility::Visible;
 
+	DirectionDistanceTextBlock->Text = closestMote->GetDistanceToThisMoteInKm(userCoordinate) + " km";
+
+	if (closestMote->HasSameCoordinateAs(userCoordinate))
+	{
+		DirectionValueTextBlock->Text = "On your position";
+		return;
+	}
+
 	CardinalPointFlags directionToMote = closestMote->GetDirectionToThisMote(userCoordinate);
 	
 	DirectionValueTextBlock->Text = directionToMote & NORTH
@@ -214,8 +221,6 @@ void IoTLab_Temperatures::MainPage::RenderDirectionContainer()
 	DirectionValueTextBlock->Text += directionToMote & EAST
 		? " EAST"
 		: " WEST";
-
-	DirectionDistanceTextBlock->Text = closestMote->GetDistanceToThisMoteInKm(userCoordinate) + " km";
 }
 
 void IoTLab_Temperatures::MainPage::RenderMoteContainer() 

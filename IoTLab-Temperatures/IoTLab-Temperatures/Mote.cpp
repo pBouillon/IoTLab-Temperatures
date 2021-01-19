@@ -55,6 +55,21 @@ std::string Mote::GetName()
 	return this->name;
 }
 
+bool Mote::HasSameCoordinateAs(GeographicCoordinate& coordinate)
+{
+	return this->coordinate->HasSameCoordinateAs(coordinate);
+}
+
+bool Mote::HasSameLatitudeAs(GeographicCoordinate& coordinate)
+{
+	return this->coordinate->HasSameLatitudeAs(coordinate);
+}
+
+bool Mote::HasSameLongitudeAs(GeographicCoordinate& coordinate)
+{
+	return this->coordinate->HasSameLongitudeAs(coordinate);
+}
+
 void Mote::LoadLatestMeasure()
 {
 	Platform::String^ measureUri = IOTLAB_URI + MOTE_MEASURE_URI

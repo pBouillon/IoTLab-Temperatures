@@ -48,6 +48,12 @@ public:
 
 	std::string GetName();
 
+	bool HasSameCoordinateAs(GeographicCoordinate & coordinate);
+
+	bool HasSameLatitudeAs(GeographicCoordinate & coordinate);
+
+	bool HasSameLongitudeAs(GeographicCoordinate & coordinate);
+
 	// Retrieve the latest measure of the mote from the IoTLab base station
 	void LoadLatestMeasure();
 };

@@ -4,6 +4,8 @@
 #include "Degree.h"
 #include "GeographicCoordinate.h"
 
+#define DOUBLE_COMPARISON_EPSILON 0.0000001f
+
 // Earth radius in km from:
 // https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html
 const double EARTH_RADIUS_IN_KM = 6356.752;
@@ -30,11 +32,16 @@ GeographicCoordinate::GeographicCoordinate(double latitude, double longitude)
 	this->longitude = longitude;
 }
 
+boolean AreDoubleEquals(double x, double y, double epsilon = DOUBLE_COMPARISON_EPSILON)
+{
+	return fabs(x - y) < epsilon;
+}
+
 CardinalPointFlags GeographicCoordinate::GetDirectionTo(GeographicCoordinate& coordinate)
 {
-	bool isNorthFromCurrentPosition = this->longitude > coordinate.longitude;
-
-	bool isEastFromCurrentPosition = this->latitude > coordinate.latitude;
+	bool isNorthFromCurrentPosition = this->latitude > coordinate.latitude;
+		
+	bool isEastFromCurrentPosition = this->longitude > coordinate.longitude;
 
 	CardinalPointFlags direction = isNorthFromCurrentPosition
 		? NORTH
@@ -76,6 +83,22 @@ double GeographicCoordinate::GetLatitude()
 double GeographicCoordinate::GetLongitude()
 {
 	return this->longitude;
+}
+
+bool GeographicCoordinate::HasSameCoordinateAs(GeographicCoordinate& coordinate)
+{
+	return HasSameLatitudeAs(coordinate) 
+		&& HasSameLongitudeAs(coordinate);
+}
+
+bool GeographicCoordinate::HasSameLatitudeAs(GeographicCoordinate& coordinate)
+{
+	return AreDoubleEquals(this->latitude, coordinate.latitude);
+}
+
+bool GeographicCoordinate::HasSameLongitudeAs(GeographicCoordinate& coordinate)
+{
+	return AreDoubleEquals(this->longitude, coordinate.longitude);
 }
 
 bool GeographicCoordinate::IsValidLatitude(double latitude)
