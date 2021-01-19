@@ -221,6 +221,20 @@ void IoTLab_Temperatures::MainPage::RenderDirectionContainer()
 	DirectionValueTextBlock->Text += directionToMote & EAST
 		? " EAST"
 		: " WEST";
+
+	if (closestMote->HasSameLatitudeAs(userCoordinate)) 
+	{
+		DirectionValueTextBlock->Text = directionToMote & EAST
+			? " EAST"
+			: " WEST";
+	}
+
+	if (closestMote->HasSameLongitudeAs(userCoordinate))
+	{
+		DirectionValueTextBlock->Text = directionToMote & NORTH
+			? "NORTH"
+			: "SOUTH";
+	}
 }
 
 void IoTLab_Temperatures::MainPage::RenderMoteContainer() 
