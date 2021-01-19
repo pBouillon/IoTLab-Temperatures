@@ -37,6 +37,9 @@ public:
 
 	std::string GetCommonName();
 
+	// Get the direction to the mote from the current coordinate
+	CardinalPointFlags GetDirectionToThisMote(GeographicCoordinate& coordinate);
+
 	// Get the distance between this mote and a coordinate in kilometers
 	double GetDistanceToThisMoteInKm(GeographicCoordinate& coordinate);
 
@@ -44,6 +47,12 @@ public:
 	MeasureReport* GetMeasure();
 
 	std::string GetName();
+
+	bool HasSameCoordinateAs(GeographicCoordinate & coordinate);
+
+	bool HasSameLatitudeAs(GeographicCoordinate & coordinate);
+
+	bool HasSameLongitudeAs(GeographicCoordinate & coordinate);
 
 	// Retrieve the latest measure of the mote from the IoTLab base station
 	void LoadLatestMeasure();

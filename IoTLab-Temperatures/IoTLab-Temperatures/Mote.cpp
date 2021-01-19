@@ -40,6 +40,11 @@ std::string Mote::GetCommonName()
 	return this->commonName;
 }
 
+CardinalPointFlags Mote::GetDirectionToThisMote(GeographicCoordinate& coordinate)
+{
+	return coordinate.GetDirectionTo(*(this->coordinate));
+}
+
 MeasureReport* Mote::GetMeasure()
 {
 	return this->measure;
@@ -48,6 +53,21 @@ MeasureReport* Mote::GetMeasure()
 std::string Mote::GetName()
 {
 	return this->name;
+}
+
+bool Mote::HasSameCoordinateAs(GeographicCoordinate& coordinate)
+{
+	return this->coordinate->HasSameCoordinateAs(coordinate);
+}
+
+bool Mote::HasSameLatitudeAs(GeographicCoordinate& coordinate)
+{
+	return this->coordinate->HasSameLatitudeAs(coordinate);
+}
+
+bool Mote::HasSameLongitudeAs(GeographicCoordinate& coordinate)
+{
+	return this->coordinate->HasSameLongitudeAs(coordinate);
 }
 
 void Mote::LoadLatestMeasure()

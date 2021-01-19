@@ -31,7 +31,12 @@ deployed web platform, acting as a broker for the various sensors.
 - ✅ Each of the mote's data are displayed (name, common name, measures)
 - ✅ The icons are dynamically chosen: depending of the measure, the icon will
   be different (e.g. a discharge battery will be shown if the mote is running
-  out of battery).
+  out of battery)
+- ✅ When displaying a mote, the application also provide a compass to indicate
+  its position and its distance relatively to the user, as shown in the
+  following gif:
+
+![Geolocation and guidance demo](./docs/assets/demo-direction.gif)
 
 ## Credits
 
