@@ -40,7 +40,6 @@ boolean AreDoubleEquals(double x, double y, double epsilon = DOUBLE_COMPARISON_E
 CardinalPointFlags GeographicCoordinate::GetDirectionTo(GeographicCoordinate& coordinate)
 {
 	bool isNorthFromCurrentPosition = abs(this->latitude) < abs(coordinate.latitude);
-
 	bool isEastFromCurrentPosition = abs(this->longitude) < abs(coordinate.longitude);
 
 	CardinalPointFlags direction = isNorthFromCurrentPosition
