@@ -1,5 +1,7 @@
 #pragma once
 
+#include "CardinalPoint.h"
+
 // Maximum absolute degree of the latitude
 const int MAX_ABSOLUTE_LATITUDE_DEGREE = 90;
 
@@ -21,6 +23,9 @@ public:
 	// Create a new instance of a geographic coordinate, based on the provided
 	// angles
 	GeographicCoordinate(double latitude, double longitude);
+
+	// Get the direction to the current coordinate from the provided ones
+	CardinalPointFlag GetDirectionTo(GeographicCoordinate& coordinate);
 
 	// Evaluate the distance between two geographic coordinates in kilometers
 	double GetDistanceFromInKm(GeographicCoordinate& coordinate);

@@ -30,6 +30,23 @@ GeographicCoordinate::GeographicCoordinate(double latitude, double longitude)
 	this->longitude = longitude;
 }
 
+CardinalPointFlag GeographicCoordinate::GetDirectionTo(GeographicCoordinate& coordinate)
+{
+	bool isNorthFromCurrentPosition = this->longitude < coordinate.longitude;
+
+	bool isEastFromCurrentPosition = this->latitude < coordinate.latitude;
+
+	CardinalPointFlag direction = isNorthFromCurrentPosition
+		? NORTH
+		: SOUTH;
+
+	direction |= isEastFromCurrentPosition
+		? EAST
+		: WEST;
+
+	return direction;
+}
+
 // Evaluate the distance between two geographic coordinates in kilometers using the Haversine formula
 // Algorithm from: http://www.movable-type.co.uk/scripts/latlong.html
 // And an implementation in JS from: https://stackoverflow.com/a/365853
