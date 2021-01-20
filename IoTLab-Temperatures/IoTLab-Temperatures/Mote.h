@@ -46,6 +46,12 @@ public:
 	// Get the mote's measure
 	MeasureReport* GetMeasure();
 
+	// Get the latitude
+	double GetLatitude();
+
+	// Get the longitude
+	double GetLongitude();
+
 	std::string GetName();
 
 	bool HasSameCoordinateAs(GeographicCoordinate & coordinate);
