@@ -38,10 +38,10 @@ public:
 	std::string GetCommonName();
 
 	// Get the direction to the mote from the current coordinate
-	CardinalPointFlags GetDirectionToThisMote(GeographicCoordinate& coordinate);
+	CardinalPointFlags GetDirectionFrom(GeographicCoordinate& coordinate);
 
 	// Get the distance between this mote and a coordinate in kilometers
-	double GetDistanceToThisMoteInKm(GeographicCoordinate& coordinate);
+	double GetDistanceInKmFrom(GeographicCoordinate& coordinate);
 
 	// Get the mote's measure
 	MeasureReport* GetMeasure();

@@ -30,7 +30,7 @@ Mote::Mote(GeographicCoordinate* coordinate, std::string name, std::string commo
 Mote::Mote(double latitude, double longitude, std::string name, std::string commonName)
 	: Mote(new GeographicCoordinate(latitude, longitude), name, commonName) { }
 
-double Mote::GetDistanceToThisMoteInKm(GeographicCoordinate& coordinate)
+double Mote::GetDistanceInKmFrom(GeographicCoordinate& coordinate)
 {
 	return this->coordinate->GetDistanceFromInKm(coordinate);
 }
@@ -40,7 +40,7 @@ std::string Mote::GetCommonName()
 	return this->commonName;
 }
 
-CardinalPointFlags Mote::GetDirectionToThisMote(GeographicCoordinate& coordinate)
+CardinalPointFlags Mote::GetDirectionFrom(GeographicCoordinate& coordinate)
 {
 	return coordinate.GetDirectionTo(*(this->coordinate));
 }

@@ -247,11 +247,11 @@ void IoTLab_Temperatures::MainPage::RenderDirectionContainer()
 	MoteDirectionGrid->Visibility = Windows::UI::Xaml::Visibility::Visible;
 
 	// Display the distance to the mote, in km or in meter according to the distance
-	double distanceToTheMoteInKm = closestMote->GetDistanceToThisMoteInKm(userCoordinate);
+	double distanceToClosestMoteInKm = closestMote->GetDistanceInKmFrom(userCoordinate);
 
 	// If the user is as the same position as the mote or very close to it, do not display any
 	// additional direction
-	if (distanceToTheMoteInKm <= SAME_POSITION_DELTA)
+	if (distanceToClosestMoteInKm <= SAME_POSITION_DELTA)
 	{
 		DirectionValueTextBlock->Text = "On your position";
 		DirectionDistanceTextBlock->Text = "";
@@ -259,12 +259,12 @@ void IoTLab_Temperatures::MainPage::RenderDirectionContainer()
 	}
 
 	// If the distance is less than a kilometer, display it in meters
-	DirectionDistanceTextBlock->Text = distanceToTheMoteInKm >= 1
-		? distanceToTheMoteInKm + " km"
-		: distanceToTheMoteInKm * 1000 + " m";
+	DirectionDistanceTextBlock->Text = distanceToClosestMoteInKm >= 1
+		? distanceToClosestMoteInKm + " km"
+		: distanceToClosestMoteInKm * 1000 + " m";
 
 	// Build the direction indication
-	CardinalPointFlags directionToMote = closestMote->GetDirectionToThisMote(userCoordinate);
+	CardinalPointFlags directionToMote = closestMote->GetDirectionFrom(userCoordinate);
 	
 	Platform::String^ directionIndication = "";
 	Platform::String^ spacing = "";
@@ -329,7 +329,7 @@ void SetClosestMoteFromCoordinate(GeographicCoordinate& coordinate)
 	for (unsigned int i = 0; i < motes.size(); ++i) 
 	{
 		Mote* current = motes[i];
-		double distance = current->GetDistanceToThisMoteInKm(coordinate);
+		double distance = current->GetDistanceInKmFrom(coordinate);
 
 		if (distance < shortestDistance)
 		{
