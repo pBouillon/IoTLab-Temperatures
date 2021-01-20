@@ -199,22 +199,17 @@ void IoTLab_Temperatures::MainPage::LocateButton_Click(
 	Platform::Object^ sender,
 	Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-	//TODO: Rework
-	if (isRealTimeLocationEnabled)
-	{
-		isRealTimeLocationEnabled = false;
-		LatitudeSignComboBox->IsEnabled = true;
-		LongitudeSignComboBox->IsEnabled = true;
-		LatitudeBox->IsEnabled = true;
-		LongitudeBox->IsEnabled = true;
-		return;
-	}
+	// Toggle the real time status
+	isRealTimeLocationEnabled = !isRealTimeLocationEnabled;
 
-	isRealTimeLocationEnabled = true;
-	LatitudeSignComboBox->IsEnabled = false;
-	LongitudeSignComboBox->IsEnabled = false;
-	LatitudeBox->IsEnabled = false;
-	LongitudeBox->IsEnabled = false;
+	// Enable the component regarding to the real time status
+	LatitudeSignComboBox->IsEnabled = !isRealTimeLocationEnabled;
+	LatitudeBox->IsEnabled = !isRealTimeLocationEnabled;
+
+	LongitudeSignComboBox->IsEnabled = !isRealTimeLocationEnabled;
+	LongitudeBox->IsEnabled = !isRealTimeLocationEnabled;
+
+	UpdateButtonDisplays();
 }
 
 void IoTLab_Temperatures::MainPage::LongitudeBox_TextChanged(
@@ -461,6 +456,27 @@ void IoTLab_Temperatures::MainPage::UpdateBrightnessCard(MeasureReport& measure)
 
 	// Update the associated image
 	SetBrightnessImageFromMeasure(brightnessValue);
+}
+
+void IoTLab_Temperatures::MainPage::UpdateButtonDisplays()
+{
+	// Update the geolocation button display
+	LocateButton->Content = isRealTimeLocationEnabled
+		? "Stop Geolocation"
+		: "Use Geolocation";
+
+	// Style the geolocation button style according to the toggle status
+	if (isRealTimeLocationEnabled)
+	{
+		// TODO
+	}
+	else
+	{
+		// TODO
+	}
+
+	// Update the validate button
+	UpdateValidateButtonValidity();
 }
 
 void IoTLab_Temperatures::MainPage::UpdateCards() 

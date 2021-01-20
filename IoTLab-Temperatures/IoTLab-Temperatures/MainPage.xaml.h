@@ -71,6 +71,8 @@ namespace IoTLab_Temperatures
 		void UpdateBatteryCard(MeasureReport& measure);
 		
 		void UpdateBrightnessCard(MeasureReport& measure);
+
+		void UpdateButtonDisplays();
 		
 		void UpdateCards();
 
