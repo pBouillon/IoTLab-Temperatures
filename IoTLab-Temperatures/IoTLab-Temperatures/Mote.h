@@ -54,8 +54,6 @@ public:
 
 	std::string GetName();
 
-	bool HasSameCoordinateAs(GeographicCoordinate & coordinate);
-
 	bool HasSameLatitudeAs(GeographicCoordinate & coordinate);
 
 	bool HasSameLongitudeAs(GeographicCoordinate & coordinate);
