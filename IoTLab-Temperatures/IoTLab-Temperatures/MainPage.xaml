@@ -26,14 +26,14 @@
         <TextBlock x:Name="NoMoteDisplayedTextBlock" HorizontalAlignment="Center" Margin="0,0,0,199" Text="Please enter your coordinates to show the closest mote's measure" TextWrapping="Wrap" VerticalAlignment="Bottom" FontSize="18" Width="260" TextAlignment="Center" FontFamily="Segoe UI" FocusVisualPrimaryBrush="White" Foreground="#FF656565"/>
         <Grid x:Name="MoteMeasureGrid" Visibility="Collapsed" RequestedTheme="Default">
             <Image x:Name="MoteImage" HorizontalAlignment="Left" Height="60" Margin="73,231,0,0" VerticalAlignment="Top" Width="60" Source="/Assets/icons8-iot-sensor-100.png" Visibility="Visible"/>
-            <TextBlock x:Name="MoteLocationTextBlock" Margin="17,297,179,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" Visibility="Visible" Height="20" HorizontalAlignment="Stretch"/>
-            <TextBlock x:Name="MoteTextBlock" HorizontalAlignment="Stretch" Margin="47,318,201,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="10" FocusVisualPrimaryBrush="White" TextAlignment="Center" Visibility="Visible">
+            <TextBlock x:Name="MoteLocationTextBlock" Margin="17,293,179,0" Text="Mote Common Name" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" Visibility="Visible" Height="20" HorizontalAlignment="Stretch"/>
+            <TextBlock x:Name="MoteTextBlock" Margin="47,317,201,0" Text="Mote Identifier" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="10" FocusVisualPrimaryBrush="White" TextAlignment="Center" Visibility="Visible">
                 <TextBlock.Foreground>
                     <SolidColorBrush Color="#FFC7C0C2"/>
                 </TextBlock.Foreground>
             </TextBlock>
             <Rectangle x:Name="TemperatureRectangle" HorizontalAlignment="Left" Height="106" Margin="46,350,0,0" VerticalAlignment="Top" Width="113" FocusVisualPrimaryBrush="White" FocusVisualSecondaryBrush="#99FFFFFF" Stroke="#FF656565" RadiusX="8" RadiusY="8" Visibility="Visible"/>
-            <Rectangle x:Name="HumidityRectangle" Height="106" Margin="201,350,46,0" VerticalAlignment="Top" Stroke="#FF656565" RadiusX="8" RadiusY="8" Visibility="Visible" HorizontalAlignment="Stretch"/>
+            <Rectangle x:Name="HumidityRectangle" Margin="201,350,46,0" VerticalAlignment="Top" Stroke="#FF656565" RadiusX="8" RadiusY="8" Visibility="Visible" HorizontalAlignment="Stretch" Height="106"/>
             <Rectangle x:Name="BatteryRectangle" HorizontalAlignment="Left" Height="106" Margin="46,474,0,0" VerticalAlignment="Top" Width="113" FocusVisualPrimaryBrush="{x:Null}" Stroke="#FF656565" RadiusX="8" RadiusY="8" Visibility="Visible"/>
             <Rectangle x:Name="BrightnessRectangle" Height="106" Margin="201,474,46,0" VerticalAlignment="Top" Stroke="#FF656565" RadiusX="8" RadiusY="8" Visibility="Visible" HorizontalAlignment="Stretch" Width="113"/>
             <TextBlock x:Name="TemperatureTextBlock" HorizontalAlignment="Left" Margin="64,357,0,0" Text="Temperature" TextWrapping="Wrap" VerticalAlignment="Top" Visibility="Visible"/>
@@ -50,10 +50,10 @@
             <TextBlock x:Name="BrightnessValueTextBlock" HorizontalAlignment="Left" Margin="202,556,0,0" Text="210 Lx" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold" Width="107" TextAlignment="Center" Visibility="Visible"/>
         </Grid>
         <Grid x:Name="MoteDirectionGrid" Visibility="Collapsed" RequestedTheme="Default">
-            <Rectangle x:Name="DirectionRectangle" HorizontalAlignment="Left" Height="106" Margin="202,230,0,0" VerticalAlignment="Top" Width="113" FocusVisualPrimaryBrush="White" FocusVisualSecondaryBrush="#99FFFFFF" Stroke="#FF656565" RadiusX="8" RadiusY="8" Visibility="Visible" Fill="#FF333333"/>
-            <TextBlock x:Name="DirectionValueTextBlock" Margin="202,297,47,0" Text="North" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" FontSize="14" FontFamily="Segoe UI" Height="20" Canvas.ZIndex="1"/>
-            <TextBlock x:Name="DirectionDistanceTextBlock" Margin="202,318,47,0" Text="200 meters" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" FocusVisualPrimaryBrush="#FF656565" Foreground="#FFC7C0C2" FontSize="10" Canvas.ZIndex="1"/>
-            <Image x:Name="CompassImage" HorizontalAlignment="Left" Height="50" Margin="233,238,0,0" VerticalAlignment="Top" Width="50" Source="/Assets/icons8-compass-96.png" Tapped="CompassImage_Tapped" Canvas.ZIndex="1"/>
+            <Rectangle x:Name="DirectionRectangle" HorizontalAlignment="Left" Height="106" Margin="201,226,0,0" VerticalAlignment="Top" Width="113" FocusVisualPrimaryBrush="White" FocusVisualSecondaryBrush="#99FFFFFF" Stroke="#FF656565" RadiusX="8" RadiusY="8" Visibility="Visible" Fill="#FF333333"/>
+            <TextBlock x:Name="DirectionValueTextBlock" Margin="201,292,48,0" Text="North" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" FontSize="14" FontFamily="Segoe UI" Height="20" Canvas.ZIndex="1"/>
+            <TextBlock x:Name="DirectionDistanceTextBlock" Margin="201,315,48,0" Text="200 meters" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" FocusVisualPrimaryBrush="#FF656565" Foreground="#FFC7C0C2" FontSize="10" Canvas.ZIndex="1" HorizontalAlignment="Stretch"/>
+            <Image x:Name="CompassImage" HorizontalAlignment="Left" Height="50" Margin="232,234,0,0" VerticalAlignment="Top" Width="50" Source="/Assets/icons8-compass-96.png" Tapped="CompassImage_Tapped" Canvas.ZIndex="1"/>
         </Grid>
         <TextBlock x:Name="CreditsTextBlock" HorizontalAlignment="Center" Margin="0,596,0,0" Text="Icons by Icons8" TextWrapping="Wrap" VerticalAlignment="Top" Foreground="#FF656565" Width="358" TextAlignment="Center" FontSize="10"/>
         <Image x:Name="WarmTemperatureImage" HorizontalAlignment="Left" Height="37" Margin="85,385,0,0" VerticalAlignment="Top" Width="37" Source="/Assets/icons8-thermometer-80.png" Visibility="Collapsed"/>

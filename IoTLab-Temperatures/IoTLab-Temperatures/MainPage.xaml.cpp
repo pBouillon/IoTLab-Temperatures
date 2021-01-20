@@ -263,8 +263,8 @@ void IoTLab_Temperatures::MainPage::RenderDirectionContainer()
 	if (!closestMote->HasSameLatitudeAs(userCoordinate))
 	{
 		directionIndication += directionToMote & NORTH
-			? "NORTH"
-			: "SOUTH";
+			? "North"
+			: "South";
 
 		// Since the indication contains a direction regarding the latitude, we append a space
 		// if an indication containing the longitude is also appended
@@ -275,8 +275,8 @@ void IoTLab_Temperatures::MainPage::RenderDirectionContainer()
 	if (!closestMote->HasSameLongitudeAs(userCoordinate))
 	{
 		directionIndication += directionToMote & EAST
-			? spacing + "EAST"
-			: spacing + "WEST";
+			? spacing + "East"
+			: spacing + "West";
 	}
 	
 	DirectionValueTextBlock->Text = directionIndication;
