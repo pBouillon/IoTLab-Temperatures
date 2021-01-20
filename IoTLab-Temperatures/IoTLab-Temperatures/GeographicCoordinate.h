@@ -36,8 +36,6 @@ public:
 	// Get the longitude
 	double GetLongitude();
 
-	bool HasSameCoordinateAs(GeographicCoordinate & coordinate);
-
 	bool HasSameLatitudeAs(GeographicCoordinate & coordinate);
 
 	bool HasSameLongitudeAs(GeographicCoordinate & coordinate);
