@@ -567,3 +567,9 @@ void IoTLab_Temperatures::MainPage::ValidateButton_Click(
 	// measure report of the closest mote
 	SetEvent(hUpdateMoteMeasureReportEvent);
 }
+
+void IoTLab_Temperatures::MainPage::CompassImage_Tapped(Platform::Object^ sender, Windows::UI::Xaml::Input::TappedRoutedEventArgs^ e)
+{
+	// TODO: Open the Windows map and give an itinerary to the user
+	DirectionValueTextBlock->Text = "Open Map";
+}
