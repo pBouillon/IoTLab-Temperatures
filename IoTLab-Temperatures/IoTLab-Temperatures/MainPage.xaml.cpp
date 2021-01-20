@@ -239,8 +239,13 @@ void IoTLab_Temperatures::MainPage::RenderDirectionContainer()
 	// Display the container containing the direction information toward the mote
 	MoteDirectionGrid->Visibility = Windows::UI::Xaml::Visibility::Visible;
 
-	// Display the distance to the mote, in km
-	DirectionDistanceTextBlock->Text = closestMote->GetDistanceToThisMoteInKm(userCoordinate) + " km";
+	// Display the distance to the mote, in km or in meter according to the distance
+	double distanceToTheMoteInKm = closestMote->GetDistanceToThisMoteInKm(userCoordinate);
+
+	// If the distance is less than a kilometer, display it in meters
+	DirectionDistanceTextBlock->Text = distanceToTheMoteInKm >= 1
+		? distanceToTheMoteInKm + " km"
+		: distanceToTheMoteInKm * 1000 + " m";
 
 	// If the user coordinates are on the same place as the mote, their is no direction to indicate
 	if (closestMote->HasSameCoordinateAs(userCoordinate))
