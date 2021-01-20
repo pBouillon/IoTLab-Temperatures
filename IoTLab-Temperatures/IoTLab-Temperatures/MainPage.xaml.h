@@ -19,6 +19,8 @@ namespace IoTLab_Temperatures
 	private:
 		concurrency::cancellation_token_source geopositionTaskTokenSource;
 
+		bool isRealTimeLocationEnabled;
+
 		~MainPage();
 
 		void InitializeThreads();
