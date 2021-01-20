@@ -41,6 +41,8 @@ namespace IoTLab_Temperatures
 
 		void OnTick(Platform::Object^ sender, Platform::Object^ e);
 
+		void ProcessUserCoordinates();
+
 		void RenderDirectionContainer();
 		
 		void RenderMoteContainer();
@@ -59,6 +61,8 @@ namespace IoTLab_Temperatures
 		void SetHumidityImageFromMeasure(double humidityRate);
 		
 		void SetTemperatureImageFromMeasure(double temperatureValue);
+
+		void SetUserCoordinatesFromGeolocation();
 		
 		void ToggleImages(
 			Windows::UI::Xaml::Controls::Image^ toActivate,

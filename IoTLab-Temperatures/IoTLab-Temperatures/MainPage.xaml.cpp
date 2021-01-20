@@ -199,6 +199,7 @@ void IoTLab_Temperatures::MainPage::LocateButton_Click(
 	Platform::Object^ sender,
 	Windows::UI::Xaml::RoutedEventArgs^ e)
 {
+	//TODO: Rework
 	if (isRealTimeLocationEnabled)
 	{
 		isRealTimeLocationEnabled = false;
@@ -224,10 +225,29 @@ void IoTLab_Temperatures::MainPage::LongitudeBox_TextChanged(
 
 void IoTLab_Temperatures::MainPage::OnTick(Platform::Object^ sender, Platform::Object^ e)
 {
+	if (isRealTimeLocationEnabled) 
+	{
+		SetUserCoordinatesFromGeolocation();
+		ProcessUserCoordinates();
+	}
+
 	if (IsUserPositionSet())
 	{
 		UpdateDisplay();
 	}
+}
+
+void IoTLab_Temperatures::MainPage::ProcessUserCoordinates()
+{
+	UpdateUserCoordinatesFromFields();
+
+	// Fire the event requesting for the app to asynchronously compute the closest
+	// mote of the user, according to his updated coordinates
+	SetEvent(hUpdateClosestMoteEvent);
+
+	// Fire the event requesting for the app to asynchronously retrieve the latest
+	// measure report of the closest mote
+	SetEvent(hUpdateMoteMeasureReportEvent);
 }
 
 void IoTLab_Temperatures::MainPage::RenderDirectionContainer()
@@ -379,6 +399,38 @@ void IoTLab_Temperatures::MainPage::SetTemperatureImageFromMeasure(double temper
 	temperatureValue >= TEMPERATURE_THRESHOLD
 		? ToggleImages(WarmTemperatureImage, ColdTemperatureImage)
 		: ToggleImages(ColdTemperatureImage, WarmTemperatureImage);
+}
+
+void IoTLab_Temperatures::MainPage::SetUserCoordinatesFromGeolocation()
+{
+	try
+	{
+		task<GeolocationAccessStatus> geolocationAccessRequestTask(Windows::Devices::Geolocation::Geolocator::RequestAccessAsync());
+		geolocationAccessRequestTask.then([this](task<GeolocationAccessStatus> accessStatusTask)
+		{
+			// Get will throw an exception if the task was canceled or failed with an error
+			auto accessStatus = accessStatusTask.get();
+
+			if (accessStatus != GeolocationAccessStatus::Allowed) {
+				SetGeolocationPropertiesText("Access denied", "");
+				return;
+			}
+
+			auto geolocator = ref new Windows::Devices::Geolocation::Geolocator();
+
+			task<Geoposition^> geopositionTask(geolocator->GetGeopositionAsync(), geopositionTaskTokenSource.get_token());
+			geopositionTask.then([this](task<Geoposition^> getPosTask)
+			{
+				// Get will throw an exception if the task was canceled or failed with an error
+				UpdateLocationData(getPosTask.get());
+			});
+		});
+	}
+	catch (task_canceled&) { /* Silenced */ }
+	catch (Exception^ ex)
+	{
+		SetGeolocationPropertiesText("Failed to fetch", "");
+	}
 }
 
 void IoTLab_Temperatures::MainPage::ToggleImages(
@@ -561,15 +613,7 @@ void IoTLab_Temperatures::MainPage::UpdateLocationData(Windows::Devices::Geoloca
 void IoTLab_Temperatures::MainPage::ValidateButton_Click(
 	Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-	UpdateUserCoordinatesFromFields();
-
-	// Fire the event requesting for the app to asynchronously compute the closest
-	// mote of the user, according to his updated coordinates
-	SetEvent(hUpdateClosestMoteEvent);
-
-	// Fire the event requesting for the app to asynchronously retrieve the latest
-	// measure report of the closest mote
-	SetEvent(hUpdateMoteMeasureReportEvent);
+	ProcessUserCoordinates();
 }
 
 void IoTLab_Temperatures::MainPage::CompassImage_Tapped(Platform::Object^ sender, Windows::UI::Xaml::Input::TappedRoutedEventArgs^ e)
