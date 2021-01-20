@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "TypeConversion.h"
 
+#include <iomanip>
+#include <sstream>
+
 namespace typeConversion
 {
 	double ToDouble(Platform::String^ value)
@@ -14,6 +17,17 @@ namespace typeConversion
 		const wchar_t* w_chars = w_str.c_str();
 
 		return (ref new Platform::String(w_chars));
+	}
+
+	Platform::String^ ToPlatformStringWithPrecision(double value, unsigned int precision)
+	{
+		std::stringstream ss;
+
+		ss << std::fixed 
+			<< std::setprecision(precision)
+			<< value;
+
+		return ToPlatformString(ss.str());
 	}
 
 	std::string ToString(Platform::String^ value)
