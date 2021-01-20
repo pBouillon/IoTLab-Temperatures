@@ -260,8 +260,8 @@ void IoTLab_Temperatures::MainPage::RenderDirectionContainer()
 
 	// If the distance is less than a kilometer, display it in meters
 	DirectionDistanceTextBlock->Text = distanceToClosestMoteInKm >= 1
-		? distanceToClosestMoteInKm + " km"
-		: distanceToClosestMoteInKm * 1000 + " m";
+		? typeConversion::ToPlatformStringWithPrecision(distanceToClosestMoteInKm, 3) +" km"
+		: typeConversion::ToPlatformStringWithPrecision(distanceToClosestMoteInKm * 1000) + " m";
 
 	// Build the direction indication
 	CardinalPointFlags directionToMote = closestMote->GetDirectionFrom(userCoordinate);
@@ -405,7 +405,7 @@ void IoTLab_Temperatures::MainPage::UpdateBatteryCard(MeasureReport& measure)
 	double batteryValue = measure.GetBattery();
 
 	// Update the battery label
-	BatteryValueTextBlock->Text = batteryValue.ToString() + " %";
+	BatteryValueTextBlock->Text = typeConversion::ToPlatformStringWithPrecision(batteryValue, 0) + " %";
 
 	// Update the associated image
 	SetBatteryImageFromMeasure(batteryValue);
@@ -416,7 +416,7 @@ void IoTLab_Temperatures::MainPage::UpdateBrightnessCard(MeasureReport& measure)
 	double brightnessValue = measure.GetBrightness();
 
 	// Update the brightness label
-	BrightnessValueTextBlock->Text = brightnessValue.ToString() + " Lx";
+	BrightnessValueTextBlock->Text = typeConversion::ToPlatformStringWithPrecision(brightnessValue) + " Lx";
 
 	// Update the associated image
 	SetBrightnessImageFromMeasure(brightnessValue);
@@ -484,7 +484,7 @@ void IoTLab_Temperatures::MainPage::UpdateHumidityCard(MeasureReport& measure)
 	double humidityRate = measure.GetHumidity();
 
 	// Update the humidity label
-	HumidityValueTextBlock->Text = humidityRate.ToString() + " %";
+	HumidityValueTextBlock->Text = typeConversion::ToPlatformStringWithPrecision(humidityRate) + " %";
 
 	// Update the associated image
 	SetHumidityImageFromMeasure(humidityRate);
@@ -529,7 +529,7 @@ void IoTLab_Temperatures::MainPage::UpdateTemperatureCard(MeasureReport& measure
 	double temperatureValue = measure.GetTemperature();
 
 	// Update the temperature label
-	TemperatureValueTextBlock->Text = temperatureValue.ToString() + " °C";
+	TemperatureValueTextBlock->Text = typeConversion::ToPlatformStringWithPrecision(temperatureValue, 1) + " °C";
 
 	// Update the associated image
 	SetTemperatureImageFromMeasure(temperatureValue);
