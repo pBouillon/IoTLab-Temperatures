@@ -42,6 +42,9 @@ using namespace Windows::UI::Core;
 using namespace Platform;
 using namespace concurrency;
 
+// If the mote is less than a meter apart from the user, do not show the direction
+#define SAME_POSITION_DELTA 0.001
+
 // Number of milliseconds during which the thread will halted
 // while looping when awaiting an incoming event
 #define THREAD_HALT_MS 100
@@ -242,17 +245,19 @@ void IoTLab_Temperatures::MainPage::RenderDirectionContainer()
 	// Display the distance to the mote, in km or in meter according to the distance
 	double distanceToTheMoteInKm = closestMote->GetDistanceToThisMoteInKm(userCoordinate);
 
+	// If the user is as the same position as the mote or very close to it, do not display any
+	// additional direction
+	if (distanceToTheMoteInKm <= SAME_POSITION_DELTA)
+	{
+		DirectionValueTextBlock->Text = "On your position";
+		DirectionDistanceTextBlock->Text = "";
+		return;
+	}
+
 	// If the distance is less than a kilometer, display it in meters
 	DirectionDistanceTextBlock->Text = distanceToTheMoteInKm >= 1
 		? distanceToTheMoteInKm + " km"
 		: distanceToTheMoteInKm * 1000 + " m";
-
-	// If the user coordinates are on the same place as the mote, their is no direction to indicate
-	if (closestMote->HasSameCoordinateAs(userCoordinate))
-	{
-		DirectionValueTextBlock->Text = "On your position";
-		return;
-	}
 
 	// Build the direction indication
 	CardinalPointFlags directionToMote = closestMote->GetDirectionToThisMote(userCoordinate);
