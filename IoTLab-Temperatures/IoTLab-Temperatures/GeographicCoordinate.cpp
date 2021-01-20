@@ -84,12 +84,6 @@ double GeographicCoordinate::GetLongitude()
 	return this->longitude;
 }
 
-bool GeographicCoordinate::HasSameCoordinateAs(GeographicCoordinate& coordinate)
-{
-	return HasSameLatitudeAs(coordinate) 
-		&& HasSameLongitudeAs(coordinate);
-}
-
 bool GeographicCoordinate::HasSameLatitudeAs(GeographicCoordinate& coordinate)
 {
 	return AreDoubleEquals(this->latitude, coordinate.latitude);

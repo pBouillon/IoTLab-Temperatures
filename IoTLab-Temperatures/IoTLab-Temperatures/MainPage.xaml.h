@@ -87,5 +87,6 @@ namespace IoTLab_Temperatures
 			Windows::UI::Xaml::RoutedEventArgs^ e);
 		
 		void UpdateLocationData(Windows::Devices::Geolocation::Geoposition^ position);
+		void CompassImage_Tapped(Platform::Object^ sender, Windows::UI::Xaml::Input::TappedRoutedEventArgs^ e);
 	};
 }

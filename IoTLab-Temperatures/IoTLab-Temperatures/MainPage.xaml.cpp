@@ -26,8 +26,11 @@ using namespace IoTLab_Temperatures;
 using namespace Concurrency;
 using namespace Platform;
 using namespace Windows::Data::Json;
+using namespace Windows::Devices::Geolocation;
 using namespace Windows::Foundation;
 using namespace Windows::Foundation::Collections;
+using namespace Windows::System;
+using namespace Windows::UI::Core;
 using namespace Windows::UI::Xaml;
 using namespace Windows::UI::Xaml::Controls;
 using namespace Windows::UI::Xaml::Controls::Primitives;
@@ -36,9 +39,7 @@ using namespace Windows::UI::Xaml::Input;
 using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 using namespace Windows::UI::Xaml::Navigation;
-using namespace Windows::Devices::Geolocation;
 using namespace Windows::Web::Http;
-using namespace Windows::UI::Core;
 using namespace Platform;
 using namespace concurrency;
 
@@ -52,6 +53,9 @@ using namespace concurrency;
 // Number of ticks elapsed in a second
 // https://docs.microsoft.com/fr-fr/windows/uwp/threading-async/use-a-timer-to-submit-a-work-item
 #define TICKS_PER_SECOND 10000000
+
+// Package name of the BingMaps application, used to open the URI targeting it
+Platform::String^ BINGMAPS_PACKAGE_NAME = "Microsoft.WindowsMaps_8wekyb3d8bbwe";
 
 // Separator used when displaying alongside the latitude and the longitude of the user
 const Platform::String^ GEOGRAPHIC_COORDINATE_SEPARATOR = ", ";
@@ -269,8 +273,8 @@ void IoTLab_Temperatures::MainPage::RenderDirectionContainer()
 	if (!closestMote->HasSameLatitudeAs(userCoordinate))
 	{
 		directionIndication += directionToMote & NORTH
-			? "NORTH"
-			: "SOUTH";
+			? "North"
+			: "South";
 
 		// Since the indication contains a direction regarding the latitude, we append a space
 		// if an indication containing the longitude is also appended
@@ -281,8 +285,8 @@ void IoTLab_Temperatures::MainPage::RenderDirectionContainer()
 	if (!closestMote->HasSameLongitudeAs(userCoordinate))
 	{
 		directionIndication += directionToMote & EAST
-			? spacing + "EAST"
-			: spacing + "WEST";
+			? spacing + "East"
+			: spacing + "West";
 	}
 	
 	DirectionValueTextBlock->Text = directionIndication;
@@ -576,4 +580,20 @@ void IoTLab_Temperatures::MainPage::ValidateButton_Click(
 	// Fire the event requesting for the app to asynchronously retrieve the latest
 	// measure report of the closest mote
 	SetEvent(hUpdateMoteMeasureReportEvent);
+}
+
+void IoTLab_Temperatures::MainPage::CompassImage_Tapped(Platform::Object^ sender, Windows::UI::Xaml::Input::TappedRoutedEventArgs^ e)
+{
+	// Prepare the route toward the closest mote
+	Platform::String^ showItineraryToMoteIntent = "ms-walk-to:"
+		+ "?destination.latitude=" + closestMote->GetLatitude()
+		+ "&destination.longitude=" + closestMote->GetLongitude()
+		+ "&destination.name=" + typeConversion::ToPlatformString(closestMote->GetCommonName());
+
+	auto showItineraryToMoteIntentUri = ref new Uri(showItineraryToMoteIntent);
+
+	// Open the direction in the BingMaps application
+	LauncherOptions^ launcherOptions = ref new LauncherOptions();
+	launcherOptions->TargetApplicationPackageFamilyName = BINGMAPS_PACKAGE_NAME;
+	Launcher::LaunchUriAsync(showItineraryToMoteIntentUri, launcherOptions);
 }

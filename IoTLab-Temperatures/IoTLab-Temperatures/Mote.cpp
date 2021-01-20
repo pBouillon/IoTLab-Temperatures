@@ -50,14 +50,19 @@ MeasureReport* Mote::GetMeasure()
 	return this->measure;
 }
 
+double Mote::GetLatitude()
+{
+	return this->coordinate->GetLatitude();
+}
+
+double Mote::GetLongitude()
+{
+	return this->coordinate->GetLongitude();
+}
+
 std::string Mote::GetName()
 {
 	return this->name;
-}
-
-bool Mote::HasSameCoordinateAs(GeographicCoordinate& coordinate)
-{
-	return this->coordinate->HasSameCoordinateAs(coordinate);
 }
 
 bool Mote::HasSameLatitudeAs(GeographicCoordinate& coordinate)
