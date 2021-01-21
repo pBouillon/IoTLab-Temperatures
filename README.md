@@ -25,18 +25,29 @@ deployed web platform, acting as a broker for the various sensors.
 ## Features
 
 - ✅ The application is [made in C++/CX](https://docs.microsoft.com/en-us/cpp/cppcx/visual-c-language-reference-c-cx?view=msvc-160), targeting the Windows Phones
+- ✅ The user can either track his position using his GPS or fill the field by
+  himself
 - ✅ The user's coordinates are validated, and the distance between them
   computed using the [Haversine formula](https://en.wikipedia.org/wiki/Haversine_formula)
-- ✅ The app is multi-threaded (UI, HTTP calls)
+- ✅ The app is multi-threaded (UI, HTTP calls and guidance)
 - ✅ Each of the mote's data are displayed (name, common name, measures)
 - ✅ The icons are dynamically chosen: depending of the measure, the icon will
   be different (e.g. a discharge battery will be shown if the mote is running
   out of battery)
-- ✅ When displaying a mote, the application also provide a compass to indicate
+- ✅ Support the dark and the light theme:
+
+![Theme comparisons](./docs/assets/overview-themes.png)
+
+- ✅ When displaying a mote, the application also provides a compass to indicate
   its position and its distance relatively to the user, as shown in the
   following gif:
 
-![Geolocation and guidance demo](./docs/assets/demo-direction.gif)
+![Location and guidance demo](./docs/assets/demo-direction.gif)
+
+- ✅ When clicking on the direction card, it will open the BingMaps app to guide
+  the user toward the mote:
+
+![Location and guidance in BingMaps demo](./docs/assets/demo-direction-map.gif)
 
 ## Credits
 
