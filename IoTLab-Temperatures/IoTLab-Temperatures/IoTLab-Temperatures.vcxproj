@@ -202,7 +202,6 @@
     <Image Include="Assets\icons8--low-wet-80.png" />
     <Image Include="Assets\icons8-average-wet-80.png" />
     <Image Include="Assets\icons8-battery-level-96.png" />
-    <Image Include="Assets\icons8-capteur-iot-applogo-100 (1).png" />
     <Image Include="Assets\icons8-ceiling-light-64.png" />
     <Image Include="Assets\icons8-compass-96.png" />
     <Image Include="Assets\icons8-iot-sensor-100.png" />

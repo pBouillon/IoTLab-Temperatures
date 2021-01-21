@@ -92,9 +92,6 @@
     <Image Include="Assets\icons8-battery-level-96.png">
       <Filter>Assets</Filter>
     </Image>
-    <Image Include="Assets\icons8-capteur-iot-applogo-100 (1).png">
-      <Filter>Assets</Filter>
-    </Image>
     <Image Include="Assets\SmallTile.scale-100.png">
       <Filter>Assets</Filter>
     </Image>

@@ -80,11 +80,8 @@ const double MEDIUM_HUMIDITY_THRESHOLD = 66.0;
 const double TEMPERATURE_THRESHOLD = 20.0;
 
 // Color brushed to be used when styling the buttons
-SolidColorBrush^ activeButtonBackgroundColor;
-SolidColorBrush^ defaultButtonBackgroundColor;
-
-SolidColorBrush^ activeButtonBorderColor;
-SolidColorBrush^ defaultButtonBorderColor;
+Brush^ activeButtonBackgroundColor;
+Brush^ activeButtonBorderColor;
 
 // The mote that is the closest of the user's according to his
 // coordinates
@@ -127,10 +124,7 @@ MainPage::MainPage()
 
 	// Initialize UI parameters
 	activeButtonBackgroundColor = ref new SolidColorBrush(Windows::UI::ColorHelper::FromArgb(51, 81, 203, 26));
-	defaultButtonBackgroundColor = ref new SolidColorBrush(Windows::UI::ColorHelper::FromArgb(51, 255, 255, 255));
-
 	activeButtonBorderColor = ref new SolidColorBrush(Windows::UI::ColorHelper::FromArgb(255, 29, 121, 23));
-	defaultButtonBorderColor = ref new SolidColorBrush(Windows::UI::ColorHelper::FromArgb(0, 255, 255, 255));
 
 	isRealTimeLocationEnabled = false;
 
@@ -480,13 +474,13 @@ void IoTLab_Temperatures::MainPage::UpdateButtonDisplays()
 		: "Use Geolocation";
 
 	// Style the geolocation button style according to the toggle status
-	LocateButton->Background = isRealTimeLocationEnabled
-		? activeButtonBackgroundColor
-		: defaultButtonBackgroundColor;
+	isRealTimeLocationEnabled
+		? LocateButton->Background = activeButtonBackgroundColor
+		: LocateButton->ClearValue(LocateButton->BackgroundProperty);
 
-	LocateButton->BorderBrush = isRealTimeLocationEnabled
-		? activeButtonBorderColor
-		: defaultButtonBorderColor;
+	isRealTimeLocationEnabled
+		? LocateButton->BorderBrush = activeButtonBorderColor
+		: LocateButton->ClearValue(LocateButton->BorderBrushProperty);
 
 	// Update the validate button
 	UpdateValidateButtonValidity();

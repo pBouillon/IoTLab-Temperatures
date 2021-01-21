@@ -1,22 +1,21 @@
 # IoTLab sensors
 
-UWP application with C++ displaying the temperature retrieved by the closest mote using the IoTLab API
+UWP application with C++ displaying the temperature retrieved by the closest mote using the IoTLab API.
 
 <div style="text-align:center">
     <img src="./docs/assets/demo.gif" width="300px"/>
-</div>
+</div> 
 
 ## Overview
 
 This application displays the various measures retrieved by the
 closest sensor.
 
+> 📑 Note: **The project has to be launched with the**
+> **`Mobile Emulator 10.0.15254.0 720p 5 inch`**
+
 In order to retrieve the values, the app is querying the IoTLab, which is a
 deployed web platform, acting as a broker for the various sensors.
-
-<div style="text-align:center">
-    <img src="./docs/assets/overview.png" width="600px"/>
-</div>
 
 > 📑 Note: The IoTLab is deployed within
 > [TELECOM Nancy](https://telecomnancy.univ-lorraine.fr/), and can't be reached
@@ -25,18 +24,52 @@ deployed web platform, acting as a broker for the various sensors.
 ## Features
 
 - ✅ The application is [made in C++/CX](https://docs.microsoft.com/en-us/cpp/cppcx/visual-c-language-reference-c-cx?view=msvc-160), targeting the Windows Phones
+- ✅ The user can either track his position using his GPS or fill the field by
+  himself
 - ✅ The user's coordinates are validated, and the distance between them
   computed using the [Haversine formula](https://en.wikipedia.org/wiki/Haversine_formula)
-- ✅ The app is multi-threaded (UI, HTTP calls)
+- ✅ The app is multi-threaded (UI, HTTP calls and guidance)
 - ✅ Each of the mote's data are displayed (name, common name, measures)
 - ✅ The icons are dynamically chosen: depending of the measure, the icon will
   be different (e.g. a discharge battery will be shown if the mote is running
-  out of battery)
-- ✅ When displaying a mote, the application also provide a compass to indicate
+  out of battery):
+
+<div style="text-align:center">
+  <img src="./docs/assets/overview-thresholds.png" width="600px"/>
+</div>
+
+- ✅ Support the dark and the light theme:
+
+<div style="text-align:center">
+  <img src="./docs/assets/overview-themes.png" width="600px"/>
+</div>
+
+- ✅ When displaying a mote, the application also provides a compass to indicate
   its position and its distance relatively to the user, as shown in the
   following gif:
 
-![Geolocation and guidance demo](./docs/assets/demo-direction.gif)
+![Location and guidance demo](./docs/assets/demo-direction.gif)
+
+- ✅ When clicking on the direction icon, it will open the BingMaps app to guide
+  the user toward the mote:
+
+![Location and guidance in BingMaps demo](./docs/assets/demo-direction-map.gif)
+
+## Troubleshooting
+
+**If the app crashes when you tap on `Use Geolocation`**, this may be due to an
+error in the permissions.
+
+To resolve it:
+
+1. Stop the program
+2. Go back to your emulator, which should display a pop-up asking for the
+  permission to locate you:
+
+![popup](./docs/assets/permission-popup.png)
+
+3. Chose `Yes`
+4. Rerun the program
 
 ## Credits
 
