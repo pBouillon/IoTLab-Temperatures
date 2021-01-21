@@ -79,6 +79,13 @@ const double MEDIUM_HUMIDITY_THRESHOLD = 66.0;
 // Below this threshold, the temperature is shown as a cold thermometer and above it's shown as a warm thermometer
 const double TEMPERATURE_THRESHOLD = 20.0;
 
+// Color brushed to be used when styling the buttons
+SolidColorBrush^ activeButtonBackgroundColor;
+SolidColorBrush^ defaultButtonBackgroundColor;
+
+SolidColorBrush^ activeButtonBorderColor;
+SolidColorBrush^ defaultButtonBorderColor;
+
 // The mote that is the closest of the user's according to his
 // coordinates
 Mote* closestMote;
@@ -117,6 +124,13 @@ std::shared_mutex iotlabHttpCallMutex;
 MainPage::MainPage()
 {
 	InitializeComponent();
+
+	// Initialize UI parameters
+	activeButtonBackgroundColor = ref new SolidColorBrush(Windows::UI::ColorHelper::FromArgb(51, 81, 203, 26));
+	defaultButtonBackgroundColor = ref new SolidColorBrush(Windows::UI::ColorHelper::FromArgb(51, 255, 255, 255));
+
+	activeButtonBorderColor = ref new SolidColorBrush(Windows::UI::ColorHelper::FromArgb(255, 29, 121, 23));
+	defaultButtonBorderColor = ref new SolidColorBrush(Windows::UI::ColorHelper::FromArgb(0, 255, 255, 255));
 
 	isRealTimeLocationEnabled = false;
 
@@ -466,17 +480,13 @@ void IoTLab_Temperatures::MainPage::UpdateButtonDisplays()
 		: "Use Geolocation";
 
 	// Style the geolocation button style according to the toggle status
-	auto backgroundColor = isRealTimeLocationEnabled
-		? Windows::UI::ColorHelper::FromArgb(51, 81, 203, 26)
-		: Windows::UI::ColorHelper::FromArgb(51, 255, 255, 255);
+	LocateButton->Background = isRealTimeLocationEnabled
+		? activeButtonBackgroundColor
+		: defaultButtonBackgroundColor;
 
-	LocateButton->Background = ref new SolidColorBrush(backgroundColor);
-
-	auto borderBrushColor = isRealTimeLocationEnabled
-		? Windows::UI::ColorHelper::FromArgb(255, 29, 121, 23)
-		: Windows::UI::ColorHelper::FromArgb(0, 255, 255, 255);
-
-	LocateButton->BorderBrush = ref new SolidColorBrush(borderBrushColor);
+	LocateButton->BorderBrush = isRealTimeLocationEnabled
+		? activeButtonBorderColor
+		: defaultButtonBorderColor;
 
 	// Update the validate button
 	UpdateValidateButtonValidity();
