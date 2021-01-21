@@ -61,6 +61,6 @@
         <Image x:Name="LowHumidityImage" HorizontalAlignment="Left" Height="37" Margin="249,385,0,0" VerticalAlignment="Top" Width="37" Source="/Assets/icons8--low-wet-80.png" Visibility="Collapsed"/>
         <Image x:Name="LowBatteryImage" HorizontalAlignment="Left" Height="37" Margin="74,510,0,0" VerticalAlignment="Top" Source="/Assets/icons8-low-batterie-96.png" Visibility="Collapsed"/>
         <Image x:Name="LowBrightnessImage" HorizontalAlignment="Left" Height="37" Margin="249,510,0,0" VerticalAlignment="Top" Source="/Assets/icons8-plafonnier-64.png" Visibility="Collapsed"/>
-        <Button x:Name="LocateButton" Content="Geolocate Me" HorizontalAlignment="Left" Margin="17,181,0,0" VerticalAlignment="Top" Width="150" Foreground="White" Click="LocateButton_Click"/>
+        <Button x:Name="LocateButton" Content="Use Geolocation" HorizontalAlignment="Left" Margin="17,181,0,0" VerticalAlignment="Top" Width="150" Foreground="White" Click="LocateButton_Click"/>
     </Grid>
 </Page>

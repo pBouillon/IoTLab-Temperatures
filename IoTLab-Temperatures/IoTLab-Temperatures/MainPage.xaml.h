@@ -19,6 +19,8 @@ namespace IoTLab_Temperatures
 	private:
 		concurrency::cancellation_token_source geopositionTaskTokenSource;
 
+		bool isRealTimeLocationEnabled;
+
 		~MainPage();
 
 		void InitializeThreads();
@@ -39,6 +41,8 @@ namespace IoTLab_Temperatures
 
 		void OnTick(Platform::Object^ sender, Platform::Object^ e);
 
+		void ProcessUserCoordinates();
+
 		void RenderDirectionContainer();
 		
 		void RenderMoteContainer();
@@ -57,6 +61,8 @@ namespace IoTLab_Temperatures
 		void SetHumidityImageFromMeasure(double humidityRate);
 		
 		void SetTemperatureImageFromMeasure(double temperatureValue);
+
+		void SetUserCoordinatesFromGeolocation();
 		
 		void ToggleImages(
 			Windows::UI::Xaml::Controls::Image^ toActivate,
@@ -65,6 +71,8 @@ namespace IoTLab_Temperatures
 		void UpdateBatteryCard(MeasureReport& measure);
 		
 		void UpdateBrightnessCard(MeasureReport& measure);
+
+		void UpdateButtonDisplays();
 		
 		void UpdateCards();
 

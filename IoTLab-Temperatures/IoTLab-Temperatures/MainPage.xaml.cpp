@@ -79,6 +79,13 @@ const double MEDIUM_HUMIDITY_THRESHOLD = 66.0;
 // Below this threshold, the temperature is shown as a cold thermometer and above it's shown as a warm thermometer
 const double TEMPERATURE_THRESHOLD = 20.0;
 
+// Color brushed to be used when styling the buttons
+SolidColorBrush^ activeButtonBackgroundColor;
+SolidColorBrush^ defaultButtonBackgroundColor;
+
+SolidColorBrush^ activeButtonBorderColor;
+SolidColorBrush^ defaultButtonBorderColor;
+
 // The mote that is the closest of the user's according to his
 // coordinates
 Mote* closestMote;
@@ -117,6 +124,15 @@ std::shared_mutex iotlabHttpCallMutex;
 MainPage::MainPage()
 {
 	InitializeComponent();
+
+	// Initialize UI parameters
+	activeButtonBackgroundColor = ref new SolidColorBrush(Windows::UI::ColorHelper::FromArgb(51, 81, 203, 26));
+	defaultButtonBackgroundColor = ref new SolidColorBrush(Windows::UI::ColorHelper::FromArgb(51, 255, 255, 255));
+
+	activeButtonBorderColor = ref new SolidColorBrush(Windows::UI::ColorHelper::FromArgb(255, 29, 121, 23));
+	defaultButtonBorderColor = ref new SolidColorBrush(Windows::UI::ColorHelper::FromArgb(0, 255, 255, 255));
+
+	isRealTimeLocationEnabled = false;
 
 	// No mote can be defined as the closest on startup since
 	// we do not know the current user's position
@@ -197,34 +213,17 @@ void IoTLab_Temperatures::MainPage::LocateButton_Click(
 	Platform::Object^ sender,
 	Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-	try
-	{
-		task<GeolocationAccessStatus> geolocationAccessRequestTask(Windows::Devices::Geolocation::Geolocator::RequestAccessAsync());
-		geolocationAccessRequestTask.then([this](task<GeolocationAccessStatus> accessStatusTask)
-		{
-			// Get will throw an exception if the task was canceled or failed with an error
-			auto accessStatus = accessStatusTask.get();
+	// Toggle the real time status
+	isRealTimeLocationEnabled = !isRealTimeLocationEnabled;
 
-			if (accessStatus != GeolocationAccessStatus::Allowed) {
-				SetGeolocationPropertiesText("Access denied", "");
-				return;
-			}
+	// Enable the component regarding to the real time status
+	LatitudeSignComboBox->IsEnabled = !isRealTimeLocationEnabled;
+	LatitudeBox->IsEnabled = !isRealTimeLocationEnabled;
 
-			auto geolocator = ref new Windows::Devices::Geolocation::Geolocator();
+	LongitudeSignComboBox->IsEnabled = !isRealTimeLocationEnabled;
+	LongitudeBox->IsEnabled = !isRealTimeLocationEnabled;
 
-			task<Geoposition^> geopositionTask(geolocator->GetGeopositionAsync(), geopositionTaskTokenSource.get_token());
-			geopositionTask.then([this](task<Geoposition^> getPosTask)
-			{
-				// Get will throw an exception if the task was canceled or failed with an error
-				UpdateLocationData(getPosTask.get());
-			});
-		});
-	}
-	catch (task_canceled&) { /* Silenced */ }
-	catch (Exception^ ex)
-	{
-		SetGeolocationPropertiesText("Failed to fetch", "");
-	}
+	UpdateButtonDisplays();
 }
 
 void IoTLab_Temperatures::MainPage::LongitudeBox_TextChanged(
@@ -235,10 +234,29 @@ void IoTLab_Temperatures::MainPage::LongitudeBox_TextChanged(
 
 void IoTLab_Temperatures::MainPage::OnTick(Platform::Object^ sender, Platform::Object^ e)
 {
+	if (isRealTimeLocationEnabled) 
+	{
+		SetUserCoordinatesFromGeolocation();
+		ProcessUserCoordinates();
+	}
+
 	if (IsUserPositionSet())
 	{
 		UpdateDisplay();
 	}
+}
+
+void IoTLab_Temperatures::MainPage::ProcessUserCoordinates()
+{
+	UpdateUserCoordinatesFromFields();
+
+	// Fire the event requesting for the app to asynchronously compute the closest
+	// mote of the user, according to his updated coordinates
+	SetEvent(hUpdateClosestMoteEvent);
+
+	// Fire the event requesting for the app to asynchronously retrieve the latest
+	// measure report of the closest mote
+	SetEvent(hUpdateMoteMeasureReportEvent);
 }
 
 void IoTLab_Temperatures::MainPage::RenderDirectionContainer()
@@ -392,6 +410,38 @@ void IoTLab_Temperatures::MainPage::SetTemperatureImageFromMeasure(double temper
 		: ToggleImages(ColdTemperatureImage, WarmTemperatureImage);
 }
 
+void IoTLab_Temperatures::MainPage::SetUserCoordinatesFromGeolocation()
+{
+	try
+	{
+		task<GeolocationAccessStatus> geolocationAccessRequestTask(Windows::Devices::Geolocation::Geolocator::RequestAccessAsync());
+		geolocationAccessRequestTask.then([this](task<GeolocationAccessStatus> accessStatusTask)
+		{
+			// Get will throw an exception if the task was canceled or failed with an error
+			auto accessStatus = accessStatusTask.get();
+
+			if (accessStatus != GeolocationAccessStatus::Allowed) {
+				SetGeolocationPropertiesText("Access denied", "");
+				return;
+			}
+
+			auto geolocator = ref new Windows::Devices::Geolocation::Geolocator();
+
+			task<Geoposition^> geopositionTask(geolocator->GetGeopositionAsync(), geopositionTaskTokenSource.get_token());
+			geopositionTask.then([this](task<Geoposition^> getPosTask)
+			{
+				// Get will throw an exception if the task was canceled or failed with an error
+				UpdateLocationData(getPosTask.get());
+			});
+		});
+	}
+	catch (task_canceled&) { /* Silenced */ }
+	catch (Exception^ ex)
+	{
+		SetGeolocationPropertiesText("Failed to fetch", "");
+	}
+}
+
 void IoTLab_Temperatures::MainPage::ToggleImages(
 	Windows::UI::Xaml::Controls::Image^ toActivate,
 	Windows::UI::Xaml::Controls::Image^ toDeactivate) 
@@ -420,6 +470,26 @@ void IoTLab_Temperatures::MainPage::UpdateBrightnessCard(MeasureReport& measure)
 
 	// Update the associated image
 	SetBrightnessImageFromMeasure(brightnessValue);
+}
+
+void IoTLab_Temperatures::MainPage::UpdateButtonDisplays()
+{
+	// Update the geolocation button display
+	LocateButton->Content = isRealTimeLocationEnabled
+		? "Geolocation In Use"
+		: "Use Geolocation";
+
+	// Style the geolocation button style according to the toggle status
+	LocateButton->Background = isRealTimeLocationEnabled
+		? activeButtonBackgroundColor
+		: defaultButtonBackgroundColor;
+
+	LocateButton->BorderBrush = isRealTimeLocationEnabled
+		? activeButtonBorderColor
+		: defaultButtonBorderColor;
+
+	// Update the validate button
+	UpdateValidateButtonValidity();
 }
 
 void IoTLab_Temperatures::MainPage::UpdateCards() 
@@ -553,7 +623,8 @@ void IoTLab_Temperatures::MainPage::UpdateUserCoordinatesFromFields()
 // Enable the "Validate" button depending of the validity of the other fields
 void IoTLab_Temperatures::MainPage::UpdateValidateButtonValidity()
 {
-	ValidateButton->IsEnabled = IsLatitudeValid()
+	ValidateButton->IsEnabled = !isRealTimeLocationEnabled
+		&& IsLatitudeValid()
 		&& IsLongitudeValid();
 }
 
@@ -571,15 +642,7 @@ void IoTLab_Temperatures::MainPage::UpdateLocationData(Windows::Devices::Geoloca
 void IoTLab_Temperatures::MainPage::ValidateButton_Click(
 	Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-	UpdateUserCoordinatesFromFields();
-
-	// Fire the event requesting for the app to asynchronously compute the closest
-	// mote of the user, according to his updated coordinates
-	SetEvent(hUpdateClosestMoteEvent);
-
-	// Fire the event requesting for the app to asynchronously retrieve the latest
-	// measure report of the closest mote
-	SetEvent(hUpdateMoteMeasureReportEvent);
+	ProcessUserCoordinates();
 }
 
 void IoTLab_Temperatures::MainPage::CompassImage_Tapped(Platform::Object^ sender, Windows::UI::Xaml::Input::TappedRoutedEventArgs^ e)
