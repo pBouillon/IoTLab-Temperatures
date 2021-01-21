@@ -11,9 +11,6 @@ UWP application with C++ displaying the temperature retrieved by the closest mot
 This application displays the various measures retrieved by the
 closest sensor.
 
-> 📑 Note: **The project has to be launched with the**
-> **`Mobile Emulator 10.0.15254.0 720p 5 inch`**
-
 In order to retrieve the values, the app is querying the IoTLab, which is a
 deployed web platform, acting as a broker for the various sensors.
 
