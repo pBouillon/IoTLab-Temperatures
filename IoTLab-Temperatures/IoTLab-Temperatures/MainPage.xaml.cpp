@@ -466,16 +466,13 @@ void IoTLab_Temperatures::MainPage::UpdateButtonDisplays()
 		: "Use Geolocation";
 
 	// Style the geolocation button style according to the toggle status
-	if (isRealTimeLocationEnabled)
-	{
-		LocateButton->Background = ref new SolidColorBrush(Windows::UI::ColorHelper::FromArgb(51, 81, 203, 26));
-		LocateButton->BorderBrush = ref new SolidColorBrush(Windows::UI::ColorHelper::FromArgb(255, 29, 121, 23));
-	}
-	else
-	{
-		LocateButton->Background = ref new SolidColorBrush(Windows::UI::ColorHelper::FromArgb(51, 255, 255, 255));
-		LocateButton->BorderBrush = ref new SolidColorBrush(Windows::UI::ColorHelper::FromArgb(0, 255, 255, 255));
-	}
+	LocateButton->Background = isRealTimeLocationEnabled
+		? ref new SolidColorBrush(Windows::UI::ColorHelper::FromArgb(51, 81, 203, 26))
+		: ref new SolidColorBrush(Windows::UI::ColorHelper::FromArgb(51, 255, 255, 255));
+
+	LocateButton->BorderBrush = isRealTimeLocationEnabled
+		? ref new SolidColorBrush(Windows::UI::ColorHelper::FromArgb(255, 29, 121, 23))
+		: ref new SolidColorBrush(Windows::UI::ColorHelper::FromArgb(0, 255, 255, 255));
 
 	// Update the validate button
 	UpdateValidateButtonValidity();
