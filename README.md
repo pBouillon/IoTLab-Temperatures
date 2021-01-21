@@ -4,7 +4,7 @@ UWP application with C++ displaying the temperature retrieved by the closest mot
 
 <div style="text-align:center">
     <img src="./docs/assets/demo.gif" width="300px"/>
-</div>
+</div> 
 
 ## Overview
 
@@ -54,6 +54,22 @@ deployed web platform, acting as a broker for the various sensors.
   the user toward the mote:
 
 ![Location and guidance in BingMaps demo](./docs/assets/demo-direction-map.gif)
+
+## Troubleshooting
+
+**If the app crashes when you tap on `Use Geolocation`**, this may be due to an
+error in the permissions.
+
+To resolve it:
+
+1. Stop the program
+2. Go back to your emulator, which should display a pop-up asking for the
+  permission to locate you:
+
+![popup](./docs/assets/permission-popup.png)
+
+3. Chose `Yes`
+4. Rerun the program
 
 ## Credits
 
