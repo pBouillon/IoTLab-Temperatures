@@ -51,7 +51,7 @@
         </Grid>
         <Grid x:Name="MoteDirectionGrid" Visibility="Collapsed" RequestedTheme="Default" Margin="-9,0,9,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Rectangle x:Name="DirectionRectangle" HorizontalAlignment="Left" Height="106" Margin="220,226,0,0" VerticalAlignment="Top" Width="113" FocusVisualPrimaryBrush="White" FocusVisualSecondaryBrush="#99FFFFFF" Stroke="#FF656565" RadiusX="8" RadiusY="8" Visibility="Visible"/>
-            <TextBlock x:Name="DirectionValueTextBlock" Margin="221,292,28,0" Text="North" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" FontSize="14" FontFamily="Segoe UI" Height="20" Canvas.ZIndex="1" HorizontalAlignment="Stretch" Foreground="#FF3499DA" FontWeight="Bold"/>
+            <TextBlock x:Name="DirectionValueTextBlock" Margin="221,292,28,0" Text="North" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" FontSize="13" FontFamily="Segoe UI" Height="20" Canvas.ZIndex="1" HorizontalAlignment="Stretch" Foreground="#FF3499DA" FontWeight="Bold"/>
             <TextBlock x:Name="DirectionDistanceTextBlock" Margin="221,311,28,0" Text="200 meters" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" FocusVisualPrimaryBrush="#FF656565" Foreground="#FFC7C0C2" FontSize="10" Canvas.ZIndex="1"/>
             <Image x:Name="CompassImage" HorizontalAlignment="Left" Height="50" Margin="251,234,0,0" VerticalAlignment="Top" Width="50" Source="/Assets/icons8-compass-96.png" Tapped="CompassImage_Tapped" Canvas.ZIndex="1"/>
         </Grid>
