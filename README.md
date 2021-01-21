@@ -1,6 +1,6 @@
 # IoTLab sensors
 
-UWP application with C++ displaying the temperature retrieved by the closest mote using the IoTLab API
+UWP application with C++ displaying the temperature retrieved by the closest mote using the IoTLab API.
 
 <div style="text-align:center">
     <img src="./docs/assets/demo.gif" width="300px"/>
@@ -13,10 +13,6 @@ closest sensor.
 
 In order to retrieve the values, the app is querying the IoTLab, which is a
 deployed web platform, acting as a broker for the various sensors.
-
-<div style="text-align:center">
-    <img src="./docs/assets/overview.png" width="600px"/>
-</div>
 
 > 📑 Note: The IoTLab is deployed within
 > [TELECOM Nancy](https://telecomnancy.univ-lorraine.fr/), and can't be reached
@@ -33,7 +29,12 @@ deployed web platform, acting as a broker for the various sensors.
 - ✅ Each of the mote's data are displayed (name, common name, measures)
 - ✅ The icons are dynamically chosen: depending of the measure, the icon will
   be different (e.g. a discharge battery will be shown if the mote is running
-  out of battery)
+  out of battery):
+
+<div style="text-align:center">
+  <img src="./docs/assets/overview-thresholds.png" width="600px"/>
+</div>
+
 - ✅ Support the dark and the light theme:
 
 ![Theme comparisons](./docs/assets/overview-themes.png)
@@ -44,7 +45,7 @@ deployed web platform, acting as a broker for the various sensors.
 
 ![Location and guidance demo](./docs/assets/demo-direction.gif)
 
-- ✅ When clicking on the direction card, it will open the BingMaps app to guide
+- ✅ When clicking on the direction icon, it will open the BingMaps app to guide
   the user toward the mote:
 
 ![Location and guidance in BingMaps demo](./docs/assets/demo-direction-map.gif)
