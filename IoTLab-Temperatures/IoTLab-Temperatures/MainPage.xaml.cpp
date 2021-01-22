@@ -364,16 +364,24 @@ void IoTLab_Temperatures::MainPage::SetGeolocationPropertyFromValue(
 	Windows::UI::Xaml::Controls::ComboBox^ signComboBox,
 	Windows::UI::Xaml::Controls::TextBox^ valueTextBox)
 {
-	std::string longitude = typeConversion::ToString(value);
+	std::string coordinate = typeConversion::ToString(value);
 
-	if (!value->IsEmpty()
-		&& longitude[0] == '-')
+	// Flag to indicate whether or not the coordinate starts with '-'
+	bool isMinusSigned = !value->IsEmpty()
+		&& coordinate[0] == '-';
+
+	// Set the appropriate sign
+	signComboBox->SelectedIndex = isMinusSigned
+		? 1
+		: 0;
+
+	// Once the sign is set, remove it from the coordinate text
+	if (isMinusSigned)
 	{
-		longitude = longitude.substr(1, longitude.length() - 1);
-		signComboBox->SelectedIndex = 1;
+		coordinate = coordinate.substr(1, coordinate.length() - 1);
 	}
 
-	valueTextBox->Text = typeConversion::ToPlatformString(longitude);
+	valueTextBox->Text = typeConversion::ToPlatformString(coordinate);
 }
 
 void IoTLab_Temperatures::MainPage::SetHumidityImageFromMeasure(double humidityRate) 
